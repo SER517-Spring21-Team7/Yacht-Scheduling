@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package tys.com.TYSWebServer.tomcat.web;
+package tys.TYSWebServer.tomcat.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import tys.com.TYSWebServer.tomcat.service.HelloWorldService;
+import tys.TYSWebServer.tomcat.service.HelloWorldService;
 
 @Controller
 public class SampleController {

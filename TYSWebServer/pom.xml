@@ -8,7 +8,7 @@
 		<version>1.0.2.RELEASE</version>
 	</parent>
 	<artifactId>TYSWebServer</artifactId>
-	<groupId>tys.com</groupId>
+	<groupId>tys</groupId>
 	<name>Spring Boot Tomcat Sample</name>
 	<description>Spring Boot Tomcat Sample</description>
 	<version>0.0.1-SNAPSHOT</version>

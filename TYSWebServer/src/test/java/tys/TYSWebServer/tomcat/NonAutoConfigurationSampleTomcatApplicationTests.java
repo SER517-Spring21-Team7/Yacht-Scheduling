@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package tys.com.TYSWebServer.tomcat;
+package tys.TYSWebServer.tomcat;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,9 +38,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import tys.com.TYSWebServer.tomcat.NonAutoConfigurationSampleTomcatApplicationTests.NonAutoConfigurationSampleTomcatApplication;
-import tys.com.TYSWebServer.tomcat.service.HelloWorldService;
-import tys.com.TYSWebServer.tomcat.web.SampleController;
+import tys.TYSWebServer.tomcat.NonAutoConfigurationSampleTomcatApplicationTests.NonAutoConfigurationSampleTomcatApplication;
+import tys.TYSWebServer.tomcat.service.HelloWorldService;
+import tys.TYSWebServer.tomcat.web.SampleController;
 
 import static org.junit.Assert.assertEquals;
 

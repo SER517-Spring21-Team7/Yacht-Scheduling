@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package tys.com.TYSWebServer.tomcat;
+package tys.TYSWebServer.tomcat;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
