@@ -15,6 +15,12 @@ const useStyle = makeStyles(theme =>({
     textField: {
         width: '25ch',
     },
+    containerStyle:{
+        backgroundColor: '#f5f5f5',
+        width: '90%',
+        marginLeft: '5%',
+        marginTop: theme.spacing(4)
+    }
 }))
 
 const initialValues = {
@@ -62,7 +68,7 @@ for (let i = minOffset; i <= maxOffset; i++) {
     return (
         <div>
           <form className={classes.root}>
-            <Grid container>
+            <Grid container className={classes.containerStyle}>
                 <Grid item xs={6}>
                     <TextField
                     variant="outlined"
@@ -72,8 +78,9 @@ for (let i = minOffset; i <= maxOffset; i++) {
                     onChange = {handleInputChange}
                     />
                 </Grid>
-            </Grid>
-            <Grid container>
+                <Grid item xs={6}>
+                    {/* Blank grid */}
+                </Grid>
                 <Grid item xs={6}>
                     <TextField
                         multiline
@@ -85,8 +92,9 @@ for (let i = minOffset; i <= maxOffset; i++) {
                         onChange = {handleInputChange}
                         />
                 </Grid>
-            </Grid>
-            <Grid container>
+                <Grid item xs={6}>
+                    {/* Blank grid */}
+                </Grid>
                 <Grid item xs={6}>
                     <FormControl variant="outlined">
                         <InputLabel>Class</InputLabel>
@@ -131,8 +139,6 @@ for (let i = minOffset; i <= maxOffset; i++) {
                         </Select>
                     </FormControl>
                 </Grid>
-            </Grid>
-            <Grid container>
                 <Grid item xs={6}>
                     <FormControl variant="outlined">
                         <InputLabel>Fuel Type</InputLabel>
@@ -181,8 +187,6 @@ for (let i = minOffset; i <= maxOffset; i++) {
                         </Select>
                     </FormControl>
                 </Grid>
-            </Grid>
-            <Grid container>
                 <Grid item xs={6}>
                     <TextField
                     variant="outlined"
@@ -192,7 +196,6 @@ for (let i = minOffset; i <= maxOffset; i++) {
                     onChange = {handleInputChange}
                     />
                 </Grid>
-                
                 <Grid item xs={6}>
                     <TextField
                     variant="outlined"
@@ -202,8 +205,6 @@ for (let i = minOffset; i <= maxOffset; i++) {
                     onChange = {handleInputChange}
                     />
                 </Grid>
-            </Grid>
-            <Grid container>
                 <Grid item xs={2}>
                     <TextField
                         label="Length"
