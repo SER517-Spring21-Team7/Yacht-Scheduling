@@ -21,9 +21,6 @@ const useStyle = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     marginLeft: theme.spacing(0),
   },
-  eachGrid: {
-    marginLeft: theme.spacing(20),
-  },
 }));
 
 const initialValues = {
@@ -53,7 +50,7 @@ export default function ManagePassword() {
       </Typography>
       <Grid container className={classes.container}>
         <Grid item xs={3}></Grid>
-        <Grid item xs={6} classname={classes.eachGrid}>
+        <Grid item xs={6}>
           <TextField
             required
             variant="outlined"
@@ -66,7 +63,7 @@ export default function ManagePassword() {
         </Grid>
         <Grid item xs={3}></Grid>
         <Grid item xs={3}></Grid>
-        <Grid item xs={6} classname={classes.eachGrid}>
+        <Grid item xs={6}>
           <TextField
             required
             variant="outlined"
@@ -79,7 +76,7 @@ export default function ManagePassword() {
         </Grid>
         <Grid item xs={3}></Grid>
         <Grid item xs={3}></Grid>
-        <Grid item xs={6} classname={classes.eachGrid}>
+        <Grid item xs={6}>
           <TextField
             required
             variant="outlined"
