@@ -1,5 +1,5 @@
 .navbar {
-    background-color: #060b26;
+    background-color: #5f6b6d;
     height: 80px;
     display: flex;
     justify-content: start;
@@ -13,15 +13,16 @@
   }
   
   .nav-menu {
-    background-color: #060b26;
+    background-color: #5f6b6d;
     width: 250px;
     height: 100vh;
     display: flex;
     justify-content: center;
     position: fixed;
-    top: 0;
+    /* top: 0; */
     left: -100%;
     transition: 850ms;
+    padding-top: 10vh;
   }
   
   .nav-menu.active {
@@ -51,7 +52,7 @@
   }
   
   .nav-text a:hover {
-    background-color: #1a83ff;
+    background-color: #b6b6b6;
   }
   
   .nav-menu-items {
@@ -59,7 +60,7 @@
   }
   
   .navbar-toggle {
-    background-color: #060b26;
+    background-color: #5f6b6d;
     width: 100%;
     height: 80px;
     display: flex;

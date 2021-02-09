@@ -1,21 +1,40 @@
 import React, {useState} from 'react'
-import * as FaIcons from 'react-icons/fa';
 import {Link} from 'react-router-dom';
-import * as AiIcons from 'react-icons/ai';
 import {SidebarData} from './SidebarData';
 import './Sidebar.css';
 import { IconContext } from 'react-icons';
+import { makeStyles, AppBar, Toolbar, Typography } from '@material-ui/core';
+
+
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+    },
+    title: {
+      flexGrow: 1,
+    },
+  }));
 
 
 
 function ToolbarUI() {
-    
-    const [sidebar, setSidebar] = useState(false);
-    const handleSidebar = () => setSidebar(!sidebar);
+
+    // const [sidebar, setSidebar] = useState(false);
+    // const handleSidebar = () => setSidebar(!sidebar);
+    const classes = useStyles();
 
     return (
         <>
-            <h1 style={{float:'right'}}>HEEEEEEE</h1>
+            <div className={classes.root}>
+                <AppBar position="static" style={{backgroundColor:'#8ad4eb'}}>
+                    <Toolbar>
+                        <Typography variant="h6" className={classes.title}>
+                            The Yacht Solutions
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+            </div>
             <IconContext.Provider value={{ color: '#fff' }}>
                 <nav className='nav-menu active'>
                     <ul className='nav-menu-items'>
