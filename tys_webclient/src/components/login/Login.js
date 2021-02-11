@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -24,6 +24,17 @@ function Copyright() {
     </Typography>
   );
 }
+
+async function loginUser(credentials) {
+  return fetch('http://localhost:8080/login/admin', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(credentials)
+  })
+    .then(data => data.json())
+ }
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,8 +67,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Login() {
+function Login({ setToken }) {
   const classes = useStyles();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    alert("clicked");
+    const token = await loginUser({
+      email,
+      password
+    });
+    alert(token);
+    setToken(token);
+  }
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -74,11 +98,12 @@ function Login() {
           <Typography component="h1" variant="h6">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} onSubmit={handleSubmit} noValidate>
             <TextField
               variant="outlined"
               margin="normal"
               required
+              onChange={e => setEmail(e.target.value)}  
               fullWidth
               id="email"
               label="Email Address"
@@ -91,6 +116,7 @@ function Login() {
               margin="normal"
               required
               fullWidth
+              onChange={e => setPassword(e.target.value)}
               name="password"
               label="Password"
               type="password"
