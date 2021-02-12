@@ -33,7 +33,12 @@ const useStyles = makeStyles({
 
 const Watercrafts = (props) => {
     const classes = useStyles();
-    console.log(props.name)
+    const deleteWaterCraft = async (id) => {
+        const url = "http://localhost:8080/watercraft/deleteWaterCraft/" + id;
+        const response = await fetch(url, {
+            method: "DELETE"
+        });
+    }
     return (
         <>
             <Card className={classes.rootFirst}>
@@ -66,8 +71,8 @@ const Watercrafts = (props) => {
                 <CardActions>
                     <Button size="small" color="primary">
                         Edit
-                </Button>
-                    <Button size="small" color="primary">
+                    </Button>
+                    <Button size="small" color="primary" onClick={() => deleteWaterCraft(props.watercraftId)}>
                         Delete
                     </Button>
                 </CardActions>   

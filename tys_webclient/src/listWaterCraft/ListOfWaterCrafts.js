@@ -40,7 +40,7 @@ const ListOfWaterCrafts = () => {
                     console.log(singleCraft.watercraftId);
                     const {watercraftId, model } = singleCraft
                     return <Grid key={watercraftId }>
-                        <Paper className={classes.paper}><Watercrafts name={ model}/></Paper>
+                        <Paper className={classes.paper}><Watercrafts name={model} watercraftId={watercraftId}/></Paper>
                     </Grid> 
                 })
             }
