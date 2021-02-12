@@ -24,17 +24,16 @@ const useStyle = makeStyles(theme =>({
 }))
 
 const initialValues = {
-    BName: '',
-    year: '',
+    watercraftName: '',
+    makeYear: '',
     description: '',
     class: '',
     builder: '',
-    hull: '',
+    hullType: '',
     length: '',
     category: '',
     model: '',
-    fuel: '',
-    weight:''
+    fuelType: ''
 }
 
 
@@ -51,9 +50,27 @@ const handleInputChange = e => {
         [name]:value
     })
 }
-function buttonClicked(){
-    console.log(values);
-}
+const buttonClicked = (event) => {
+    return fetch("http://localhost:8080/watercraft/details",{
+        method: "POST",
+        headers:{
+            Accept: "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            ...values,
+        }),
+    })
+    .then((response) => response.json())
+    .then((json) =>{
+        alert("Watercraft successfully added!")
+        setValues(initialValues);
+    })
+    .catch((error)=>{
+        alert("It seems we have some issue! Please retry.")
+    });
+    
+};
 
 const yearOptions = [];
 const minOffset = 0;
@@ -73,8 +90,8 @@ for (let i = minOffset; i <= maxOffset; i++) {
                     <TextField
                     variant="outlined"
                     label="Boat Name"
-                    name="BName" 
-                    value={values.name}
+                    name="watercraftName" 
+                    value={values.watercraftName}
                     onChange = {handleInputChange}
                     />
                 </Grid>
@@ -118,14 +135,14 @@ for (let i = minOffset; i <= maxOffset; i++) {
                         <InputLabel>Hull Type</InputLabel>
                         <Select
                             label="Hull Type"
-                            name="hull"
-                            value={values.hull}
+                            name="hullType"
+                            value={values.hullType}
                             onChange={handleInputChange}
                         >
                         <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
-                        <MenuItem value='Aluminium'>Aluminium</MenuItem>
+                        <MenuItem value={"Aluminium"}>Aluminium</MenuItem>
                         <MenuItem value={"FerroCement"}>Ferro-Cement</MenuItem>
                         <MenuItem value={'FiberglassReinforced'}>Fiberglass Reinforced</MenuItem>
                         <MenuItem value={'Fiberglass/Composite'}>Fiberglass/Composite</MenuItem>
@@ -144,8 +161,8 @@ for (let i = minOffset; i <= maxOffset; i++) {
                         <InputLabel>Fuel Type</InputLabel>
                         <Select
                             label="Fuel Type"
-                            name="fuel"
-                            value={values.fuel}
+                            name="fuelType"
+                            value={values.fuelType}
                             onChange={handleInputChange}
                         >
                         <MenuItem value="">
@@ -210,6 +227,7 @@ for (let i = minOffset; i <= maxOffset; i++) {
                         label="Length"
                         id="outlined-start-adornment"
                         name='length'
+                        value={values.length}
                         onChange={handleInputChange}
                         className={clsx(classes.margin, classes.textField)}
                         InputProps={{
@@ -224,8 +242,8 @@ for (let i = minOffset; i <= maxOffset; i++) {
                         <InputLabel>Make Year</InputLabel>
                         <Select
                             label="Make Year"
-                            name="year"
-                            value={values.year}
+                            name="makeYear"
+                            value={values.makeYear}
                             onChange={handleInputChange}>
                             <MenuItem value="">
                                 <em>None</em>
