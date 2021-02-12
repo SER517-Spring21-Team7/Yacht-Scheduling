@@ -1,8 +1,11 @@
 package tys.tysWebserver.watercraftManager.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import javax.persistence.Column;
 
 @Entity
@@ -10,6 +13,7 @@ import javax.persistence.Column;
 public class AddWatercraftModel {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "watercraftid")
 	private int watercraftId;
 	@Column(name = "watercraftname")
