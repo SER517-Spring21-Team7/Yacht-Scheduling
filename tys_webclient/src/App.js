@@ -1,11 +1,14 @@
-import "./App.css";
-import MyAccount from "./components/MyAccount/MyAccount";
+import './App.css';
+import Toolbar from './components/Sidebar/ToolbarUI';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 
 function App() {
   return (
-    <div className="App">
-      <MyAccount />
-    </div>
+    <>
+      <Router>
+        <Toolbar/>
+      </Router>
+    </>
   );
 }
 
