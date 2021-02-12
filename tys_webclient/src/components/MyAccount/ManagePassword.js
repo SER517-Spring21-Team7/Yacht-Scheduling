@@ -21,6 +21,9 @@ const useStyle = makeStyles((theme) => ({
     },
     flexGrow: 1,
   },
+  buttonStyle: {
+    marginLeft: '38%'
+  },
   container: {
     backgroundColor: "#f5f5f5",
     width: "100%",
@@ -99,7 +102,7 @@ export default function ManagePassword() {
           </Grid>
         </Grid>
       </form>
-      <div>
+      <div className={classes.buttonStyle}>
         <Button
           variant="contained"
           color="primary"

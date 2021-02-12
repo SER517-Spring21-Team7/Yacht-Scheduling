@@ -19,11 +19,18 @@ const useStyle = makeStyles((theme) => ({
     width: "80%",
     marginTop: theme.spacing(0),
     marginLeft: theme.spacing(15),
+
     "& .MuiFormControl-root": {
       width: "80%",
       margin: theme.spacing(1.5),
     },
+    '& .MuiButtonBase-root':{
+      marginLeft: '38%',
+    },
     flexGrow: 1,
+  },
+  buttonStyle: {
+    marginLeft: '38%'
   },
   container: {
     backgroundColor: "#f5f5f5",
@@ -110,7 +117,7 @@ export default function MyProfile() {
   };
 
   return (
-    <div>
+    <>
       <form className={classes.root}>
         <Typography>
           <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
@@ -244,8 +251,8 @@ export default function MyProfile() {
           </Grid>
         </Grid>
       </form>
-      <div>
-        <Button
+      <div className={classes.buttonStyle}>
+      <Button
           variant="contained"
           color="primary"
           size="medium"
@@ -256,6 +263,6 @@ export default function MyProfile() {
           Save changes
         </Button>
       </div>
-    </div>
+    </>
   );
 }

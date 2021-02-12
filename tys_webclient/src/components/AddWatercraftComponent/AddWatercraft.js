@@ -1,12 +1,18 @@
 import React, {useState} from 'react'
-import { Grid, makeStyles, TextField, Select, InputLabel, MenuItem, FormControl, InputAdornment, Button } from '@material-ui/core'
+import { Grid, makeStyles, TextField, Select, InputLabel, MenuItem, FormControl, InputAdornment, Button, Typography, Box } from '@material-ui/core'
 import clsx from 'clsx';
 
 const useStyle = makeStyles(theme =>({
     root: {
+        width: "80%",
+        marginTop: theme.spacing(5),
+        marginLeft: theme.spacing(15),
         '& .MuiFormControl-root':{
-            width: '80%',
-            margin:theme.spacing(2)
+            width: '70%',
+            margin:theme.spacing(1.5)
+        },
+        '& .MuiButtonBase-root':{
+            marginLeft: '38%',
         }
     },
     margin: {
@@ -17,9 +23,9 @@ const useStyle = makeStyles(theme =>({
     },
     containerStyle:{
         backgroundColor: '#f5f5f5',
-        width: '90%',
-        marginLeft: '5%',
-        marginTop: theme.spacing(4)
+        width: '100%',
+        marginTop: theme.spacing(1),
+        marginLeft: theme.spacing(0),
     }
 }))
 
@@ -85,6 +91,11 @@ for (let i = minOffset; i <= maxOffset; i++) {
     return (
         <div>
           <form className={classes.root}>
+          <Typography>
+                <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
+                    Add Watercraft Details
+                </Box>
+            </Typography>
             <Grid container className={classes.containerStyle}>
                 <Grid item xs={6}>
                     <TextField
@@ -259,10 +270,9 @@ for (let i = minOffset; i <= maxOffset; i++) {
                 size="large" 
                 variant="contained" 
                 color="secondary"
-                style={{width:'20%', marginTop:'5%'}}
-                onClick={buttonClicked}
-                >
-                Add
+                style={{width:'20%', marginTop:'2.5%', paddingLeft: '0px'}}
+                onClick={buttonClicked}>
+                Add Details
             </Button>
           </form>
         </div>

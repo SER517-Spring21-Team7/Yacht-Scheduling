@@ -9,13 +9,13 @@
   .menu-bars {
     margin-left: 2rem;
     font-size: 2rem;
-    background: none;
+    /* background: none; */
   }
   
   .nav-menu {
     background-color: #5f6b6d;
-    width: 250px;
-    height: 100vh;
+    width: 20%;
+    height: 100%;
     display: flex;
     justify-content: center;
     position: fixed;
@@ -28,6 +28,7 @@
   .nav-menu.active {
     left: 0;
     transition: 350ms;
+
   }
   
   .nav-text {

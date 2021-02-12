@@ -25,9 +25,9 @@ function ToolbarUI() {
     const classes = useStyles();
 
     return (
-        <>
+        <div style={{position:'static'}}>
             <div className={classes.root}>
-                <AppBar position="static" style={{backgroundColor:'#8ad4eb'}}>
+                <AppBar position="fixed" style={{backgroundColor:'#8ad4eb'}} >
                     <Toolbar>
                         <Typography variant="h6" className={classes.title}>
                             The Yacht Solutions
@@ -51,7 +51,7 @@ function ToolbarUI() {
                     </ul>
                 </nav>
             </IconContext.Provider>
-        </>
+        </div>
     )
 }
 

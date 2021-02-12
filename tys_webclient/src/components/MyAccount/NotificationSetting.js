@@ -24,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
     width: "80%",
     marginTop: theme.spacing(0),
     marginLeft: theme.spacing(15),
+    
+  },
+  buttonStyle: {
+    marginLeft: '38%'
   },
   aSummery: {
     backgroundColor: "rgba(0, 0, 0, .03)",
@@ -341,18 +345,18 @@ export default function NotificationSetting() {
             />
           </AccordionDetails>
         </Accordion>
+        
       </div>
-      <div>
+      <div className={classes.buttonStyle}>
         <Button
           variant="contained"
           color="primary"
           size="medium"
           className={classes.button}
           startIcon={<SaveIcon />}
-          onClick={saveChanges}
-        >
+          onClick={saveChanges}>
           Save changes
-        </Button>
+        </Button>   
       </div>
     </div>
   );
