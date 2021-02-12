@@ -10,7 +10,7 @@ import javax.persistence.Column;
 
 @Entity
 @Table(name = "watercraftdetails")
-public class AddWatercraftModel {
+public class WatercraftModel {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,10 +43,10 @@ public class AddWatercraftModel {
 				+ ", length=" + length + ", category=" + category + ", model="
 				+ model + ", fuelType=" + fuelType + "]";
 	}
-	public AddWatercraftModel() {
+	public WatercraftModel() {
 		super();
 	}
-	public AddWatercraftModel(int watercraftId, String watercraftName, int makeYear, String description, String builder,
+	public WatercraftModel(int watercraftId, String watercraftName, int makeYear, String description, String builder,
 			String hullType, Float length, String category, String model, String fuelType) {
 		super();
 		this.watercraftId = watercraftId;
