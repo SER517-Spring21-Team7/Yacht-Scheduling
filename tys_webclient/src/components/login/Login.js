@@ -1,4 +1,5 @@
-import React, {useState } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -59,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%',
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -67,7 +68,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Login({ setToken }) {
+function Login({ setAccess }) {
+
+  const bcrypt = require("bcrypt");
   const classes = useStyles();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -75,12 +78,12 @@ function Login({ setToken }) {
   const handleSubmit = async e => {
     e.preventDefault();
     alert("clicked");
-    const token = await loginUser({
+    const access = await loginUser({
       email,
-      password
+      bcrypt.hashSync(password, saltRounds)
     });
-    alert(token);
-    setToken(token);
+    alert(access);
+    setAccess(access);
   }
 
   return (
@@ -157,5 +160,9 @@ function Login({ setToken }) {
     </Grid>
   );
 }
+
+Login.propTypes = {
+  setAccess: PropTypes.func.isRequired
+};
 
 export default Login;
