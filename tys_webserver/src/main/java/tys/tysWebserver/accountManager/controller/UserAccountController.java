@@ -4,6 +4,7 @@ package tys.tysWebserver.accountManager.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +16,7 @@ import tys.tysWebserver.accountManager.repository.UserNotificationSettingRepo;
 import tys.tysWebserver.accountManager.repository.UserProfileRepo;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserAccountController {
 	
 	@Autowired
@@ -37,7 +39,6 @@ public class UserAccountController {
 			throws ResourceNotFoundException {
 		UserNotificationSetting unsObject = UNSRepo.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("Notification setting not found for this id :: " + userId));
-
 		unsObject.setAddedToExpense(unsRequest.isAddedToExpense());
 		unsObject.setEventCancel(unsRequest.isEventCancel());
 		unsObject.setEventChange(unsRequest.isEventChange());
