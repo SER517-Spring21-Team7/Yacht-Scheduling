@@ -15,6 +15,17 @@ const useStyles = makeStyles({
     root: {  
         maxWidth: 345,
     },
+    rootFirst: {  
+        maxWidth: 345,
+        display: 'flex',
+    },
+    contentAlignment: {
+        alignItems: 'left',
+    },
+    details: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
     media: {  
         height: 100,
         width: 100,
@@ -25,32 +36,44 @@ const useStyles = makeStyles({
 const Watercrafts = () => {
     const classes = useStyles();
     return (
-        <Card className={classes.root}>
-            <CardActionArea >
-                <CardMedia
-                    className={classes.media}
-                    image="https://api1.nauticalmonkey.com/uploadedImages/ab68874bf7d941cb815e5ba28d0a7b07_small.jpg"
-                    title="Boat"
-                />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                        Lizard
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                        Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                        across all continents except Antarctica
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
-            <CardActions>
-                <Button size="small" color="primary">
-                    Edit
-            </Button>
-                <Button size="small" color="primary">
-                    Delete
+        <>
+            <Card className={classes.rootFirst}>
+                <div className={classes.details}>
+                    <CardActionArea>
+                        <CardMedia
+                            className={classes.media}
+                            image="https://api1.nauticalmonkey.com/uploadedImages/ab68874bf7d941cb815e5ba28d0a7b07_small.jpg"
+                            title="Boat"
+                        />
+                    </CardActionArea>
+                </div>
+                <div className={classes.details}>
+                    <CardActionArea>
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                NameOfBoat
+                            </Typography>
+                            <Typography variant="h6" color="textSecondary" component="p">
+                                List of users component
+                            </Typography>
+                            <Typography variant="h6" color="textSecondary" component="p">
+                                All scheduling Controls
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                </div>
+            </Card>
+           <Card className={classes.root}> 
+                <CardActions>
+                    <Button size="small" color="primary">
+                        Edit
                 </Button>
-            </CardActions>    
-        </Card>
+                    <Button size="small" color="primary">
+                        Delete
+                    </Button>
+                </CardActions>   
+            </Card>    
+        </>
     )
 }
 
