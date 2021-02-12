@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Login({ setAccess }) {
 
-  const bcrypt = require("bcrypt");
+  // const bcrypt = require("bcrypt");
   const classes = useStyles();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -80,7 +80,7 @@ function Login({ setAccess }) {
     alert("clicked");
     const access = await loginUser({
       email,
-      bcrypt.hashSync(password, saltRounds)
+      // bcrypt.hashSync(password, saltRounds)
     });
     alert(access);
     setAccess(access);

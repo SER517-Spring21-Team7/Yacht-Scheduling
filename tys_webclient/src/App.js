@@ -40,7 +40,7 @@ function App() {
         <Toolbar/>
         <Switch>
           <div className={classes.stylingComponents}>
-            <Route path='/listWatercraft' exact component={ListOfWaterCrafts} />
+            <Route path='/listwatercraft' exact component={ListOfWaterCrafts} />
             <Route path='/watercrafts' component={AddWatercraft} />
             <Route path='/MyAccount' component={MyAccount} />
           </div>
