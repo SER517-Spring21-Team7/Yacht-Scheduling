@@ -34,6 +34,10 @@ const useStyles = makeStyles({
 const Watercrafts = (props) => {
     const classes = useStyles();
     const deleteWaterCraft = async (id) => {
+        var listOfWatercrafts = props.parentState;
+
+        listOfWatercrafts = listOfWatercrafts.filter(item => item.watercraftId !== id)
+        props.parentState1(listOfWatercrafts);
         const url = "http://localhost:8080/watercraft/deleteWaterCraft/" + id;
         const response = await fetch(url, {
             method: "DELETE"
