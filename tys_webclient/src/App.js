@@ -1,24 +1,52 @@
-import logo from './logo.svg';
 import './App.css';
+import Watercrafts from './listWaterCraft/Watercrafts';
+import ListOfWaterCrafts from './listWaterCraft/ListOfWaterCrafts';
+import Login from './components/login/Login.js';
+import Toolbar from './components/Sidebar/ToolbarUI';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import {makeStyles} from '@material-ui/core'
+import AddWatercraft from './components/AddWatercraftComponent/AddWatercraft';
+import MyAccount from './components/MyAccount/MyAccount';
 
+
+const useStyle = makeStyles(theme =>({
+  stylingComponents: {
+          width: '80%',
+          marginLeft: '20%',
+          marginTop: '4.5%'
+        }
+}))
+
+function setAccess(userAccess) {
+  sessionStorage.setItem('access', JSON.stringify(userAccess));
+}
+  
+function getAccess() {
+  const accessString = sessionStorage.getItem('access');
+  const userAccess = JSON.parse(accessString);
+  return userAccess?.access
+}
+  
 function App() {
+  //const token = getAccess();
+  
+  //if(!token) {
+  //  return <Login setAccess={setAccess} />
+  //}
+  const classes = useStyle();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+        <Toolbar/>
+        <Switch>
+          <div className={classes.stylingComponents}>
+            <Route path='/listWatercraft' exact component={ListOfWaterCrafts} />
+            <Route path='/watercrafts' component={AddWatercraft} />
+            <Route path='/MyAccount' component={MyAccount} />
+          </div>
+        </Switch>
+      </Router>
+    </>
   );
 }
 

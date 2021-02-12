@@ -18,6 +18,7 @@ import tys.tysWebserver.watercraftManager.model.WatercraftModel;
 import tys.tysWebserver.watercraftManager.repository.AddWatercraftRepo;
 
 @RestController
+@CrossOrigin("http://localhost:3000")
 @RequestMapping("/watercraft")
 
 public class AddWatercraftController {
