@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect} from 'react'
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -16,22 +16,34 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ListOfWaterCrafts = () => {
+
+    const [watercrafts, setWatercrafts] = useState([]);
+    const url = "http://localhost:8080/watercraft/getAllWaterCraft"
+    const getWaterCraft = async () => { 
+        const response = await fetch(url, {
+            method: "GET"
+        });
+        const watercrafts = await response.json();
+        console.log(watercrafts);
+        setWatercrafts(watercrafts);
+    }
+    useEffect(() => { 
+        getWaterCraft();
+    },[])
+    // console.log(craft);
     const classes = useStyles();
     return (
         <div className={classes.root}>
             <Grid container direction="row" justify="space-between" alignItems="center">
-                <Grid>
-                    <Paper className={classes.paper}><Watercrafts/></Paper>
-                </Grid> 
-                <Grid>
-                    <Paper className={classes.paper}><Watercrafts/></Paper>
-                </Grid> 
-                <Grid>
-                    <Paper className={classes.paper}><Watercrafts/></Paper>
-                </Grid> 
-                <Grid>
-                    <Paper className={classes.paper}><Watercrafts/></Paper>
-                </Grid> 
+            {
+                watercrafts.map((singleCraft) => {
+                    console.log(singleCraft.watercraftId);
+                    const {watercraftId, model } = singleCraft
+                    return <Grid key={watercraftId }>
+                        <Paper className={classes.paper}><Watercrafts name={ model}/></Paper>
+                    </Grid> 
+                })
+            }
             </Grid>
         </div>
     )

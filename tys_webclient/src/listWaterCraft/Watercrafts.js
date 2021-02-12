@@ -33,8 +33,9 @@ const useStyles = makeStyles({
 });
 
 
-const Watercrafts = () => {
+const Watercrafts = (props) => {
     const classes = useStyles();
+    console.log(props.name)
     return (
         <>
             <Card className={classes.rootFirst}>
@@ -51,7 +52,7 @@ const Watercrafts = () => {
                     <CardActionArea>
                         <CardContent>
                             <Typography gutterBottom variant="h5" component="h2">
-                                NameOfBoat
+                                {props.name}
                             </Typography>
                             <Typography variant="h6" color="textSecondary" component="p">
                                 List of users component
