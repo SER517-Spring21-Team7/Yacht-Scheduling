@@ -1,11 +1,12 @@
 import './App.css';
+import Watercrafts from './listWaterCraft/Watercrafts';
+import ListOfWaterCrafts from './listWaterCraft/ListOfWaterCrafts';
 import Login from './components/login/Login.js';
 import Toolbar from './components/Sidebar/ToolbarUI';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {makeStyles} from '@material-ui/core'
 import AddWatercraft from './components/AddWatercraftComponent/AddWatercraft';
 import MyAccount from './components/MyAccount/MyAccount';
-
 
 
 const useStyle = makeStyles(theme =>({
@@ -27,11 +28,11 @@ function getAccess() {
 }
   
 function App() {
-  const token = getAccess();
+  //const token = getAccess();
   
-  if(!token) {
-    return <Login setAccess={setAccess} />
-  }
+  //if(!token) {
+  //  return <Login setAccess={setAccess} />
+  //}
   const classes = useStyle();
   return (
     <>
@@ -39,7 +40,7 @@ function App() {
         <Toolbar/>
         <Switch>
           <div className={classes.stylingComponents}>
-            <Route path='/' exact/>
+            <Route path='/listWatercraft' exact component={ListOfWaterCrafts} />
             <Route path='/watercrafts' component={AddWatercraft} />
             <Route path='/MyAccount' component={MyAccount} />
           </div>
