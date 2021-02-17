@@ -7,6 +7,7 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {makeStyles} from '@material-ui/core'
 import AddWatercraft from './components/AddWatercraftComponent/AddWatercraft';
 import MyAccount from './components/MyAccount/MyAccount';
+import AddMember from './components/AddMember/AddMember';
 
 
 const useStyle = makeStyles(theme =>({
@@ -42,6 +43,7 @@ function App() {
           <div className={classes.stylingComponents}>
             <Route path='/listwatercraft' exact component={ListOfWaterCrafts} />
             <Route path='/watercrafts' component={AddWatercraft} />
+            <Route path='/member' component={AddMember}/>
             <Route path='/MyAccount' component={MyAccount} />
           </div>
         </Switch>

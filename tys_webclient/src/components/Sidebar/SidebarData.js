@@ -18,6 +18,12 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
+    title: 'Manage Member',
+    path: '/member',
+    icon: <FaIcons.FaRegUserCircle />,
+    cName: 'nav-text'
+  },
+  {
     title: 'Service Request',
     path: '/service',
     icon: <FaIcons.FaTools />,
