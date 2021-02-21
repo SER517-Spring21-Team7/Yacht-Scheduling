@@ -6,55 +6,55 @@ import java.util.TimeZone;
 import javax.persistence.*;
 
 @Entity
-@Table(name="schedulersetting")
+@Table(name = "schedulersetting")
 public class SchedulerSetting {
-	
+
 	@Id
-	@Column(name="watercraftid")
+	@Column(name = "watercraftid")
 	private int watercraftId;
-	//TODO private List<String> premiumDays; // Is List really needed? can we work around?
+	// TODO private List<String> premiumDays; // Is List really needed? can we work
+	// around?
 	@ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "timeslot", joinColumns = @JoinColumn(name = "watercraftid"))
+	@CollectionTable(name = "timeslot", joinColumns = @JoinColumn(name = "watercraftid"))
 	private List<TimeSlot> timeSlot = new ArrayList<>();
-	@Column(name="watercraftid")
-	private boolean blockAllShareOneSlot;
-	@Column(name="watercraftid")
+	@Column(name = "blockalloneslotbooking")
+	private boolean blockAllOneSlotBooking;
+	@Column(name = "maxcontinuousbookingdays")
 	private int maxContinuousBookingDays;
-	@Column(name="watercraftid")
+	@Column(name = "freebookingafterhours")
 	private int freeBookingAfterHours;
-	@Column(name="watercraftid")
+	@Column(name = "confirmationbeforehours")
 	private int confirmationBeforeHours;
-	@Column(name="watercraftid")
+	@Column(name = "noresponsecancelathours")
 	private int noResponseCancelAtHours;
-	@Column(name="watercraftid")
+	@Column(name = "weathercountry")
 	private String weatherCountry;
-	@Column(name="watercraftid")
+	@Column(name = "weathercity")
 	private String weatherCity;
-	@Column(name="watercraftid")
+	@Column(name = "weatherzipcode")
 	private String weatherZipCode;
-	@Column(name="watercraftid")
+	@Column(name = "holidaycalname")
 	private String holidayCalName;
-	@Column(name="watercraftid")
+	@Column(name = "maxholidaybookingdays")
 	private int maxHolidayBookingDays;
-	@Column(name="watercraftid")
+	@Column(name = "timezone")
 	private TimeZone timeZone;
-	@Column(name="watercraftid")
+	@Column(name = "allowcarryborrow")
 	private boolean allowCarryBorrow;
-	@Column(name="watercraftid")
+	@Column(name = "ignoresharepercent")
 	private boolean ignoreSharePercent;
-	@Column(name="watercraftid")
+	@Column(name = "limitadvbookingmonths")
 	private int limitAdvBookingMonths;
-	// TODO few fields about limiting reservation is pending
-	
-	
+	// TODO few fields about limiting reservation per day is pending
+
 	public SchedulerSetting() {
 		super();
 	}
-	
+
 	@Override
 	public String toString() {
 		return "SchedulerSetting [watercraftId=" + watercraftId + ", timeSlot=" + timeSlot + ", blockAllShareOneSlot="
-				+ blockAllShareOneSlot + ", maxContinuousBookingDays=" + maxContinuousBookingDays
+				+ blockAllOneSlotBooking + ", maxContinuousBookingDays=" + maxContinuousBookingDays
 				+ ", freeBookingAfterHours=" + freeBookingAfterHours + ", confirmationBeforeHours="
 				+ confirmationBeforeHours + ", noResponseCancelAtHours=" + noResponseCancelAtHours + ", weatherCountry="
 				+ weatherCountry + ", weatherCity=" + weatherCity + ", weatherZipCode=" + weatherZipCode
@@ -71,7 +71,7 @@ public class SchedulerSetting {
 		super();
 		this.watercraftId = watercraftId;
 		this.timeSlot = timeSlot;
-		this.blockAllShareOneSlot = blockAllShareOneSlot;
+		this.blockAllOneSlotBooking = blockAllShareOneSlot;
 		this.maxContinuousBookingDays = maxContinuousBookingDays;
 		this.freeBookingAfterHours = freeBookingAfterHours;
 		this.confirmationBeforeHours = confirmationBeforeHours;
@@ -86,103 +86,133 @@ public class SchedulerSetting {
 		this.ignoreSharePercent = ignoreSharePercent;
 		this.limitAdvBookingMonths = limitAdvBookingMonths;
 	}
-	
+
 	public int getWatercraftId() {
 		return watercraftId;
 	}
+
 	public void setWatercraftId(int watercraftId) {
 		this.watercraftId = watercraftId;
 	}
+
 	public List<TimeSlot> getTimeSlot() {
 		return timeSlot;
 	}
+
 	public void setTimeSlot(List<TimeSlot> timeSlot) {
 		this.timeSlot = timeSlot;
 	}
+
 	public boolean isBlockAllShareOneSlot() {
-		return blockAllShareOneSlot;
+		return blockAllOneSlotBooking;
 	}
+
 	public void setBlockAllShareOneSlot(boolean blockAllShareOneSlot) {
-		this.blockAllShareOneSlot = blockAllShareOneSlot;
+		this.blockAllOneSlotBooking = blockAllShareOneSlot;
 	}
+
 	public int getMaxContinuousBookingDays() {
 		return maxContinuousBookingDays;
 	}
+
 	public void setMaxContinuousBookingDays(int maxContinuousBookingDays) {
 		this.maxContinuousBookingDays = maxContinuousBookingDays;
 	}
+
 	public int getFreeBookingAfterHours() {
 		return freeBookingAfterHours;
 	}
+
 	public void setFreeBookingAfterHours(int freeBookingAfterHours) {
 		this.freeBookingAfterHours = freeBookingAfterHours;
 	}
+
 	public int getConfirmationBeforeHours() {
 		return confirmationBeforeHours;
 	}
+
 	public void setConfirmationBeforeHours(int confirmationBeforeHours) {
 		this.confirmationBeforeHours = confirmationBeforeHours;
 	}
+
 	public int getNoResponseCancelAtHours() {
 		return noResponseCancelAtHours;
 	}
+
 	public void setNoResponseCancelAtHours(int noResponseCancelAtHours) {
 		this.noResponseCancelAtHours = noResponseCancelAtHours;
 	}
+
 	public String getWeatherCountry() {
 		return weatherCountry;
 	}
+
 	public void setWeatherCountry(String weatherCountry) {
 		this.weatherCountry = weatherCountry;
 	}
+
 	public String getWeatherCity() {
 		return weatherCity;
 	}
+
 	public void setWeatherCity(String weatherCity) {
 		this.weatherCity = weatherCity;
 	}
+
 	public String getWeatherZipCode() {
 		return weatherZipCode;
 	}
+
 	public void setWeatherZipCode(String weatherZipCode) {
 		this.weatherZipCode = weatherZipCode;
 	}
+
 	public String getHolidayCalName() {
 		return holidayCalName;
 	}
+
 	public void setHolidayCalName(String holidayCalName) {
 		this.holidayCalName = holidayCalName;
 	}
+
 	public int getMaxHolidayBookingDays() {
 		return maxHolidayBookingDays;
 	}
+
 	public void setMaxHolidayBookingDays(int maxHolidayBookingDays) {
 		this.maxHolidayBookingDays = maxHolidayBookingDays;
 	}
+
 	public TimeZone getTimeZone() {
 		return timeZone;
 	}
+
 	public void setTimeZone(TimeZone timeZone) {
 		this.timeZone = timeZone;
 	}
+
 	public boolean isAllowCarryBorrow() {
 		return allowCarryBorrow;
 	}
+
 	public void setAllowCarryBorrow(boolean allowCarryBorrow) {
 		this.allowCarryBorrow = allowCarryBorrow;
 	}
+
 	public boolean isIgnoreSharePercent() {
 		return ignoreSharePercent;
 	}
+
 	public void setIgnoreSharePercent(boolean ignoreSharePercent) {
 		this.ignoreSharePercent = ignoreSharePercent;
 	}
+
 	public int getLimitAdvBookingMonths() {
 		return limitAdvBookingMonths;
 	}
+
 	public void setLimitAdvBookingMonths(int limitAdvBookingMonths) {
 		this.limitAdvBookingMonths = limitAdvBookingMonths;
 	}
-	
-	
+
 }
