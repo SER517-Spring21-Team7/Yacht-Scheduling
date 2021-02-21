@@ -31,9 +31,9 @@ function getAccess() {
 function App() {
   //const token = getAccess();
   
-  //if(!token) {
+  // if(!token) {
   //  return <Login setAccess={setAccess} />
-  //}
+  // }
   const classes = useStyle();
   return (
     <>

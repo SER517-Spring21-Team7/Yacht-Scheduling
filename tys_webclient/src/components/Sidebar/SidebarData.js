@@ -20,7 +20,7 @@ export const SidebarData = [
   {
     title: 'Manage Member',
     path: '/member',
-    icon: <FaIcons.FaRegUserCircle />,
+    icon: <FaIcons.FaUsers/>,
     cName: 'nav-text'
   },
   {
