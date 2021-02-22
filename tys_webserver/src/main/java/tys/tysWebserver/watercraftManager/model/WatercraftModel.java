@@ -34,7 +34,15 @@ public class WatercraftModel {
 	private String model;
 	@Column(name = "fueltype")
 	private String fuelType;
+	@Column(name = "boatclass")
+	private String boatClass;
 
+	public String getBoatClass() {
+		return boatClass;
+	}
+	public void setBoatClass(String boatClass) {
+		this.boatClass = boatClass;
+	}
 	@Override
 	public String toString() {
 		return "watercraftdetails [watercraftid=" + watercraftId + ", watercraftname=" +watercraftName + ", makeyear="
