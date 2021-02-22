@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
-import { Grid, makeStyles, TextField, Select, InputLabel, MenuItem, FormControl, InputAdornment, Button, Typography, Box } from '@material-ui/core'
+import React, { useState } from 'react';
+import { useHistory } from "react-router-dom";
+import { Grid, makeStyles, TextField, Select, InputLabel, MenuItem, FormControl, InputAdornment, Button, Typography, Box } from '@material-ui/core';
 import clsx from 'clsx';
 
 const useStyle = makeStyles(theme =>({
@@ -33,7 +34,7 @@ const initialValues = {
     watercraftName: '',
     makeYear: '',
     description: '',
-    class: '',
+    boatClass: '',
     builder: '',
     hullType: '',
     length: '',
@@ -43,9 +44,12 @@ const initialValues = {
 }
 
 
-export default function AddWatercraft() {
+export default function AddWatercraft(props) {
 
-const [values, setValues] = useState(initialValues);
+console.log(props.data);
+const [values, setValues] = useState(props.data === null ? initialValues : props.data);
+console.log(values);
+const history = useHistory();
 
 const classes = useStyle();
 
@@ -77,6 +81,25 @@ const buttonClicked = (event) => {
     });
     
 };
+const handleRedirectToHomePage = (id) => {
+    history.push('/listwatercraft');
+};
+const updateWatercraftById = async () => { 
+    const updateUrl = 'http://localhost:8080/watercraft/updateWatercraftById/'+props.data.watercraftId;
+    const response = await fetch(updateUrl, {
+        method: "POST",
+        headers:{
+            Accept: "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            ...values,
+        }),
+    });
+    const confirmation = await response.json();
+    handleRedirectToHomePage();
+};
+
 
 const yearOptions = [];
 const minOffset = 0;
@@ -128,8 +151,8 @@ for (let i = minOffset; i <= maxOffset; i++) {
                         <InputLabel>Class</InputLabel>
                         <Select
                             label="Class"
-                            name="class"
-                            value={values.class}
+                            name="boatClass"
+                            value={values.boatClass}
                             onChange={handleInputChange}
                         >
                         <MenuItem value="">
@@ -266,14 +289,23 @@ for (let i = minOffset; i <= maxOffset; i++) {
                     </FormControl>
                 </Grid>
             </Grid>
-            <Button 
+            {props.data === null && <Button 
                 size="large" 
                 variant="contained" 
                 color="secondary"
                 style={{width:'20%', marginTop:'2.5%', paddingLeft: '0px'}}
                 onClick={buttonClicked}>
                 Add Details
-            </Button>
+            </Button>}
+            {props.data !== null && <Button 
+                size="large" 
+                variant="contained" 
+                color="secondary"
+                style={{width:'20%', marginTop:'2.5%', paddingLeft: '0px'}}
+                    onClick={() => { updateWatercraftById() }}>
+                Update Details
+            </Button>}
+            
           </form>
         </div>
     )
