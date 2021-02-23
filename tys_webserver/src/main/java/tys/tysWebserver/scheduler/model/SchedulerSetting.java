@@ -49,9 +49,13 @@ public class SchedulerSetting {
 	@Column(name = "limitadvbookingmonths")
 	private int limitAdvBookingMonths;
 	// TODO few fields about limiting reservation per day is pending
+	@Column(name = "reservationlimit")
 	private int reservationLimit;
+	@Column(name = "reservationlimitper")
 	private int reservationLimitPer;
+	@Column(name = "reservationlimitunit")
 	private String reservationLimitUnit;
+	@Column(name = "reservationlimitinclude")
 	private String reservationLimitInclude;
 
 	public SchedulerSetting() {
