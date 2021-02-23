@@ -1,9 +1,10 @@
 import React, {useState} from 'react'
 import 'date-fns';
-import { Typography, Grid, makeStyles, Box, TextField, FormControlLabel, Checkbox, Input, Button } from '@material-ui/core'
+import { Typography, Grid, makeStyles, Box, TextField, FormControlLabel, FormControl, FormLabel, RadioGroup, Radio, Button } from '@material-ui/core'
 import { MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import ColorPicker from "material-ui-color-picker";
+import SearchMember from './SearchMember'
 
 
 const initialValues = {
@@ -18,6 +19,7 @@ const initialValues = {
     standardshare: '',
     freebookings: '',
     schedulercolor: '',
+    access: '',
 
 }
 const useStyle = makeStyles(theme =>({
@@ -38,7 +40,8 @@ const useStyle = makeStyles(theme =>({
         width: '100%',
         marginTop: theme.spacing(1),
         marginLeft: theme.spacing(0),
-    }
+    },
+    
 }))
 
 export default function AddMember() {
@@ -84,17 +87,20 @@ export default function AddMember() {
     return (
         <>
         <form className={classes.root}>
-            <Typography>
+        
+            <Typography style={{margin:'5%'}}>
                 <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
-                    Member Information
+                    <h2>Search Existing Member or Enter Details</h2>
                 </Box>
             </Typography>
+            <div><SearchMember/></div>
             <Grid container className={classes.containerStyle}>
                 <Grid item xs={12} sm={6}>
                     <TextField
                     variant="outlined"
                     required
                     id="email"
+                    type="text"
                     name="email"
                     label="Email"
                     value={values.email}
@@ -103,7 +109,7 @@ export default function AddMember() {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    {/* For spacing only */}
+                    {/* For wqatercraft dropdown */}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -133,6 +139,7 @@ export default function AddMember() {
                     <TextField
                     variant="outlined"
                     required
+                    type="password"
                     id="password"
                     name="password"
                     label="Password"
@@ -232,26 +239,27 @@ export default function AddMember() {
                         </Grid>
                     </MuiPickersUtilsProvider>
                 </Grid>
-                <Grid item xs={12} sm={3}>
-                    <Typography>Scheduler Color</Typography>
+                <Grid item xs={12} sm={4}>
+                    <div style={{display:'flex'}}>
+                        <label style={{padding:'5%', display:'inline'}}>Color</label>
                         <ColorPicker
                             name="color"
-                            variant="outlined"
-                            defaultValue="#000"
+                            defaultValue="Select Scheduler Color"
                             style={{backgroundColor:values.schedulercolor, borderRadius:'5px'}}
                             onChange={handleColorChange}
                             value={values.schedulercolor}
                         />
-                    </Grid>
-                <Grid item xs={12}>
-                    <FormControlLabel
-                        control={<Checkbox color="secondary" name="member" value="yes" />}
-                        label="Member"
-                    />
-                    <FormControlLabel
-                        control={<Checkbox color="secondary" name="admin" value="yes" />}
-                        label="Admin"
-                    />
+                    </div>
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <FormControl component="fieldset">
+                        <RadioGroup aria-label="access" name="access" value={values.access} onChange={handleInputChange} row>
+                            <FormControlLabel value="Admin" control={<Radio />} label="Admin" />
+                            <FormControlLabel value="Member" control={<Radio />} label="Member" checked/>
+                        </RadioGroup>
+                    </FormControl>
                 </Grid>
             </Grid>  
             <Button 

@@ -8,6 +8,7 @@ import {makeStyles} from '@material-ui/core'
 import AddWatercraft from './components/AddWatercraftComponent/AddWatercraft';
 import MyAccount from './components/MyAccount/MyAccount';
 import AddMember from './components/AddMember/AddMember';
+import SearchMember from './components/AddMember/SearchMember'
 
 
 const useStyle = makeStyles(theme =>({

@@ -12,7 +12,7 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
-    title: 'Watercrafts',
+    title: 'Watercraft',
     path: '/watercrafts',
     icon: <GiIcons.GiSailboat />,
     cName: 'nav-text'
