@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.TimeZone;
 import javax.persistence.*;
 
+import tys.tysWebserver.StringListConverter;
+
 @Entity
 @Table(name = "schedulersetting")
 public class SchedulerSetting {
@@ -12,8 +14,9 @@ public class SchedulerSetting {
 	@Id
 	@Column(name = "watercraftid")
 	private int watercraftId;
-	// TODO private List<String> premiumDays; // Is List really needed? can we work
-	// around?
+	@Column(name = "premiumdays")
+	@Convert(converter = StringListConverter.class)
+	private List<String> premiumDays;
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "timeslot", joinColumns = @JoinColumn(name = "watercraftid"))
 	private List<TimeSlot> timeSlot = new ArrayList<>();
@@ -53,23 +56,25 @@ public class SchedulerSetting {
 
 	@Override
 	public String toString() {
-		return "SchedulerSetting [watercraftId=" + watercraftId + ", timeSlot=" + timeSlot + ", blockAllShareOneSlot="
-				+ blockAllOneSlotBooking + ", maxContinuousBookingDays=" + maxContinuousBookingDays
-				+ ", freeBookingAfterHours=" + freeBookingAfterHours + ", confirmationBeforeHours="
-				+ confirmationBeforeHours + ", noResponseCancelAtHours=" + noResponseCancelAtHours + ", weatherCountry="
-				+ weatherCountry + ", weatherCity=" + weatherCity + ", weatherZipCode=" + weatherZipCode
-				+ ", holidayCalName=" + holidayCalName + ", maxHolidayBookingDays=" + maxHolidayBookingDays
-				+ ", timeZone=" + timeZone + ", allowCarryBorrow=" + allowCarryBorrow + ", ignoreSharePercent="
-				+ ignoreSharePercent + ", limitAdvBookingMonths=" + limitAdvBookingMonths + "]";
+		return "SchedulerSetting [watercraftId=" + watercraftId + ", premiumDays=" + premiumDays + ", timeSlot="
+				+ timeSlot + ", blockAllShareOneSlot=" + blockAllOneSlotBooking + ", maxContinuousBookingDays="
+				+ maxContinuousBookingDays + ", freeBookingAfterHours=" + freeBookingAfterHours
+				+ ", confirmationBeforeHours=" + confirmationBeforeHours + ", noResponseCancelAtHours="
+				+ noResponseCancelAtHours + ", weatherCountry=" + weatherCountry + ", weatherCity=" + weatherCity
+				+ ", weatherZipCode=" + weatherZipCode + ", holidayCalName=" + holidayCalName
+				+ ", maxHolidayBookingDays=" + maxHolidayBookingDays + ", timeZone=" + timeZone + ", allowCarryBorrow="
+				+ allowCarryBorrow + ", ignoreSharePercent=" + ignoreSharePercent + ", limitAdvBookingMonths="
+				+ limitAdvBookingMonths + "]";
 	}
 
-	public SchedulerSetting(int watercraftId, List<TimeSlot> timeSlot, boolean blockAllShareOneSlot,
-			int maxContinuousBookingDays, int freeBookingAfterHours, int confirmationBeforeHours,
-			int noResponseCancelAtHours, String weatherCountry, String weatherCity, String weatherZipCode,
-			String holidayCalName, int maxHolidayBookingDays, TimeZone timeZone, boolean allowCarryBorrow,
-			boolean ignoreSharePercent, int limitAdvBookingMonths) {
+	public SchedulerSetting(int watercraftId, List<String> premiumDays, List<TimeSlot> timeSlot,
+			boolean blockAllShareOneSlot, int maxContinuousBookingDays, int freeBookingAfterHours,
+			int confirmationBeforeHours, int noResponseCancelAtHours, String weatherCountry, String weatherCity,
+			String weatherZipCode, String holidayCalName, int maxHolidayBookingDays, TimeZone timeZone,
+			boolean allowCarryBorrow, boolean ignoreSharePercent, int limitAdvBookingMonths) {
 		super();
 		this.watercraftId = watercraftId;
+		this.premiumDays = premiumDays;
 		this.timeSlot = timeSlot;
 		this.blockAllOneSlotBooking = blockAllShareOneSlot;
 		this.maxContinuousBookingDays = maxContinuousBookingDays;
@@ -93,6 +98,14 @@ public class SchedulerSetting {
 
 	public void setWatercraftId(int watercraftId) {
 		this.watercraftId = watercraftId;
+	}
+
+	public List<String> getPremiumDays() {
+		return premiumDays;
+	}
+
+	public void setPremiumDays(List<String> premiumDays) {
+		this.premiumDays = premiumDays;
 	}
 
 	public List<TimeSlot> getTimeSlot() {

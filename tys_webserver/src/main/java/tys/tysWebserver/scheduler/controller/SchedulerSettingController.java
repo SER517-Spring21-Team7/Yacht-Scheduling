@@ -35,6 +35,7 @@ public class SchedulerSettingController {
 		System.out.println("Request Object is :: " + ssRequest);
 		SchedulerSetting ssObject = ssr.findById(watercraftId).orElseThrow(
 				() -> new ResourceNotFoundException("Scheduler setting not found for this id :: " + watercraftId));
+		ssObject.setPremiumDays(ssRequest.getPremiumDays());
 		ssObject.setTimeSlot(ssRequest.getTimeSlot());
 		ssObject.setBlockAllShareOneSlot(ssRequest.isBlockAllShareOneSlot());
 		ssObject.setMaxContinuousBookingDays(ssRequest.getMaxContinuousBookingDays());
