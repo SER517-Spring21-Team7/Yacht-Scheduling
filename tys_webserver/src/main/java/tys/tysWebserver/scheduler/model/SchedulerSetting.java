@@ -49,6 +49,10 @@ public class SchedulerSetting {
 	@Column(name = "limitadvbookingmonths")
 	private int limitAdvBookingMonths;
 	// TODO few fields about limiting reservation per day is pending
+	private int reservationLimit;
+	private int reservationLimitPer;
+	private String reservationLimitUnit;
+	private String reservationLimitInclude;
 
 	public SchedulerSetting() {
 		super();
@@ -57,26 +61,29 @@ public class SchedulerSetting {
 	@Override
 	public String toString() {
 		return "SchedulerSetting [watercraftId=" + watercraftId + ", premiumDays=" + premiumDays + ", timeSlot="
-				+ timeSlot + ", blockAllShareOneSlot=" + blockAllOneSlotBooking + ", maxContinuousBookingDays="
+				+ timeSlot + ", blockAllOneSlotBooking=" + blockAllOneSlotBooking + ", maxContinuousBookingDays="
 				+ maxContinuousBookingDays + ", freeBookingAfterHours=" + freeBookingAfterHours
 				+ ", confirmationBeforeHours=" + confirmationBeforeHours + ", noResponseCancelAtHours="
 				+ noResponseCancelAtHours + ", weatherCountry=" + weatherCountry + ", weatherCity=" + weatherCity
 				+ ", weatherZipCode=" + weatherZipCode + ", holidayCalName=" + holidayCalName
 				+ ", maxHolidayBookingDays=" + maxHolidayBookingDays + ", timeZone=" + timeZone + ", allowCarryBorrow="
 				+ allowCarryBorrow + ", ignoreSharePercent=" + ignoreSharePercent + ", limitAdvBookingMonths="
-				+ limitAdvBookingMonths + "]";
+				+ limitAdvBookingMonths + ", reservationLimit=" + reservationLimit + ", reservationLimitPer="
+				+ reservationLimitPer + ", reservationLimitUnit=" + reservationLimitUnit + ", reservationLimitInclude="
+				+ reservationLimitInclude + "]";
 	}
 
 	public SchedulerSetting(int watercraftId, List<String> premiumDays, List<TimeSlot> timeSlot,
-			boolean blockAllShareOneSlot, int maxContinuousBookingDays, int freeBookingAfterHours,
+			boolean blockAllOneSlotBooking, int maxContinuousBookingDays, int freeBookingAfterHours,
 			int confirmationBeforeHours, int noResponseCancelAtHours, String weatherCountry, String weatherCity,
 			String weatherZipCode, String holidayCalName, int maxHolidayBookingDays, TimeZone timeZone,
-			boolean allowCarryBorrow, boolean ignoreSharePercent, int limitAdvBookingMonths) {
+			boolean allowCarryBorrow, boolean ignoreSharePercent, int limitAdvBookingMonths, int reservationLimit,
+			int reservationLimitPer, String reservationLimitUnit, String reservationLimitInclude) {
 		super();
 		this.watercraftId = watercraftId;
 		this.premiumDays = premiumDays;
 		this.timeSlot = timeSlot;
-		this.blockAllOneSlotBooking = blockAllShareOneSlot;
+		this.blockAllOneSlotBooking = blockAllOneSlotBooking;
 		this.maxContinuousBookingDays = maxContinuousBookingDays;
 		this.freeBookingAfterHours = freeBookingAfterHours;
 		this.confirmationBeforeHours = confirmationBeforeHours;
@@ -90,6 +97,10 @@ public class SchedulerSetting {
 		this.allowCarryBorrow = allowCarryBorrow;
 		this.ignoreSharePercent = ignoreSharePercent;
 		this.limitAdvBookingMonths = limitAdvBookingMonths;
+		this.reservationLimit = reservationLimit;
+		this.reservationLimitPer = reservationLimitPer;
+		this.reservationLimitUnit = reservationLimitUnit;
+		this.reservationLimitInclude = reservationLimitInclude;
 	}
 
 	public int getWatercraftId() {
@@ -116,12 +127,12 @@ public class SchedulerSetting {
 		this.timeSlot = timeSlot;
 	}
 
-	public boolean isBlockAllShareOneSlot() {
+	public boolean isBlockAllOneSlotBooking() {
 		return blockAllOneSlotBooking;
 	}
 
-	public void setBlockAllShareOneSlot(boolean blockAllShareOneSlot) {
-		this.blockAllOneSlotBooking = blockAllShareOneSlot;
+	public void setBlockAllOneSlotBooking(boolean blockAllOneSlotBooking) {
+		this.blockAllOneSlotBooking = blockAllOneSlotBooking;
 	}
 
 	public int getMaxContinuousBookingDays() {
@@ -226,6 +237,38 @@ public class SchedulerSetting {
 
 	public void setLimitAdvBookingMonths(int limitAdvBookingMonths) {
 		this.limitAdvBookingMonths = limitAdvBookingMonths;
+	}
+
+	public int getReservationLimit() {
+		return reservationLimit;
+	}
+
+	public void setReservationLimit(int limitReservation) {
+		this.reservationLimit = limitReservation;
+	}
+
+	public int getReservationLimitPer() {
+		return reservationLimitPer;
+	}
+
+	public void setReservationLimitPer(int limitReservationTo) {
+		this.reservationLimitPer = limitReservationTo;
+	}
+
+	public String getReservationLimitUnit() {
+		return reservationLimitUnit;
+	}
+
+	public void setReservationLimitUnit(String limitReservationUnit) {
+		this.reservationLimitUnit = limitReservationUnit;
+	}
+
+	public String getReservationLimitInclude() {
+		return reservationLimitInclude;
+	}
+
+	public void setReservationLimitInclude(String limitReservationInclude) {
+		this.reservationLimitInclude = limitReservationInclude;
 	}
 
 }

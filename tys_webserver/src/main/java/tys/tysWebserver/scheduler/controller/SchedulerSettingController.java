@@ -37,7 +37,7 @@ public class SchedulerSettingController {
 				() -> new ResourceNotFoundException("Scheduler setting not found for this id :: " + watercraftId));
 		ssObject.setPremiumDays(ssRequest.getPremiumDays());
 		ssObject.setTimeSlot(ssRequest.getTimeSlot());
-		ssObject.setBlockAllShareOneSlot(ssRequest.isBlockAllShareOneSlot());
+		ssObject.setBlockAllOneSlotBooking(ssRequest.isBlockAllOneSlotBooking());
 		ssObject.setMaxContinuousBookingDays(ssRequest.getMaxContinuousBookingDays());
 		ssObject.setFreeBookingAfterHours(ssRequest.getFreeBookingAfterHours());
 		ssObject.setConfirmationBeforeHours(ssRequest.getConfirmationBeforeHours());
@@ -51,6 +51,10 @@ public class SchedulerSettingController {
 		ssObject.setAllowCarryBorrow(ssRequest.isAllowCarryBorrow());
 		ssObject.setIgnoreSharePercent(ssRequest.isIgnoreSharePercent());
 		ssObject.setLimitAdvBookingMonths(ssRequest.getLimitAdvBookingMonths());
+		ssObject.setReservationLimit(ssRequest.getReservationLimit());
+		ssObject.setReservationLimitPer(ssRequest.getReservationLimitPer());
+		ssObject.setReservationLimitUnit(ssRequest.getReservationLimitUnit());
+		ssObject.setReservationLimitInclude(ssRequest.getReservationLimitInclude());
 		final SchedulerSetting updatedSetting = ssr.save(ssObject);
 		return ResponseEntity.ok(updatedSetting);
 	}

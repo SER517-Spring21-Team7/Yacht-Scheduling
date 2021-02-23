@@ -1,5 +1,7 @@
 package tys.tysWebserver.scheduler.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,12 @@ public class HolidayCalendarController {
 			throws ResourceNotFoundException {
 		HolidayCalendar hcObject = hcRepo.findById(calendarId).orElseThrow(
 				() -> new ResourceNotFoundException("Holiday Calendar not found for this id :: " + calendarId));
+		return ResponseEntity.ok().body(hcObject);
+	}
+
+	@GetMapping("/holidaycalendar")
+	public ResponseEntity<List<HolidayCalendar>> getAllHolidayCalendar() throws ResourceNotFoundException {
+		List<HolidayCalendar> hcObject = hcRepo.findAll();
 		return ResponseEntity.ok().body(hcObject);
 	}
 
