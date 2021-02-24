@@ -6,8 +6,10 @@ import Select from '@material-ui/core/Select';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import {Typography, Grid} from '@material-ui/core';
+import {Typography, Grid, AppBar} from '@material-ui/core';
+import TimeSlots from './TimeSlots';
 import {
+    Container,
     Checkbox,
     makeStyles,
     TextField
@@ -149,30 +151,34 @@ export default function SchedulerSetting() {
 
   return (
     <div>
+        <Container>
+        <Typography color="textPrimary" gutterBottom variant="h2" align="center">
+            Scheduler Settings
+        </Typography>
+        </Container>
         <form>
         <Grid container className={classes.container}>
             <Grid item xs={12}>
-        <Card className={classes.root}>
-            <CardContent>
-            <Typography className={classes.title} color="textSecondary" gutterBottom>
-                Select Premium Day(s):
-            </Typography>
-            <div>
-                <div class="row" style={{display: 'flex', flexDirection: 'row'}}>
-                {
-                    ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map(day => {
-                    return (
-                        <div>
-                            <Checkbox id={day} value={day} onChange={handlePremiumCheckboxChange} />
-                            <label class="custom-control-label" for={day}>{day}</label>
-                        </div>
-                    )
-                    })
-                }
+                <Typography className=".MuiTypography-overline" color="textSecondary" gutterBottom>
+                    Select Premium Day(s):
+                </Typography>
+                <div>
+                    <div class="row" style={{display: 'flex', flexDirection: 'row'}}>
+                    {
+                        ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map(day => {
+                        return (
+                            <div>
+                                <Checkbox id={day} value={day} onChange={handlePremiumCheckboxChange} />
+                                <label class="custom-control-label" for={day}>{day}</label>
+                            </div>
+                        )
+                        })
+                    }
                 </div>
             </div>
-            </CardContent>
-        </Card>
+        </Grid>
+        <Grid item xs={12}>
+          <TimeSlots />
         </Grid>
         <Grid item xs={12}>
         <div>
@@ -190,7 +196,9 @@ export default function SchedulerSetting() {
         </Grid>
         <Grid item xs={12}>
         <div>
-            <h4>Free Booking Period:</h4>
+            <Typography className=".MuiTypography-overline" color="textSecondary" gutterBottom>
+                Free Booking Period:
+            </Typography>
             <label class="custom-control-label" for='freeReservationTillHours'>Reservations made within</label> 
             <FormControl variant="outlined" className={classes.formControl}>
             <Select
@@ -217,7 +225,9 @@ export default function SchedulerSetting() {
         </Grid>
         <Grid item xs={12}>
         <div>
-            <h4>Confirmation Window:</h4>
+            <Typography className=".MuiTypography-overline" color="textSecondary" gutterBottom>
+                Confirmation Window:
+            </Typography>
             <label class="custom-control-label" for='confiramationEmailHoursBefore'>Send out confirmation email</label> 
             <FormControl variant="outlined" className={classes.formControl}>
             <Select
@@ -250,7 +260,9 @@ export default function SchedulerSetting() {
         </Grid>
         <Grid item xs={12}>
         <div>
-            <h4>Cancellation Period:</h4>
+            <Typography className=".MuiTypography-overline" color="textSecondary" gutterBottom>
+                Cancellation Period:
+            </Typography>
             <label class="custom-control-label" for='freeReservationTillHours'>If user does not confirm reservation,</label> 
             <FormControl variant="outlined" className={classes.formControl}>
             <Select
