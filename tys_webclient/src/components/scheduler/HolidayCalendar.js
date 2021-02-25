@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Grid,
   TextField,
@@ -58,11 +58,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const blankrows = [{ rownum: 1, holidayName: "", holidayDate: null }];
+const blankCalendarDetail = { calendarName: "", calendarId: 0 };
 
-export default function MaxWidthDialog() {
+export default function HolidayCalendar() {
+  //this.state.props = props;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState(blankrows);
+  const [calendarDetail, setCalendarDetail] = React.useState(
+    blankCalendarDetail
+  );
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -70,6 +75,10 @@ export default function MaxWidthDialog() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleCalendarNameChange = (event) => {
+    setCalendarDetail(event.target.value);
   };
 
   const addRow = () => {
@@ -93,15 +102,84 @@ export default function MaxWidthDialog() {
     setRows(updatedRows);
   };
 
-  const handleNameChange = (rownum, name) => {
-    console.log(rownum, name.target.value);
+  const handleNameChange = (rownum, event) => {
+    console.log(rownum, event.target.value);
     const updatedRows = rows.map((eachRow) => {
       if (eachRow.rownum === rownum) {
-        return { ...eachRow, holidayName: name.target.value };
+        return { ...eachRow, holidayName: event.target.value };
       }
       return eachRow;
     });
     setRows(updatedRows);
+  };
+
+  const handleSave = () => {
+    return fetch("http://localhost:8080/holidaycalendar", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: calendarDetail.calendarName,
+        listOfHoliday: rows,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log("Holiday Calendar created.");
+        handleClose();
+      })
+      .catch((error) => {
+        console.error("Holiday Calendat creation failed!");
+      });
+  };
+
+  useEffect(() => {
+    //if (this.state.isEdit) {
+    fetch("http://localhost:8080/holidaycalendar/27", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log("data" + data.id);
+        setCalendarDetail({ calendarName: data.name, calendarId: data.id });
+        console.log("name" + data.name);
+        console.log("id" + data.id);
+        console.log("cal det" + calendarDetail);
+        setRows(data.listOfHoliday);
+      });
+    //}
+  }, []);
+
+  const handleUpdate = () => {
+    console.log(calendarDetail.calendarId);
+    return fetch(
+      `http://localhost:8080/holidaycalendar/${calendarDetail.calendarId}`,
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: calendarDetail.calendarName,
+          listOfHoliday: rows,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        console.log("Holiday Calendar updated.");
+        handleClose();
+      })
+      .catch((error) => {
+        console.error("Holiday Calendat update failed!");
+      });
   };
 
   return (
@@ -119,7 +197,6 @@ export default function MaxWidthDialog() {
         <DialogTitle
           id="max-width-dialog-title"
           className={classes.dialogTitle}
-          //   style={{ color: "#004ba0", font: 16 }}
         >
           Holiday Calendar
         </DialogTitle>
@@ -138,7 +215,9 @@ export default function MaxWidthDialog() {
                   variant="outlined"
                   label="Holiday Calendar Name"
                   name="holidayCalendarName"
+                  value={calendarDetail.calendarName}
                   helperText="Please provide a unique name. Like: US Holidays 2021"
+                  onChange={handleCalendarNameChange}
                 />
               </Grid>
             </Grid>
@@ -180,8 +259,7 @@ export default function MaxWidthDialog() {
                       <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <Grid container justify="space-around">
                           <KeyboardDatePicker
-                            margin="medium"
-                            //id="date-picker-dialog"
+                            margin="none"
                             format="MM/dd/yyyy"
                             value={row.holidayDate}
                             onChange={(e) => handleDateChange(row.rownum, e)}
@@ -206,7 +284,10 @@ export default function MaxWidthDialog() {
           </Button>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} variant="contained" color="primary">
+          <Button onClick={handleUpdate} variant="contained" color="primary">
+            Update
+          </Button>
+          <Button onClick={handleSave} variant="contained" color="primary">
             Save
           </Button>
           <Button onClick={handleClose} variant="contained">

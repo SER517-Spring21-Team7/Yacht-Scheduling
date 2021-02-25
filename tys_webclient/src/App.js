@@ -36,7 +36,7 @@ function App() {
   const classes = useStyle();
   return (
     <>
-      <HolidayCalendar />
+      <HolidayCalendar isEdit={true} />
       {/* <Router>
         <Toolbar/>
         <Switch>
