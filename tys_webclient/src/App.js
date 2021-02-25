@@ -8,6 +8,7 @@ import {makeStyles} from '@material-ui/core'
 import AddWatercraft from './components/AddWatercraftComponent/AddWatercraft';
 import MyAccount from './components/MyAccount/MyAccount';
 import { EditWatercraft } from './editWaterCraft/EditWatercraft';
+import ListMember from './listMember/ListMember';
 
 
 const useStyle = makeStyles(theme =>({
@@ -44,7 +45,8 @@ function App() {
             <Route path='/listwatercraft' exact component={ListOfWaterCrafts} />
             <Route path='/watercrafts'><AddWatercraft data={ null}/></Route>
             <Route path='/MyAccount' component={MyAccount} />
-            <Route path='/editWatercraft/:idOfWatercraft' component={EditWatercraft}/>
+            <Route path='/editWatercraft/:idOfWatercraft' component={EditWatercraft} />
+            <Route path='/listMember' component={ListMember}/>
           </div>
         </Switch>
       </Router>
