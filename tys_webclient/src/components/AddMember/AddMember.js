@@ -1,26 +1,29 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import 'date-fns';
-import { Typography, Grid, makeStyles, Box, TextField, FormControlLabel, FormControl, FormLabel, RadioGroup, Radio, Button } from '@material-ui/core'
+import { Typography, Grid, makeStyles, Box, TextField, FormControlLabel, FormControl, InputLabel, Select, MenuItem, RadioGroup, Radio, Button } from '@material-ui/core'
 import { MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import ColorPicker from "material-ui-color-picker";
 import SearchMember from './SearchMember'
 
 
+const tempState ={
+    drop:[]
+}
 const initialValues = {
     email: '',
+    watercraft:'',
     firstname: '',
     lastname: '',
     password: '',
     password2: '',
-    startdate: new Date(),
-    enddate: new Date().setMonth(new Date().getMonth()+1),
+    startdate: null,
+    enddate: null,
     premiumshare: '',
     standardshare: '',
     freebookings: '',
     schedulercolor: '',
     access: '',
-
 }
 const useStyle = makeStyles(theme =>({
     root: {
@@ -44,10 +47,13 @@ const useStyle = makeStyles(theme =>({
     
 }))
 
+
 export default function AddMember() {
 
     const classes = useStyle();
     const [values, setValues] = useState(initialValues);
+    const [tempStateValues, setTempStateValues] = useState(tempState);
+
 
     const handleInputChange = (e) => {
         const {name, value} = e.target;
@@ -82,7 +88,44 @@ export default function AddMember() {
 
     const buttonClicked = (event) => {
         console.log(values)
+        return fetch("http://localhost:8080/member/details",{
+            method: "POST",
+            headers:{
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                ...values,
+            }),
+        })
+        .then((response) => response.json())
+        .then((json) =>{
+            alert("Member successfully added!")
+            setValues(initialValues);
+        })
+        .catch((error)=>{
+            alert("It seems we have some issue! Please retry.")
+        });
     };
+
+    const url = "http://localhost:8080/watercraft/getAllWaterCraft"
+    const watercraftList = []
+    const getWaterCraft = async () => { 
+        const response = await fetch(url, {
+            method: "GET"
+        });
+        const watercraftResponse = await response.json();
+        for (let i = 0; i < watercraftResponse.length; i++){
+            watercraftList.push(watercraftResponse[i]["watercraftName"])
+        }
+        setTempStateValues({
+            ...tempStateValues,
+            drop: watercraftList
+        });
+    }
+    useEffect(() => { 
+        getWaterCraft();
+    },[])
 
     return (
         <>
@@ -109,7 +152,25 @@ export default function AddMember() {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    {/* For wqatercraft dropdown */}
+                <FormControl variant="outlined">
+                        <InputLabel>Watercraft</InputLabel>
+                        <Select
+                            label="Watercraft"
+                            name="watercraft"
+                            value={values.watercraft}
+                            onChange={handleInputChange}>
+                            <MenuItem>
+                                <em>None</em>
+                            </MenuItem>
+                            {
+                                tempStateValues.drop.map((craft, index) => {
+                                    return (
+                                        <MenuItem key={index} value={craft}>{craft}</MenuItem>
+                                    )
+                                })
+                            } 
+                        </Select>
+                    </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -139,7 +200,6 @@ export default function AddMember() {
                     <TextField
                     variant="outlined"
                     required
-                    type="password"
                     id="password"
                     name="password"
                     label="Password"
@@ -197,7 +257,7 @@ export default function AddMember() {
                     type="number"
                     id="freebookings"
                     name="freebookings"
-                    label="Free booking per month"
+                    label="Free Booking(s) per month"
                     value={values.freebookings}
                     onChange={handleInputChange}
                     fullWidth
@@ -257,7 +317,7 @@ export default function AddMember() {
                     <FormControl component="fieldset">
                         <RadioGroup aria-label="access" name="access" value={values.access} onChange={handleInputChange} row>
                             <FormControlLabel value="Admin" control={<Radio />} label="Admin" />
-                            <FormControlLabel value="Member" control={<Radio />} label="Member" checked/>
+                            <FormControlLabel value="Member" control={<Radio />} label="Member"/>
                         </RadioGroup>
                     </FormControl>
                 </Grid>

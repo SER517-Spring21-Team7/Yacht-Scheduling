@@ -80,11 +80,12 @@ const buttonClicked = (event) => {
 
 const yearOptions = [];
 const minOffset = 0;
-const maxOffset = 30;
+const maxOffset = 20;
 const thisYear = (new Date()).getFullYear();
 for (let i = minOffset; i <= maxOffset; i++) {
     const year = thisYear - i;
-    yearOptions.push(<option value={year} key={i}>{year}</option>);
+    // yearOptions.push(<option value={year} key={i}>{year}</option>);
+    yearOptions.push(year);
   }
 
 
@@ -259,9 +260,7 @@ for (let i = minOffset; i <= maxOffset; i++) {
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
-                            {/* <MenuItem value={yearOptions}><em>{yearOptions}</em></MenuItem> */}
-                            {yearOptions}
-                            {yearOptions.map((year, index) => <MenuItem key={index} value={year}/>)}
+                            {yearOptions.map((year, index) => <MenuItem key={index} value={year}> {year} </MenuItem>)}
                         </Select>
                     </FormControl>
                 </Grid>
