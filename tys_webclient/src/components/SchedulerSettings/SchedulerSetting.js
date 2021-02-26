@@ -8,6 +8,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import { Typography, Grid, AppBar, Paper } from "@material-ui/core";
 import TimeSlots from "./TimeSlots";
+
 import {
   Container,
   Checkbox,
@@ -85,6 +86,54 @@ export default function SchedulerSetting() {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const hoursArr = [6, 12, 24, 36, 48, 60, 72];
+  const timezoneArr = [
+    "Australia/ACT",
+    "Australia/Adelaide",
+    "Australia/Brisbane",
+    "Australia/Broken_Hill",
+    "Australia/Canberra",
+    "Australia/Currie",
+    "Australia/Darwin",
+    "Australia/Eucla",
+    "Australia/Hobart",
+    "Australia/LHI",
+    "Australia/Lindeman",
+    "Australia/Lord_Howe",
+    "Australia/Melbourne",
+    "Australia/NSW",
+    "Australia/North",
+    "Australia/Perth",
+    "Australia/Queensland",
+    "Australia/South",
+    "Australia/Sydney",
+    "Australia/Tasmania",
+    "Australia/Victoria",
+    "Australia/West",
+    "Australia/Yancowinna",
+    "Canada/Atlantic",
+    "Canada/Central",
+    "Canada/Eastern",
+    "Canada/Mountain",
+    "Canada/Newfoundland",
+    "Canada/Pacific",
+    "Canada/Saskatchewan",
+    "Canada/Yukon",
+    "Etc/UTC",
+    "Europe/London",
+    "US/Alaska",
+    "US/Aleutian",
+    "US/Arizona",
+    "US/Central",
+    "US/East-Indiana",
+    "US/Eastern",
+    "US/Hawaii",
+    "US/Indiana-Starke",
+    "US/Michigan",
+    "US/Mountain",
+    "US/Pacific",
+    "US/Pacific-New",
+  ];
+
   const [state, setState] = React.useState({
     premiumDays: [],
     customSlots: [],
@@ -513,21 +562,13 @@ export default function SchedulerSetting() {
               <Grid item md={3}></Grid>
               <Grid item md={1}></Grid>
               <Grid item md={4} xs={12}>
-                <FormControl variant="outlined">
-                  <InputLabel>City</InputLabel>
-                  <Select
-                    label="City"
-                    name="weatherCity"
-                    value={state.weatherCity}
-                    onChange={handleChange}
-                  >
-                    <MenuItem value="">None</MenuItem>
-                    <MenuItem value={"Australia"}>Australia</MenuItem>
-                    <MenuItem value={"Canada"}>Canada</MenuItem>
-                    <MenuItem value={"United Kingdom"}>United Kingdom</MenuItem>
-                    <MenuItem value={"United States"}>United States</MenuItem>
-                  </Select>
-                </FormControl>
+                <TextField
+                  variant="outlined"
+                  label="City"
+                  name="weatherCity"
+                  value={state.weatherCity}
+                  onChange={handleChange}
+                />
               </Grid>
               <Grid item md={1}>
                 <Typography
@@ -621,10 +662,13 @@ export default function SchedulerSetting() {
                     onChange={handleChange}
                   >
                     <MenuItem value="">None</MenuItem>
-                    <MenuItem value={"Australia"}>Australia</MenuItem>
-                    <MenuItem value={"Canada"}>Canada</MenuItem>
-                    <MenuItem value={"United Kingdom"}>United Kingdom</MenuItem>
-                    <MenuItem value={"United States"}>United States</MenuItem>
+                    {timezoneArr.map((tz) => {
+                      return (
+                        <MenuItem key={tz} value={tz}>
+                          {tz}
+                        </MenuItem>
+                      );
+                    })}
                   </Select>
                 </FormControl>
               </Grid>
