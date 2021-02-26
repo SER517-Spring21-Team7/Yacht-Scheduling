@@ -198,15 +198,33 @@ export default function SchedulerSetting() {
         <Typography
           color="textPrimary"
           gutterBottom
-          variant="h2"
+          variant="h3"
           align="center"
         >
           Scheduler Settings
         </Typography>
       </Container>
+      <Accordion
+        expanded={expanded === "panel0"}
+        onChange={handleChangeExpansion("panel0")}
+      >
+        <AccordionSummary
+          className={classes.aSummery}
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1bh-content"
+          id="panel1bh-header"
+        >
+          <Typography className={classes.heading}>Basic Settings</Typography>
+          <Typography className={classes.secondaryHeading}>
+            Change basic settings for watercraft here
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+
+
       <form>
         <Grid container className={classes.container}>
-          <Grid item xs={12}>
+          <Grid item md={6} xs={12}>
             <Typography
               className=".MuiTypography-overline"
               color="textPrimary"
@@ -244,8 +262,9 @@ export default function SchedulerSetting() {
               </div>
             </div>
           </Grid>
-                <br/>
+
           <Grid item xs={12}>
+          <br/>
           <Typography
               className=".MuiTypography-overline"
               color="textPrimary"
@@ -256,6 +275,7 @@ export default function SchedulerSetting() {
             <TimeSlots customSlots={state.customSlots}/>
           </Grid>
           <Grid item xs={12}>
+            <br/>
             <div>
               <Checkbox
                 id="oneSetSlots"
@@ -269,6 +289,7 @@ export default function SchedulerSetting() {
             </div>
           </Grid>
           <Grid item xs={12}>
+            <br/>
             <div>
               <label class="custom-control-label" for="conReservationDays">
                 {" "}
@@ -300,6 +321,7 @@ export default function SchedulerSetting() {
             </div>
           </Grid>
           <Grid item md={6} xs={12}>
+            <br/>
             <div>
               <Typography
                 className=".MuiTypography-overline"
@@ -344,6 +366,7 @@ export default function SchedulerSetting() {
             </div>
           </Grid>
           <Grid item xs={12}>
+            <br/>
             <div>
               <Typography
                 className=".MuiTypography-overline"
@@ -394,6 +417,7 @@ export default function SchedulerSetting() {
             </div>
           </Grid>
           <Grid item xs={12}>
+            <br/>
             <div>
               <Typography
                 className=".MuiTypography-overline"
@@ -439,6 +463,9 @@ export default function SchedulerSetting() {
           </Grid>
         </Grid>
       </form>
+    </AccordionDetails> 
+    </Accordion>
+
       <Accordion
         expanded={expanded === "panel1"}
         onChange={handleChangeExpansion("panel1")}

@@ -150,9 +150,8 @@ export default function TimeSlots(props) {
                 </TableBody>
             </Table>
         </TableContainer>
-        <br/>
         <Button onClick={addNewSlot} variant="contained"
-        style={{ margin: "10px"}}>
+        style={{ margin: "5px"}}>
             Add Item
         </Button>
         <br/>
