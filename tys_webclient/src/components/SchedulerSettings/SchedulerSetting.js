@@ -17,26 +17,31 @@ import {
   Box,
   ButtonGroup,
   FormControlLabel,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
 } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: "#90caf9",
     width: "80%",
     marginTop: theme.spacing(0),
-    marginLeft: theme.spacing(15),
+    marginLeft: theme.spacing(0),
+    padding: "10px",
 
     "& .MuiFormControl-root": {
       width: "80%",
-      margin: theme.spacing(1.5),
+      margin: theme.spacing(0.75),
     },
     flexGrow: 1,
   },
   container: {
     backgroundColor: "#f5f5f5",
     width: "100%",
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(0),
     marginLeft: theme.spacing(0),
   },
   formControl: {
@@ -56,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   heading: {
-    fontSize: theme.typography.pxToRem(15),
+    fontSize: theme.typography.pxToRem(20),
     flexBasis: "33.33%",
     flexShrink: 0,
     color: "#00227b",
@@ -67,10 +72,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#00227b",
   },
   button: {
-    margin: theme.spacing(2),
-  },
-  title: {
-    fontSize: 14,
+    margin: theme.spacing(1),
   },
   secTypo: {
     marginLeft: "5%",
@@ -81,6 +83,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SchedulerSetting() {
   const classes = useStyles();
+  const [expanded, setExpanded] = React.useState(false);
   const hoursArr = [6, 12, 24, 36, 48, 60, 72];
   const [state, setState] = React.useState({
     premiumDays: [],
@@ -103,6 +106,10 @@ export default function SchedulerSetting() {
     reservationLimitUnit: "",
     reservationLimitInclude: "",
   });
+
+  const handleChangeExpansion = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   const handleChange = (event) => {
     console.log(event);
@@ -423,293 +430,308 @@ export default function SchedulerSetting() {
           </Grid>
         </Grid>
       </form>
-      <form className={classes.root}>
-        <Typography>
-          <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
-            Advance Settings
-          </Box>
-        </Typography>
+      <Accordion
+        expanded={expanded === "panel1"}
+        onChange={handleChangeExpansion("panel1")}
+      >
+        <AccordionSummary
+          className={classes.aSummery}
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1bh-content"
+          id="panel1bh-header"
+        >
+          <Typography className={classes.heading}>Advance Settings</Typography>
+          <Typography className={classes.secondaryHeading}>
+            Change advance settings for watercraft here
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <form className={classes.root}>
+            <Grid container className={classes.container}>
+              <Grid item md={3}>
+                <Typography
+                  className={classes.secTypo}
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  Show weather for:
+                </Typography>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <FormControl variant="outlined" required>
+                  <InputLabel>Country</InputLabel>
+                  <Select
+                    label="Country"
+                    name="weatherCountry"
+                    value={state.weatherCountry}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value={"Australia"}>Australia</MenuItem>
+                    <MenuItem value={"Canada"}>Canada</MenuItem>
+                    <MenuItem value={"United Kingdom"}>United Kingdom</MenuItem>
+                    <MenuItem value={"United States"}>United States</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item md={3}></Grid>
+              <Grid item md={1}></Grid>
+              <Grid item md={4} xs={12}>
+                <FormControl variant="outlined">
+                  <InputLabel>City</InputLabel>
+                  <Select
+                    label="City"
+                    name="weatherCity"
+                    value={state.weatherCity}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value={"Australia"}>Australia</MenuItem>
+                    <MenuItem value={"Canada"}>Canada</MenuItem>
+                    <MenuItem value={"United Kingdom"}>United Kingdom</MenuItem>
+                    <MenuItem value={"United States"}>United States</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item md={1}>
+                <Typography
+                  color="textSecondary"
+                  className={classes.secTypo}
+                  gutterBottom
+                >
+                  Or
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField
+                  variant="outlined"
+                  label="Zip/Postal Code"
+                  name="weatherZipCode"
+                  value={state.weatherZipCode}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item md={3}>
+                <Typography
+                  className={classes.secTypo}
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  Select Holiday Calendar:
+                </Typography>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <FormControl variant="outlined" required>
+                  <InputLabel>Holiday Calendar</InputLabel>
+                  <Select
+                    label="Holiday Calendar"
+                    name="holidayCalendar"
+                    value={state.holidayCalendar}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value={"Australia"}>Australia</MenuItem>
+                    <MenuItem value={"Canada"}>Canada</MenuItem>
+                    <MenuItem value={"United Kingdom"}>United Kingdom</MenuItem>
+                    <MenuItem value={"United States"}>United States</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid>
+                <ButtonGroup
+                  color="primary"
+                  aria-label="outlined primary button group"
+                  style={{ marginTop: "10%", marginLeft: "0%" }}
+                >
+                  <Button>Edit</Button>
+                  <Button>Create</Button>
+                </ButtonGroup>
+              </Grid>
+              <Grid item md={3}>
+                <Typography
+                  className={classes.secTypo}
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  Max Holiday Reservation:
+                </Typography>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <TextField
+                  variant="outlined"
+                  label="Days Per Year"
+                  name="maxHolidayDays"
+                  value={state.maxHolidayDays}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item md={3}></Grid>
+              <Grid item md={3}>
+                <Typography
+                  className={classes.secTypo}
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  Select Watercraft Time Zone:
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" required>
+                  <InputLabel>Watercraft Time Zone</InputLabel>
+                  <Select
+                    label="Watercraft Time Zone"
+                    name="watercraftTimeZone"
+                    value={state.watercraftTimeZone}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="">None</MenuItem>
+                    <MenuItem value={"Australia"}>Australia</MenuItem>
+                    <MenuItem value={"Canada"}>Canada</MenuItem>
+                    <MenuItem value={"United Kingdom"}>United Kingdom</MenuItem>
+                    <MenuItem value={"United States"}>United States</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item md={3}></Grid>
+              <Grid item md={3}>
+                <Typography
+                  className={classes.secTypo}
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  Allow advance reservation upto:
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl variant="outlined" required>
+                  <InputLabel>Month(s)</InputLabel>
+                  <Select
+                    label="Month(s)"
+                    name="advanceBookingMonth"
+                    value={state.advanceBookingMonth}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="No Limit">No Limit</MenuItem>
+                    <MenuItem value={1}>1</MenuItem>
+                    <MenuItem value={2}>2</MenuItem>
+                    <MenuItem value={3}>3</MenuItem>
+                    <MenuItem value={4}>4</MenuItem>
+                    <MenuItem value={5}>5</MenuItem>
+                    <MenuItem value={6}>6</MenuItem>
+                    <MenuItem value={7}>7</MenuItem>
+                    <MenuItem value={8}>8</MenuItem>
+                    <MenuItem value={9}>9</MenuItem>
+                    <MenuItem value={10}>10</MenuItem>
+                    <MenuItem value={11}>11</MenuItem>
+                    <MenuItem value={12}>12</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={state.carryBorrow}
+                      onChange={handleChange}
+                      name="carryBorrow"
+                      color="primary"
+                    />
+                  }
+                  label="Allow carrying slots from the previous month and borrow slots from the next month."
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={state.ignoreSharePercent}
+                      onChange={handleChange}
+                      name="ignoreSharePercent"
+                      color="primary"
+                    />
+                  }
+                  label="Ignore share percentages - Allow users to book at will."
+                />
+              </Grid>
+              <Grid item md={1} xs={12}>
+                <Typography
+                  className={classes.secTypo}
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  Limit:
+                </Typography>
+              </Grid>
+              <Grid item md={2} xs={12}>
+                <TextField
+                  variant="outlined"
+                  label="reservations"
+                  name="reservationLimit"
+                  value={state.reservationLimit}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item md={1} xs={12}>
+                <Typography
+                  className={classes.secTypo}
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  Every:
+                </Typography>
+              </Grid>
+              <Grid item md={2} xs={12}>
+                <TextField
+                  variant="outlined"
+                  name="reservationLimitPer"
+                  value={state.reservationLimitPer}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item md={2} xs={12}>
+                <FormControl variant="outlined" required>
+                  <Select
+                    name="reservationLimitUnit"
+                    value={state.reservationLimitUnit}
+                    onChange={handleChange}
+                    defaultValue={"Month"}
+                  >
+                    <MenuItem value={"Month"}>Month(s)</MenuItem>
+                    <MenuItem value={"Week"}>Week(s)</MenuItem>
+                    <MenuItem value={"Day"}>Day(s)</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item md={1} xs={12}>
+                <Typography
+                  className={classes.secTypo}
+                  color="textSecondary"
+                  gutterBottom
+                >
+                  Including:
+                </Typography>
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <FormControl variant="outlined" required>
+                  <Select
+                    name="reservationLimitInclude"
+                    value={state.reservationLimitInclude}
+                    onChange={handleChange}
+                    defaultValue={"Past"}
+                  >
+                    <MenuItem value={"Past"}>Past Reservations</MenuItem>
+                    <MenuItem value={"Future"}>Future Reservations</MenuItem>
+                    <MenuItem value={"Both"}>
+                      Past & Future Reservations
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </form>
+        </AccordionDetails>
+      </Accordion>
 
-        <Grid container className={classes.container}>
-          <Grid item md={3}>
-            <Typography
-              className={classes.secTypo}
-              color="textSecondary"
-              gutterBottom
-            >
-              Show weather for:
-            </Typography>
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <FormControl variant="outlined" required>
-              <InputLabel>Country</InputLabel>
-              <Select
-                label="Country"
-                name="weatherCountry"
-                value={state.weatherCountry}
-                onChange={handleChange}
-              >
-                <MenuItem value="">None</MenuItem>
-                <MenuItem value={"Australia"}>Australia</MenuItem>
-                <MenuItem value={"Canada"}>Canada</MenuItem>
-                <MenuItem value={"United Kingdom"}>United Kingdom</MenuItem>
-                <MenuItem value={"United States"}>United States</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item md={3}></Grid>
-          <Grid item md={1}></Grid>
-          <Grid item md={4} xs={12}>
-            <FormControl variant="outlined">
-              <InputLabel>City</InputLabel>
-              <Select
-                label="City"
-                name="weatherCity"
-                value={state.weatherCity}
-                onChange={handleChange}
-              >
-                <MenuItem value="">None</MenuItem>
-                <MenuItem value={"Australia"}>Australia</MenuItem>
-                <MenuItem value={"Canada"}>Canada</MenuItem>
-                <MenuItem value={"United Kingdom"}>United Kingdom</MenuItem>
-                <MenuItem value={"United States"}>United States</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item md={1}>
-            <Typography
-              color="textSecondary"
-              className={classes.secTypo}
-              gutterBottom
-            >
-              Or
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <TextField
-              variant="outlined"
-              label="Zip/Postal Code"
-              name="weatherZipCode"
-              value={state.weatherZipCode}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item md={3}>
-            <Typography
-              className={classes.secTypo}
-              color="textSecondary"
-              gutterBottom
-            >
-              Select Holiday Calendar:
-            </Typography>
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <FormControl variant="outlined" required>
-              <InputLabel>Holiday Calendar</InputLabel>
-              <Select
-                label="Holiday Calendar"
-                name="holidayCalendar"
-                value={state.holidayCalendar}
-                onChange={handleChange}
-              >
-                <MenuItem value="">None</MenuItem>
-                <MenuItem value={"Australia"}>Australia</MenuItem>
-                <MenuItem value={"Canada"}>Canada</MenuItem>
-                <MenuItem value={"United Kingdom"}>United Kingdom</MenuItem>
-                <MenuItem value={"United States"}>United States</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid>
-            <ButtonGroup
-              color="primary"
-              aria-label="outlined primary button group"
-              style={{ marginTop: "10%", marginLeft: "0%" }}
-            >
-              <Button>Edit</Button>
-              <Button>Create</Button>
-            </ButtonGroup>
-          </Grid>
-          <Grid item md={3}>
-            <Typography
-              className={classes.secTypo}
-              color="textSecondary"
-              gutterBottom
-            >
-              Max Holiday Reservation:
-            </Typography>
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <TextField
-              variant="outlined"
-              label="Days Per Year"
-              name="maxHolidayDays"
-              value={state.maxHolidayDays}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item md={3}></Grid>
-          <Grid item md={3}>
-            <Typography
-              className={classes.secTypo}
-              color="textSecondary"
-              gutterBottom
-            >
-              Select Watercraft Time Zone:
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <FormControl variant="outlined" required>
-              <InputLabel>Watercraft Time Zone</InputLabel>
-              <Select
-                label="Watercraft Time Zone"
-                name="watercraftTimeZone"
-                value={state.watercraftTimeZone}
-                onChange={handleChange}
-              >
-                <MenuItem value="">None</MenuItem>
-                <MenuItem value={"Australia"}>Australia</MenuItem>
-                <MenuItem value={"Canada"}>Canada</MenuItem>
-                <MenuItem value={"United Kingdom"}>United Kingdom</MenuItem>
-                <MenuItem value={"United States"}>United States</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item md={3}></Grid>
-          <Grid item md={3}>
-            <Typography
-              className={classes.secTypo}
-              color="textSecondary"
-              gutterBottom
-            >
-              Allow advance reservation upto:
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <FormControl variant="outlined" required>
-              <InputLabel>Month(s)</InputLabel>
-              <Select
-                label="Month(s)"
-                name="advanceBookingMonth"
-                value={state.advanceBookingMonth}
-                onChange={handleChange}
-              >
-                <MenuItem value="No Limit">No Limit</MenuItem>
-                <MenuItem value={1}>1</MenuItem>
-                <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={4}>4</MenuItem>
-                <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={6}>6</MenuItem>
-                <MenuItem value={7}>7</MenuItem>
-                <MenuItem value={8}>8</MenuItem>
-                <MenuItem value={9}>9</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={11}>11</MenuItem>
-                <MenuItem value={12}>12</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={state.carryBorrow}
-                  onChange={handleChange}
-                  name="carryBorrow"
-                  color="primary"
-                />
-              }
-              label="Allow carrying slots from the previous month and borrow slots from the next month."
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={state.ignoreSharePercent}
-                  onChange={handleChange}
-                  name="ignoreSharePercent"
-                  color="primary"
-                />
-              }
-              label="Ignore share percentages - Allow users to book at will."
-            />
-          </Grid>
-          <Grid item md={1} xs={12}>
-            <Typography
-              className={classes.secTypo}
-              color="textSecondary"
-              gutterBottom
-            >
-              Limit:
-            </Typography>
-          </Grid>
-          <Grid item md={2} xs={12}>
-            <TextField
-              variant="outlined"
-              label="reservations"
-              name="reservationLimit"
-              value={state.reservationLimit}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item md={1} xs={12}>
-            <Typography
-              className={classes.secTypo}
-              color="textSecondary"
-              gutterBottom
-            >
-              Every:
-            </Typography>
-          </Grid>
-          <Grid item md={2} xs={12}>
-            <TextField
-              variant="outlined"
-              name="reservationLimitPer"
-              value={state.reservationLimitPer}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item md={2} xs={12}>
-            <FormControl variant="outlined" required>
-              <Select
-                name="reservationLimitUnit"
-                value={state.reservationLimitUnit}
-                onChange={handleChange}
-                defaultValue={"Month"}
-              >
-                <MenuItem value={"Month"}>Month(s)</MenuItem>
-                <MenuItem value={"Week"}>Week(s)</MenuItem>
-                <MenuItem value={"Day"}>Day(s)</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item md={1} xs={12}>
-            <Typography
-              className={classes.secTypo}
-              color="textSecondary"
-              gutterBottom
-            >
-              Including:
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={3}>
-            <FormControl variant="outlined" required>
-              <Select
-                name="reservationLimitInclude"
-                value={state.reservationLimitInclude}
-                onChange={handleChange}
-                defaultValue={"Past"}
-              >
-                <MenuItem value={"Past"}>Past Reservations</MenuItem>
-                <MenuItem value={"Future"}>Future Reservations</MenuItem>
-                <MenuItem value={"Both"}>Past & Future Reservations</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
-      </form>
       <div className={classes.buttonStyle}>
         <Button
           variant="contained"
