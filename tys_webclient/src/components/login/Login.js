@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -12,6 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import tysLogo  from '../../tysLogo.png';
+
 
 function Copyright() {
   return (
@@ -68,22 +68,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Login({ setAccess }) {
-
-  const bcrypt = require("bcrypt");
+function Login({setAccess}) {
   const classes = useStyles();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
   const handleSubmit = async e => {
     e.preventDefault();
-    alert("clicked");
     const access = await loginUser({
       email,
-      bcrypt.hashSync(password, saltRounds)
-    });
-    alert(access);
+      password
+    })
     setAccess(access);
+    alert("my login page");
+   // this.history.push('/MyAccount');
   }
 
   return (
@@ -160,9 +158,5 @@ function Login({ setAccess }) {
     </Grid>
   );
 }
-
-Login.propTypes = {
-  setAccess: PropTypes.func.isRequired
-};
 
 export default Login;
