@@ -19,7 +19,7 @@ const useStyles = makeStyles({
   
 });
 
-const Member = () => {
+const Member = (props) => {
 
     const classes = useStyles();
     const bull = <span className={classes.bullet}>•</span>;
@@ -27,15 +27,16 @@ const Member = () => {
     const section = {
         marginTop: pix,
         marginLeft: pix,
-        marginRight: pix,
-        marginBotton: pix,
+        // marginRight: pix,
+        // marginBotton: pix,
     };
     return (
         <>
+            {console.log(props.name)}
             <Card className={classes.root} style={ section}>
                 <Grid container direction="row" style={ section}>
                     <Grid container spacing={2} style={{ height: "25%" }}  >
-                        <Grid item xs={ 4} spacing={2}>
+                        <Grid item xs={ 4} >
                             <CardMedia
                                 className={classes.media}
                                 image="https://api1.nauticalmonkey.com/uploadedImages/ab68874bf7d941cb815e5ba28d0a7b07_small.jpg"
@@ -43,12 +44,12 @@ const Member = () => {
                                 alignItem='center'
                             />
                         </Grid>
-                        <Grid item xs={ 8} spacing={2}>
+                        <Grid item xs={ 8} >
                            <Typography gutterBottom variant="h5" component="h2">
-                                Namee
+                                {props.name.firstname} {props.name.lastname}
                             </Typography> 
                             <Typography variant="h6" gutterBottom>
-                                Premium & Standard
+                                Premium:{props.name.premiumshare } | Standard: {props.name.standardshare }
                             </Typography> 
                         </Grid>
                     </Grid>
@@ -56,12 +57,12 @@ const Member = () => {
                     <Grid container spacing={2} style={{ height: "65%" }} >
                         <Grid item xs={12}>
                             <Typography variant="body1" gutterBottom style={{ whiteSpace: 'pre-line' }}>
-                                email:sshah73@asu.edu
+                                {props.name.email }
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant="body1" gutterBottom style={{ whiteSpace: 'pre-line' }}>
-                                Access dates: 10/17
+                                Access dates: {new Date(props.name.startdate).toDateString()} to {new Date(props.name.enddate).toDateString()}
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>

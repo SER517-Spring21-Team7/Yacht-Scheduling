@@ -22,7 +22,7 @@ import tys.tysWebserver.watercraftManager.repository.AddWatercraftRepo;
 @CrossOrigin("http://localhost:3000")
 @RequestMapping("/watercraft")
 
-public class AddWatercraftController {
+public class WatercraftController {
 	
 	@Autowired
 	private AddWatercraftRepo AWrepo;
