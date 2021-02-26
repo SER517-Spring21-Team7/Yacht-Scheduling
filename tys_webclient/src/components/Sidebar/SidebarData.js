@@ -18,6 +18,12 @@ export const SidebarData = [
     cName: 'nav-text'
   },
   {
+    title: 'Scheduler Settings',
+    path: '/scheduler',
+    icon: <GiIcons.GiSailboat />,
+    cName: 'nav-text'
+  },
+  {
     title: 'Service Request',
     path: '/service',
     icon: <FaIcons.FaTools />,

@@ -43,7 +43,7 @@ function App() {
           <Switch>
             <div className={classes.stylingComponents}>
               <Route path='/login' component={Login} />
-              <Route path='/Scheduler' component={SchedulerSetting} />
+              <Route path='/scheduler' component={SchedulerSetting} />
               <Route path='/' exact/>
               <Route path='/watercrafts' component={AddWatercraft} />
               <Route path='/MyAccount' component={MyAccount} />

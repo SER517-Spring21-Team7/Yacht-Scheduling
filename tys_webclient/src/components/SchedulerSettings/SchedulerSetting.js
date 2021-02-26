@@ -84,6 +84,7 @@ export default function SchedulerSetting() {
   const hoursArr = [6, 12, 24, 36, 48, 60, 72];
   const [state, setState] = React.useState({
     premiumDays: [],
+    customSlots: [],
     sameSetSlots: true,
     continuousReservationDays: 0,
     freeReservationHours: 0,
@@ -201,7 +202,7 @@ export default function SchedulerSetting() {
           <Grid item xs={12}>
             <Typography
               className=".MuiTypography-overline"
-              color="textSecondary"
+              color="textPrimary"
               gutterBottom
             >
               Select Premium Day(s):
@@ -236,8 +237,16 @@ export default function SchedulerSetting() {
               </div>
             </div>
           </Grid>
+                <br/>
           <Grid item xs={12}>
-            <TimeSlots />
+          <Typography
+              className=".MuiTypography-overline"
+              color="textPrimary"
+              gutterBottom
+            >
+              Booking Slot Timings:
+            </Typography>
+            <TimeSlots customSlots={state.customSlots}/>
           </Grid>
           <Grid item xs={12}>
             <div>
@@ -283,7 +292,7 @@ export default function SchedulerSetting() {
               </label>
             </div>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item md={6} xs={12}>
             <div>
               <Typography
                 className=".MuiTypography-overline"
