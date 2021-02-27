@@ -12,6 +12,7 @@ import HolidayCalendar from "./components/scheduler/HolidayCalendar";
 import AddMember from "./components/AddMember/AddMember";
 import SearchMember from "./components/AddMember/SearchMember";
 import SchedulerSetting from "./components/SchedulerSettings/SchedulerSetting";
+import ListMember from "./listMember/ListMember";
 
 const useStyle = makeStyles((theme) => ({
   stylingComponents: {
@@ -67,6 +68,7 @@ function App() {
               path="/editWatercraft/:idOfWatercraft"
               component={EditWatercraft}
             />
+            <Route path="/listMember" component={ListMember} />
             <Route path="/login" component={Login} />
             <Route path="/scheduler" component={SchedulerSetting} />
             <Route path="/" exact />
