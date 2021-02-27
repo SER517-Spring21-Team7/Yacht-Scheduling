@@ -1,44 +1,55 @@
-import React from 'react';
-import * as FaIcons from 'react-icons/fa';
-import * as AiIcons from 'react-icons/ai';
+import React from "react";
+import * as FaIcons from "react-icons/fa";
+import * as AiIcons from "react-icons/ai";
 import * as GiIcons from "react-icons/gi";
-
 
 export const SidebarData = [
   {
-    title: 'Dashboard',
-    path: '/listwatercraft',
+    title: "Dashboard",
+    path: "/listwatercraft",
     icon: <AiIcons.AiFillHome />,
-    cName: 'nav-text'
+    cName: "nav-text",
   },
   {
-    title: 'Watercrafts',
-    path: '/watercrafts',
+    title: "Watercraft",
+    path: "/watercrafts",
     icon: <GiIcons.GiSailboat />,
-    cName: 'nav-text'
+    cName: "nav-text",
   },
   {
-    title: 'Service Request',
-    path: '/service',
+    title: "Manage Member",
+    path: "/member",
+    icon: <FaIcons.FaUsers />,
+    cName: "nav-text",
+  },
+  {
+    title: "Scheduler Settings",
+    path: "/scheduler",
+    icon: <GiIcons.GiSailboat />,
+    cName: "nav-text",
+  },
+  {
+    title: "Service Request",
+    path: "/service",
     icon: <FaIcons.FaTools />,
-    cName: 'nav-text'
+    cName: "nav-text",
   },
   {
-    title: 'Checklists',
-    path: '/checklist',
+    title: "Checklists",
+    path: "/checklist",
     icon: <FaIcons.FaListAlt />,
-    cName: 'nav-text'
+    cName: "nav-text",
   },
   {
-    title: 'Messages',
-    path: '/messages',
+    title: "Messages",
+    path: "/messages",
     icon: <FaIcons.FaEnvelopeOpenText />,
-    cName: 'nav-text'
+    cName: "nav-text",
   },
   {
-    title: 'My Account',
-    path: '/MyAccount',
+    title: "My Account",
+    path: "/MyAccount",
     icon: <FaIcons.FaRegUserCircle />,
-    cName: 'nav-text'
-  }
+    cName: "nav-text",
+  },
 ];
