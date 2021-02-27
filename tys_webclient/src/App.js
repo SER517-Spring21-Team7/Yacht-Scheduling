@@ -1,34 +1,34 @@
-import './App.css';
-import Watercrafts from './listWaterCraft/Watercrafts';
-import ListOfWaterCrafts from './listWaterCraft/ListOfWaterCrafts';
-import Login from './components/login/Login.js';
-import Toolbar from './components/Sidebar/ToolbarUI';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-import {makeStyles} from '@material-ui/core'
-import AddWatercraft from './components/AddWatercraftComponent/AddWatercraft';
-import MyAccount from './components/MyAccount/MyAccount';
+import "./App.css";
+import Watercrafts from "./listWaterCraft/Watercrafts";
+import ListOfWaterCrafts from "./listWaterCraft/ListOfWaterCrafts";
+import Login from "./components/login/Login.js";
+import Toolbar from "./components/Sidebar/ToolbarUI";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { makeStyles } from "@material-ui/core";
+import AddWatercraft from "./components/AddWatercraftComponent/AddWatercraft";
+import MyAccount from "./components/MyAccount/MyAccount";
+import HolidayCalendar from "./components/scheduler/HolidayCalendar";
 import AddMember from './components/AddMember/AddMember';
 import SearchMember from './components/AddMember/SearchMember'
 
-
-const useStyle = makeStyles(theme =>({
+const useStyle = makeStyles((theme) => ({
   stylingComponents: {
-          width: '80%',
-          marginLeft: '20%',
-          marginTop: '4.5%'
-        }
-}))
+    width: "80%",
+    marginLeft: "20%",
+    marginTop: "4.5%",
+  },
+}));
 
 function setAccess(userAccess) {
-  sessionStorage.setItem('access', JSON.stringify(userAccess));
+  sessionStorage.setItem("access", JSON.stringify(userAccess));
 }
-  
+
 function getAccess() {
-  const accessString = sessionStorage.getItem('access');
+  const accessString = sessionStorage.getItem("access");
   const userAccess = JSON.parse(accessString);
-  return userAccess?.access
+  return userAccess?.access;
 }
-  
+
 function App() {
   //const token = getAccess();
   
@@ -38,7 +38,8 @@ function App() {
   const classes = useStyle();
   return (
     <>
-      <Router>
+      <HolidayCalendar isEdit={true} />
+      {/* <Router>
         <Toolbar/>
         <Switch>
           <div className={classes.stylingComponents}>
@@ -48,7 +49,7 @@ function App() {
             <Route path='/MyAccount' component={MyAccount} />
           </div>
         </Switch>
-      </Router>
+      </Router> */}
     </>
   );
 }
