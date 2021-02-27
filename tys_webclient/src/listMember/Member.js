@@ -69,10 +69,19 @@ const Member = (props) => {
                             <Typography variant="body1" gutterBottom style={{ whiteSpace: 'pre-line' }}>
                                 Premium slot
                             </Typography>
+                            <Typography variant="body1" gutterBottom style={{ whiteSpace: 'pre-line' }}>
+                                9:00 AM - 5:00 PM :  4  remaining   ( Out of Total  4 )
+                            </Typography>
+                            <Typography variant="body1" gutterBottom style={{ whiteSpace: 'pre-line' }}>
+                                9:00 AM - 5:00 PM :  4  remaining   ( Out of Total  4 )
+                            </Typography>
                         </Grid>
                         <Grid item xs={12}>
                             <Typography variant="body1" gutterBottom style={{ whiteSpace: 'pre-line' }}>
                                 Standard slot
+                            </Typography>
+                            <Typography variant="body1" gutterBottom style={{ whiteSpace: 'pre-line' }}>
+                                9:00 AM - 5:00 PM :  4  remaining   ( Out of Total  4 )
                             </Typography>
                         </Grid>
                         <Grid item xs={12}>
