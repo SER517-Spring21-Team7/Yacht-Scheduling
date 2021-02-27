@@ -34,7 +34,7 @@ const ListOfWaterCrafts = () => {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <Grid container direction="row" justify="space-between" alignItems="center">
+            <Grid container direction="row" alignItems="center">
             {
                 watercrafts.map((singleCraft) => {
                     console.log(singleCraft.watercraftId);

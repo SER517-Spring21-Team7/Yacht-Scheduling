@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import AddWatercraft from "./components/AddWatercraftComponent/AddWatercraft";
 import MyAccount from "./components/MyAccount/MyAccount";
+import { EditWatercraft } from './editWaterCraft/EditWatercraft';
 import HolidayCalendar from "./components/scheduler/HolidayCalendar";
 import AddMember from './components/AddMember/AddMember';
 import SearchMember from './components/AddMember/SearchMember'
@@ -44,9 +45,10 @@ function App() {
         <Switch>
           <div className={classes.stylingComponents}>
             <Route path='/listwatercraft' exact component={ListOfWaterCrafts} />
-            <Route path='/watercrafts' component={AddWatercraft} />
+            <Route path='/watercrafts'><AddWatercraft data={ null}/></Route>
             <Route path='/member' component={AddMember}/>
             <Route path='/MyAccount' component={MyAccount} />
+            <Route path='/editWatercraft/:idOfWatercraft' component={EditWatercraft}/>
           </div>
         </Switch>
       </Router> */}
