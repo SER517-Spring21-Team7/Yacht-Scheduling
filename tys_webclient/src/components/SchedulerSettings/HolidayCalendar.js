@@ -22,6 +22,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -63,6 +64,7 @@ const blankCalendarDetail = { calendarName: "", calendarId: 0 };
 export default function HolidayCalendar() {
   //this.state.props = props;
   const classes = useStyles();
+  const history = useHistory();
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState(blankrows);
   const [calendarDetail, setCalendarDetail] = React.useState(
@@ -75,6 +77,7 @@ export default function HolidayCalendar() {
 
   const handleClose = () => {
     setOpen(false);
+    history.push("/scheduler");
   };
 
   const handleCalendarNameChange = (event) => {
@@ -136,24 +139,25 @@ export default function HolidayCalendar() {
   };
 
   useEffect(() => {
+    handleClickOpen();
     //if (this.state.isEdit) {
-    fetch("http://localhost:8080/holidaycalendar/27", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        console.log("data" + data.id);
-        setCalendarDetail({ calendarName: data.name, calendarId: data.id });
-        console.log("name" + data.name);
-        console.log("id" + data.id);
-        console.log("cal det" + calendarDetail);
-        setRows(data.listOfHoliday);
-      });
-    //}
+    //   fetch("http://localhost:8080/holidaycalendar/27", {
+    //     method: "GET",
+    //     headers: {
+    //       Accept: "application/json",
+    //       "Content-Type": "application/json",
+    //     },
+    //   })
+    //     .then((resp) => resp.json())
+    //     .then((data) => {
+    //       console.log("data" + data.id);
+    //       setCalendarDetail({ calendarName: data.name, calendarId: data.id });
+    //       console.log("name" + data.name);
+    //       console.log("id" + data.id);
+    //       console.log("cal det" + calendarDetail);
+    //       setRows(data.listOfHoliday);
+    //     });
+    //   //}
   }, []);
 
   const handleUpdate = () => {
@@ -184,9 +188,9 @@ export default function HolidayCalendar() {
 
   return (
     <React.Fragment>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+      {/* <Button variant="outlined" color="primary" onClick={handleClickOpen}>
         Open max-width dialog
-      </Button>
+      </Button> */}
       <Dialog
         fullWidth
         maxWidth={"sm"}

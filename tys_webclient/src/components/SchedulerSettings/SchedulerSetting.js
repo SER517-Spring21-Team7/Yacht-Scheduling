@@ -8,6 +8,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import { Typography, Grid, AppBar, Paper } from "@material-ui/core";
 import TimeSlots from "./TimeSlots";
+import { useHistory } from "react-router-dom";
 
 import {
   Container,
@@ -24,6 +25,7 @@ import {
 } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import HolidayCalendar from "./HolidayCalendar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,6 +86,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SchedulerSetting() {
   const classes = useStyles();
+  const history = useHistory();
   const [expanded, setExpanded] = React.useState(false);
   const hoursArr = [6, 12, 24, 36, 48, 60, 72];
   const timezoneArr = [
@@ -204,6 +207,10 @@ export default function SchedulerSetting() {
       continuousReservationDays: event.target.value,
     });
   };
+
+  const handleRedirect = () => {
+    history.push("/holidaycalendar");
+  };
   //   useEffect((state) => {
   //     fetch("http://localhost:8080/user/3/nsetting", {
   //       method: "GET",
@@ -269,251 +276,258 @@ export default function SchedulerSetting() {
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
-
-
-      <form>
-        <Grid container className={classes.container}>
-          <Grid item md={6} xs={12}>
-            <Typography
-              className=".MuiTypography-overline"
-              color="textPrimary"
-              gutterBottom
-            >
-              Select Premium Day(s):
-            </Typography>
-            <div>
-              <div
-                class="row"
-                style={{ display: "flex", flexDirection: "row" }}
-              >
-                {[
-                  "Sunday",
-                  "Monday",
-                  "Tuesday",
-                  "Wednesday",
-                  "Thursday",
-                  "Friday",
-                  "Saturday",
-                ].map((day) => {
-                  return (
-                    <div>
-                      <Checkbox
-                        id={day}
-                        value={day}
-                        onChange={handlePremiumCheckboxChange}
-                      />
-                      <label class="custom-control-label" for={day}>
-                        {day}
-                      </label>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </Grid>
-
-          <Grid item xs={12}>
-          <br/>
-          <Typography
-              className=".MuiTypography-overline"
-              color="textPrimary"
-              gutterBottom
-            >
-              Booking Slot Timings:
-            </Typography>
-            <TimeSlots customSlots={state.customSlots}/>
-          </Grid>
-          <Grid item xs={12}>
-            <br/>
-            <div>
-              <Checkbox
-                id="oneSetSlots"
-                value={state.sameSetSlots}
-                onChange={handleSetSlotChange}
-              />
-              <label class="custom-control-label" for="oneSetSlots">
-                Prevent members from using their entire share percentage on one
-                set of slots.
-              </label>
-            </div>
-          </Grid>
-          <Grid item xs={12}>
-            <br/>
-            <div>
-              <label class="custom-control-label" for="conReservationDays">
-                {" "}
-                Limit Back to Back reservations to{" "}
-              </label>
-              <TextField
-                variant="outlined"
-                type="number"
-                size="small"
-                helperText={
-                  state.continuousReservationDays < 0 ||
-                  state.continuousReservationDays > 100
-                    ? "Min: 0, Max: 100"
-                    : ""
-                }
-                error={
-                  state.continuousReservationDays < 0 ||
-                  state.continuousReservationDays > 100
-                }
-                id="conReservationDays"
-                inputProps={{ min: "0", max: "100", step: "1" }}
-                value={state.continuousReservationDays}
-                onChange={handleContinousReservationChange}
-              />
-              <label class="custom-control-label" for="conReservationDays">
-                {" "}
-                days in a row.
-              </label>
-            </div>
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <br/>
-            <div>
-              <Typography
-                className=".MuiTypography-overline"
-                color="textSecondary"
-                gutterBottom
-              >
-                Free Booking Period:
-              </Typography>
-              <label
-                class="custom-control-label"
-                for="freeReservationTillHours"
-              >
-                Reservations made within
-              </label>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <Select
-                  name="freeReservationHours"
-                  id="freeReservationTillHours"
-                  value={state.freeReservationHours}
-                  size="small"
-                  onChange={handleChange}
-                  label="Age"
+          <form>
+            <Grid container className={classes.container}>
+              <Grid item md={6} xs={12}>
+                <Typography
+                  className=".MuiTypography-overline"
+                  color="textPrimary"
+                  gutterBottom
                 >
-                  <MenuItem value={0}>
-                    <em>None</em>
-                  </MenuItem>
-                  {hoursArr.map((hour) => {
-                    return (
-                      <MenuItem key={hour} value={hour}>
-                        {hour} hours
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-              <label
-                class="custom-control-label"
-                for="freeReservationTillHours"
-              >
-                do not count against usage.
-              </label>
-            </div>
-          </Grid>
-          <Grid item xs={12}>
-            <br/>
-            <div>
-              <Typography
-                className=".MuiTypography-overline"
-                color="textSecondary"
-                gutterBottom
-              >
-                Confirmation Window:
-              </Typography>
-              <label
-                class="custom-control-label"
-                for="confiramationEmailHoursBefore"
-              >
-                Send out confirmation email
-              </label>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <Select
-                  name="confirmEmailHours"
-                  id="confiramationEmailHoursBefore"
-                  value={state.confirmEmailHours}
-                  size="small"
-                  onChange={handleChange}
+                  Select Premium Day(s):
+                </Typography>
+                <div>
+                  <div
+                    class="row"
+                    style={{ display: "flex", flexDirection: "row" }}
+                  >
+                    {[
+                      "Sunday",
+                      "Monday",
+                      "Tuesday",
+                      "Wednesday",
+                      "Thursday",
+                      "Friday",
+                      "Saturday",
+                    ].map((day) => {
+                      return (
+                        <div>
+                          <Checkbox
+                            id={day}
+                            value={day}
+                            onChange={handlePremiumCheckboxChange}
+                          />
+                          <label class="custom-control-label" for={day}>
+                            {day}
+                          </label>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </Grid>
+
+              <Grid item xs={12}>
+                <br />
+                <Typography
+                  className=".MuiTypography-overline"
+                  color="textPrimary"
+                  gutterBottom
                 >
-                  <MenuItem value={0}>
-                    <em>None</em>
-                  </MenuItem>
-                  {hoursArr.map((hour) => {
-                    return (
-                      <MenuItem key={hour} value={hour}>
-                        {hour} hours
+                  Booking Slot Timings:
+                </Typography>
+                <TimeSlots customSlots={state.customSlots} />
+              </Grid>
+              <Grid item xs={12}>
+                <br />
+                <div>
+                  <Checkbox
+                    id="oneSetSlots"
+                    value={state.sameSetSlots}
+                    onChange={handleSetSlotChange}
+                  />
+                  <label class="custom-control-label" for="oneSetSlots">
+                    Prevent members from using their entire share percentage on
+                    one set of slots.
+                  </label>
+                </div>
+              </Grid>
+              <Grid item xs={12}>
+                <br />
+                <div>
+                  <label class="custom-control-label" for="conReservationDays">
+                    {" "}
+                    Limit Back to Back reservations to{" "}
+                  </label>
+                  <TextField
+                    variant="outlined"
+                    type="number"
+                    size="small"
+                    helperText={
+                      state.continuousReservationDays < 0 ||
+                      state.continuousReservationDays > 100
+                        ? "Min: 0, Max: 100"
+                        : ""
+                    }
+                    error={
+                      state.continuousReservationDays < 0 ||
+                      state.continuousReservationDays > 100
+                    }
+                    id="conReservationDays"
+                    inputProps={{ min: "0", max: "100", step: "1" }}
+                    value={state.continuousReservationDays}
+                    onChange={handleContinousReservationChange}
+                  />
+                  <label class="custom-control-label" for="conReservationDays">
+                    {" "}
+                    days in a row.
+                  </label>
+                </div>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <br />
+                <div>
+                  <Typography
+                    className=".MuiTypography-overline"
+                    color="textSecondary"
+                    gutterBottom
+                  >
+                    Free Booking Period:
+                  </Typography>
+                  <label
+                    class="custom-control-label"
+                    for="freeReservationTillHours"
+                  >
+                    Reservations made within
+                  </label>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <Select
+                      name="freeReservationHours"
+                      id="freeReservationTillHours"
+                      value={state.freeReservationHours}
+                      size="small"
+                      onChange={handleChange}
+                      label="Age"
+                    >
+                      <MenuItem value={0}>
+                        <em>None</em>
                       </MenuItem>
-                    );
-                  })}
-                  {[4, 5, 10, 15].map((day) => {
-                    return (
-                      <MenuItem key={day * 24} value={day * 24}>
-                        {day} days
+                      {hoursArr.map((hour) => {
+                        return (
+                          <MenuItem key={hour} value={hour}>
+                            {hour} hours
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                  <label
+                    class="custom-control-label"
+                    for="freeReservationTillHours"
+                  >
+                    do not count against usage.
+                  </label>
+                </div>
+              </Grid>
+              <Grid item xs={12}>
+                <br />
+                <div>
+                  <Typography
+                    className=".MuiTypography-overline"
+                    color="textSecondary"
+                    gutterBottom
+                  >
+                    Confirmation Window:
+                  </Typography>
+                  <label
+                    class="custom-control-label"
+                    for="confiramationEmailHoursBefore"
+                  >
+                    Send out confirmation email
+                  </label>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <Select
+                      name="confirmEmailHours"
+                      id="confiramationEmailHoursBefore"
+                      value={state.confirmEmailHours}
+                      size="small"
+                      onChange={handleChange}
+                    >
+                      <MenuItem value={0}>
+                        <em>None</em>
                       </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-              <label
-                class="custom-control-label"
-                for="confiramationEmailHoursBefore"
-              >
-                before reservation
-              </label>
-            </div>
-          </Grid>
-          <Grid item xs={12}>
-            <br/>
-            <div>
-              <Typography
-                className=".MuiTypography-overline"
-                color="textSecondary"
-                gutterBottom
-              >
-                Cancellation Period:
-              </Typography>
-              <label
-                class="custom-control-label"
-                for="freeReservationTillHours"
-              >
-                If user does not confirm reservation,
-              </label>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <Select
-                  name="cancelBookingBeforeStart"
-                  id="cancelBeforeBookingStart"
-                  value={state.cancelBookingBeforeStart}
-                  size="small"
-                  onChange={handleChange}
-                  label="Hours"
-                >
-                  <MenuItem value={0}>
-                    <em>Do not cancel it.</em>
-                  </MenuItem>
-                  {hoursArr.map((hour) => {
-                    return (
-                      <MenuItem key={hour} value={hour}>
-                        Cancel it {hour} hours
+                      {hoursArr.map((hour) => {
+                        return (
+                          <MenuItem key={hour} value={hour}>
+                            {hour} hours
+                          </MenuItem>
+                        );
+                      })}
+                      {[4, 5, 10, 15].map((day) => {
+                        return (
+                          <MenuItem key={day * 24} value={day * 24}>
+                            {day} days
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                  <label
+                    class="custom-control-label"
+                    for="confiramationEmailHoursBefore"
+                  >
+                    before reservation
+                  </label>
+                </div>
+              </Grid>
+              <Grid item xs={12}>
+                <br />
+                <div>
+                  <Typography
+                    className=".MuiTypography-overline"
+                    color="textSecondary"
+                    gutterBottom
+                  >
+                    Cancellation Period:
+                  </Typography>
+                  <label
+                    class="custom-control-label"
+                    for="freeReservationTillHours"
+                  >
+                    If user does not confirm reservation,
+                  </label>
+                  <FormControl
+                    variant="outlined"
+                    className={classes.formControl}
+                  >
+                    <Select
+                      name="cancelBookingBeforeStart"
+                      id="cancelBeforeBookingStart"
+                      value={state.cancelBookingBeforeStart}
+                      size="small"
+                      onChange={handleChange}
+                      label="Hours"
+                    >
+                      <MenuItem value={0}>
+                        <em>Do not cancel it.</em>
                       </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-              <label
-                class="custom-control-label"
-                for="freeReservationTillHours"
-              >
-                before it starts.
-              </label>
-            </div>
-          </Grid>
-        </Grid>
-      </form>
-    </AccordionDetails> 
-    </Accordion>
+                      {hoursArr.map((hour) => {
+                        return (
+                          <MenuItem key={hour} value={hour}>
+                            Cancel it {hour} hours
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                  </FormControl>
+                  <label
+                    class="custom-control-label"
+                    for="freeReservationTillHours"
+                  >
+                    before it starts.
+                  </label>
+                </div>
+              </Grid>
+            </Grid>
+          </form>
+        </AccordionDetails>
+      </Accordion>
 
       <Accordion
         expanded={expanded === "panel1"}
@@ -621,7 +635,7 @@ export default function SchedulerSetting() {
                   style={{ marginTop: "10%", marginLeft: "0%" }}
                 >
                   <Button>Edit</Button>
-                  <Button>Create</Button>
+                  <Button onClick={() => handleRedirect()}>Create</Button>
                 </ButtonGroup>
               </Grid>
               <Grid item md={3}>

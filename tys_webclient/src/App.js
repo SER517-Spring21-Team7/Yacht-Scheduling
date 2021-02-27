@@ -8,11 +8,11 @@ import { makeStyles } from "@material-ui/core";
 import AddWatercraft from "./components/AddWatercraftComponent/AddWatercraft";
 import MyAccount from "./components/MyAccount/MyAccount";
 import { EditWatercraft } from "./editWaterCraft/EditWatercraft";
-import HolidayCalendar from "./components/scheduler/HolidayCalendar";
 import AddMember from "./components/AddMember/AddMember";
 import SearchMember from "./components/AddMember/SearchMember";
 import SchedulerSetting from "./components/SchedulerSettings/SchedulerSetting";
 import ListMember from "./listMember/ListMember";
+import HolidayCalendar from "./components/SchedulerSettings/HolidayCalendar";
 
 const useStyle = makeStyles((theme) => ({
   stylingComponents: {
@@ -53,7 +53,6 @@ function App() {
   const classes = useStyle();
   return (
     <>
-      {/* <HolidayCalendar isEdit={true} /> */}
       <Router>
         <Toolbar />
         <Switch>
@@ -63,6 +62,7 @@ function App() {
               <AddWatercraft data={null} />
             </Route>
             <Route path="/member" component={AddMember} />
+            <Route path="/viewmember" component={ListMember} />
             <Route path="/MyAccount" component={MyAccount} />
             <Route
               path="/editWatercraft/:idOfWatercraft"
@@ -73,6 +73,7 @@ function App() {
             <Route path="/scheduler" component={SchedulerSetting} />
             <Route path="/" exact />
             <Route path="/watercrafts" component={AddWatercraft} />
+            <Route path="/holidaycalendar" component={HolidayCalendar} />
           </div>
         </Switch>
       </Router>
