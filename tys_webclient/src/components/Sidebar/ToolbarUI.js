@@ -3,7 +3,8 @@ import {Link} from 'react-router-dom';
 import {SidebarData} from './SidebarData';
 import './Sidebar.css';
 import { IconContext } from 'react-icons';
-import { makeStyles, AppBar, Toolbar, Typography } from '@material-ui/core';
+import { makeStyles, AppBar, Toolbar, Typography, Paper } from '@material-ui/core';
+import tysLogo  from '../../tysLogo.png';
 
 
 
@@ -29,9 +30,11 @@ function ToolbarUI() {
             <div className={classes.root}>
                 <AppBar position="fixed" style={{backgroundColor:'#8ad4eb'}} >
                     <Toolbar>
-                        <Typography variant="h6" className={classes.title}>
-                            The Yacht Solutions
-                        </Typography>
+                            <img src={ tysLogo } alt='Logo' style={{
+                                height: '20%',
+                                width: '10%',
+                                margin: '1%',
+                            }}/>
                     </Toolbar>
                 </AppBar>
             </div>

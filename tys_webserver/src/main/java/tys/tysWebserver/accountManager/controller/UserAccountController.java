@@ -1,6 +1,5 @@
 package tys.tysWebserver.accountManager.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import tys.tysWebserver.accountManager.model.UserNotificationSetting;
 import tys.tysWebserver.accountManager.model.UserProfile;
 import tys.tysWebserver.accountManager.repository.UserNotificationSettingRepo;
