@@ -90,9 +90,10 @@ export default function MyAccount() {
         </Tabs>
       </AppBar>
       <div className={classes.root}>
-        <Avatar alt="Test" src={logo} className={classes.large} />
+        {/* src={logo} */}
+        <Avatar alt="Test" className={classes.large} />
         <Typography variant="h4" gutterBottom className={classes.typo}>
-          Welcome, Miss Sood!
+          Welcome, User!
         </Typography>
       </div>
       <TabPanel value={indexValue} index={0}>
