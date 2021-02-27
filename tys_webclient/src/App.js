@@ -8,6 +8,8 @@ import { makeStyles } from "@material-ui/core";
 import AddWatercraft from "./components/AddWatercraftComponent/AddWatercraft";
 import MyAccount from "./components/MyAccount/MyAccount";
 import HolidayCalendar from "./components/scheduler/HolidayCalendar";
+import AddMember from './components/AddMember/AddMember';
+import SearchMember from './components/AddMember/SearchMember'
 
 const useStyle = makeStyles((theme) => ({
   stylingComponents: {
@@ -29,10 +31,10 @@ function getAccess() {
 
 function App() {
   //const token = getAccess();
-
-  //if(!token) {
+  
+  // if(!token) {
   //  return <Login setAccess={setAccess} />
-  //}
+  // }
   const classes = useStyle();
   return (
     <>
@@ -43,6 +45,7 @@ function App() {
           <div className={classes.stylingComponents}>
             <Route path='/listwatercraft' exact component={ListOfWaterCrafts} />
             <Route path='/watercrafts' component={AddWatercraft} />
+            <Route path='/member' component={AddMember}/>
             <Route path='/MyAccount' component={MyAccount} />
           </div>
         </Switch>
