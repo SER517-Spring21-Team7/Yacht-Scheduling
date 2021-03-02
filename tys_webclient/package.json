@@ -11,6 +11,7 @@
     "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "^12.6.3",
     "bcrypt": "^5.0.0",
+    "browser-image-compression": "^1.0.14",
     "clsx": "^1.1.1",
     "date-fns": "^2.17.0",
     "material-ui-color-picker": "^3.5.1",

@@ -5,6 +5,7 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers
 import DateFnsUtils from '@date-io/date-fns';
 import ColorPicker from "material-ui-color-picker";
 import SearchMember from './SearchMember'
+import imageCompression from 'browser-image-compression'
 
 
 const tempState ={
@@ -24,6 +25,7 @@ const initialValues = {
     freebookings: '',
     schedulercolor: '',
     access: '',
+    image: '',
 }
 const useStyle = makeStyles(theme =>({
     root: {
@@ -46,6 +48,7 @@ const useStyle = makeStyles(theme =>({
     },
     
 }))
+
 
 
 export default function AddMember() {
@@ -83,6 +86,29 @@ export default function AddMember() {
         setValues({
             ...values,
             schedulercolor: e
+        })
+    }
+    
+    const handleImageInput = (e) => {
+        let imageFile = e.target.files[0];
+        console.log('originalFile instanceof Blob', imageFile instanceof Blob); // true
+        console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
+        let options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true
+        }
+        imageCompression(imageFile, options)
+        .then(function (compressedFile){
+            console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+            console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+            setValues({
+                ...values,
+                image: compressedFile
+            })
+        })
+        .catch(function(error){
+            console.log(error.message)
         })
     }
 
@@ -320,6 +346,18 @@ export default function AddMember() {
                             <FormControlLabel value="Member" control={<Radio />} label="Member"/>
                         </RadioGroup>
                     </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    type="file"
+                    accept="image/*"
+                    variant="outlined"
+                    onChange={handleImageInput}
+                    >
+                    </TextField>
+                    {/* <input type='file' id='memberImage' name='memberPhoto'>
+
+                    </input> */}
                 </Grid>
             </Grid>  
             <Button 
