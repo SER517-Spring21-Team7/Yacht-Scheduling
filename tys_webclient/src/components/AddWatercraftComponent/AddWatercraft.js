@@ -127,7 +127,12 @@ export default function AddWatercraft(props) {
     <div>
       <form className={classes.root}>
         <Typography>
-          <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize={20}
+            textAlign="center"
+            m={1}
+          >
             Add Watercraft Details
           </Box>
         </Typography>

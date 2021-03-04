@@ -1,10 +1,13 @@
 import React, {useState} from 'react'
-import {Link} from 'react-router-dom';
+import {NavLink, Link} from 'react-router-dom';
 import {SidebarData} from './SidebarData';
 import './Sidebar.css';
 import { IconContext } from 'react-icons';
-import { makeStyles, AppBar, Toolbar, Typography, Paper } from '@material-ui/core';
+import { makeStyles, AppBar, Toolbar} from '@material-ui/core';
 import tysLogo  from '../../tysLogo.png';
+
+import * as FaIcons from "react-icons/fa";
+import * as AiIcons from "react-icons/ai";
 
 
 
@@ -12,25 +15,26 @@ const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
     },
-    title: {
-      flexGrow: 1,
-    },
     itemTitle:{
-        marginLeft: '16px'
+        marginLeft: '10%'
     },
   }));
 
 
 
-function ToolbarUI() {
+function ToolbarUI(props) {
 
-    // const [sidebar, setSidebar] = useState(false);
-    // const handleSidebar = () => setSidebar(!sidebar);
+    const [sidebar, setSidebar] = useState(true);
+    const showSidebar = () => {
+        setSidebar(!sidebar)
+        props.passChildData(!sidebar);
+    };
+    
     const classes = useStyles();
 
     return (
-        <div style={{position:'static'}}>
-            <div className={classes.root}>
+        <>
+            {/* <div className={classes.root}>
                 <AppBar position="fixed" style={{backgroundColor:'#8ad4eb'}} >
                     <Toolbar>
                             <img src={ tysLogo } alt='Logo' style={{
@@ -40,25 +44,44 @@ function ToolbarUI() {
                             }}/>
                     </Toolbar>
                 </AppBar>
-            </div>
+            </div> */}
             <IconContext.Provider value={{ color: '#fff' }}>
-                <nav className='nav-menu active'>
+                <div className='navbar'>
+                    <Link to='#' className='menu-bars'>
+                        <FaIcons.FaBars onClick={showSidebar} />
+                    </Link>
+                    <img src={ tysLogo } alt='Logo' style={{
+                            height: '7vh',
+                            width: '15vw',
+                            // margin: '1%',
+                            zIndex: '1',
+                            borderRadius:'5px'
+                        }}
+                    />
+                </div>
+            
+                <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
                     <ul className='nav-menu-items'>
+                        <li className='navbar-toggle' onClick={showSidebar}>
+                            <Link to='#' className='menu-bars'>
+                                <FaIcons.FaArrowLeft/>
+                            </Link>
+                        </li>
                         {SidebarData.map((item, index) => {
                             return (
                                 <li key={index} className={item.cName}>
-                                    <Link to={item.path}>
+                                    <NavLink to={item.path} activeClassName="activeLink">
                                         {item.icon}
                                         <span className={classes.itemTitle}>{item.title}</span>
-                                    </Link>
+                                    </NavLink>
                                 </li>
                             );
                         })}
                     </ul>
                 </nav>
             </IconContext.Provider>
-        </div>
-    )
+        </>
+    );
 }
 
 export default ToolbarUI

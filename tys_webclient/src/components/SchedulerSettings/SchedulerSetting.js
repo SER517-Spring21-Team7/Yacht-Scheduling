@@ -251,13 +251,15 @@ export default function SchedulerSetting() {
   return (
     <div>
       <Container>
-        <Typography
-          color="textPrimary"
-          gutterBottom
-          variant="h3"
-          align="center"
-        >
-          Scheduler Settings
+        <Typography>
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize={20}
+            textAlign="center"
+            m={1}
+          >
+            Scheduler Settings
+          </Box>
         </Typography>
       </Container>
       <Accordion

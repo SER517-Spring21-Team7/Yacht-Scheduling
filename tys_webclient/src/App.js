@@ -1,7 +1,8 @@
 import "./App.css";
+import React, { useState, useEffect } from "react";
 import Watercrafts from "./listWaterCraft/Watercrafts";
 import ListOfWaterCrafts from "./listWaterCraft/ListOfWaterCrafts";
-import Login from "./components/Login/Login.js";
+// import Login from "./components/Login/Login.js";
 import Toolbar from "./components/Sidebar/ToolbarUI";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
@@ -16,9 +17,10 @@ import HolidayCalendar from "./components/SchedulerSettings/HolidayCalendar";
 
 const useStyle = makeStyles((theme) => ({
   stylingComponents: {
-    width: "80%",
     marginLeft: "20%",
-    marginTop: "4.5%",
+  },
+  stylingComponentsFalse: {
+    marginLeft:'0px'
   },
 }));
 
@@ -44,6 +46,8 @@ function getToken() {
 
 function App() {
   const token = getToken();
+
+  const [childData, setChildData] = useState(true);
   //const classes = useStyle();
   //const token = getAccess();
 
@@ -54,9 +58,9 @@ function App() {
   return (
     <>
       <Router>
-        <Toolbar />
+        <Toolbar passChildData={setChildData}/>
         <Switch>
-          <div className={classes.stylingComponents}>
+          <div className={childData? classes.stylingComponents : classes.stylingComponentsFalse}>
             <Route path="/listwatercraft" exact component={ListOfWaterCrafts} />
             <Route path="/watercrafts">
               <AddWatercraft data={null} />
@@ -69,7 +73,7 @@ function App() {
               component={EditWatercraft}
             />
             <Route path="/listMember" component={ListMember} />
-            <Route path="/login" component={Login} />
+            {/* <Route path="/login" component={Login} /> */}
             <Route path="/scheduler" component={SchedulerSetting} />
             <Route path="/" exact />
             <Route path="/watercrafts" component={AddWatercraft} />
