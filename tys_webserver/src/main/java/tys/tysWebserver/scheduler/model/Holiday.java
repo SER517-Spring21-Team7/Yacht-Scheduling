@@ -8,6 +8,8 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class Holiday {
 
+	@Column(name = "rownum")
+	private int rownum;
 	@Column(name = "holidayname")
 	private String holidayName;
 	@Column(name = "holidaydate")
@@ -17,8 +19,9 @@ public class Holiday {
 		super();
 	}
 
-	public Holiday(String holidayName, Date holidayDate) {
+	public Holiday(int rowNum, String holidayName, Date holidayDate) {
 		super();
+		this.rownum = rowNum;
 		this.holidayName = holidayName;
 		this.holidayDate = holidayDate;
 	}
@@ -28,6 +31,13 @@ public class Holiday {
 		return "HolidayDetails [holidayName=" + holidayName + ", holidayDate=" + holidayDate + "]";
 	}
 
+	public int getRownum( ) {
+		return rownum;
+	}
+	
+	public void setRownum(int rownum) {
+		this.rownum = rownum;
+	}
 	public String getHolidayName() {
 		return holidayName;
 	}
