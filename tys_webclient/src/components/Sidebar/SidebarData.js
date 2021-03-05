@@ -19,7 +19,8 @@ export const SidebarData = [
   {
     title: "Add Member",
     path: "/member",
-    icon: <FaIcons.FaUsers />,
+    icon: <AiIcons.AiOutlineUserAdd />,
+    
     cName: "nav-text",
   },
   {
