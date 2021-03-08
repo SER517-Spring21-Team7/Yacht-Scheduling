@@ -1,7 +1,7 @@
 import "./App.css";
 import Watercrafts from "./listWaterCraft/Watercrafts";
 import ListOfWaterCrafts from "./listWaterCraft/ListOfWaterCrafts";
-import Login from "./components/Login/Login.js";
+// import Login from "./components/Login/Login.js";
 import Toolbar from "./components/Sidebar/ToolbarUI";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
@@ -69,7 +69,7 @@ function App() {
               component={EditWatercraft}
             />
             <Route path="/listMember" component={ListMember} />
-            <Route path="/login" component={Login} />
+            {/* <Route path="/login" component={Login} /> */}
             <Route path="/scheduler" component={SchedulerSetting} />
             <Route path="/" exact />
             <Route path="/watercrafts" component={AddWatercraft} />
