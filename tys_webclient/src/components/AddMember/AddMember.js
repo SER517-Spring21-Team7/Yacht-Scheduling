@@ -5,11 +5,24 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers
 import DateFnsUtils from '@date-io/date-fns';
 import ColorPicker from "material-ui-color-picker";
 import SearchMember from './SearchMember'
-
+import SearchField from "react-search-field";
+import TypeChecker from 'typeco';
+import ExampleList from './ExampleList';
 
 const tempState ={
     drop:[]
 }
+const exampleList = [
+  {
+    name: 'Joe Smith',
+    email: 'joesmith@gmail.com',
+  },
+  {
+    name: 'Alan Donald',
+    email: 'alan@gmail.com',
+  },
+];
+
 const initialValues = {
     email: '',
     watercraft:'',
@@ -123,9 +136,32 @@ export default function AddMember() {
             drop: watercraftList
         });
     }
+
+    const [members, setMembers] = useState([]);
+
+    const getAllMember = async () => { 
+        const response = await fetch(url, {
+            method: "GET"
+        });
+        const members = await response.json();
+        console.log(members);
+        setMembers(members);
+    }
+
     useEffect(() => { 
         getWaterCraft();
-    },[])
+    }, [])
+
+    const getMatchedList = (searchText) => {
+        // if (searchText === '') return '';
+        if (TypeChecker.isEmpty(searchText)) return exampleList;
+        return exampleList.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+    };
+    const [onEnterExampleList, setOnEnterExampleList] = useState([]);
+    
+    const onEnterExample = (value) => {
+        setOnEnterExampleList(getMatchedList(value));
+    };
 
     return (
         <>
@@ -136,7 +172,16 @@ export default function AddMember() {
                     <h2>Search Existing Member or Enter Details</h2>
                 </Box>
             </Typography>
-            <div><SearchMember/></div>
+                {/* <div><SearchMember/></div> */}
+                <SearchField
+                placeholder="Search Member"
+                onEnter={onEnterExample}
+                searchText=""
+                classNames="test-class"
+                />
+                <ExampleList
+                    list={onEnterExampleList}
+                />
             <Grid container className={classes.containerStyle}>
                 <Grid item xs={12} sm={6}>
                     <TextField
