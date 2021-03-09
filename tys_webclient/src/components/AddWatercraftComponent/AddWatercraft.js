@@ -18,8 +18,8 @@ import clsx from "clsx";
 const useStyle = makeStyles((theme) => ({
   root: {
     width: "80%",
-    marginTop: theme.spacing(5),
-    marginLeft: theme.spacing(15),
+    // marginTop: theme.spacing(5),
+    // marginLeft: theme.spacing(15),
     "& .MuiFormControl-root": {
       width: "70%",
       margin: theme.spacing(1.5),
@@ -28,9 +28,9 @@ const useStyle = makeStyles((theme) => ({
       marginLeft: "38%",
     },
   },
-  margin: {
-    margin: theme.spacing(1),
-  },
+  // margin: {
+  //   margin: theme.spacing(1),
+  // },
   textField: {
     width: "25ch",
   },
@@ -127,7 +127,12 @@ export default function AddWatercraft(props) {
     <div>
       <form className={classes.root}>
         <Typography>
-          <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize={20}
+            textAlign="center"
+            m={1}
+          >
             Add Watercraft Details
           </Box>
         </Typography>
