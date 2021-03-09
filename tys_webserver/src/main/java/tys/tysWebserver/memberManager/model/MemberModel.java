@@ -1,5 +1,6 @@
 package tys.tysWebserver.memberManager.model;
 
+import java.sql.Blob;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -7,7 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+
+import org.hibernate.type.BlobType;
 
 @Entity
 @Table(name = "memberdetails")
@@ -41,13 +45,16 @@ public class MemberModel {
 	private String schedulercolor;
 	@Column(name = "access")
 	private String access;
+	@Lob
+	@Column (name = "userimage")
+	private String image;
 
 	@Override
 	public String toString() {
 		return "memberdetails [memberid=" + memberId + ", email=" + email + ", firstname=" + firstname + ", lastname="
 				+ lastname + ", password=" + password + ", password2=" + password2 + ", startdate=" + startdate
 				+ ", enddate=" + enddate + ", premiumshare=" + premiumshare + ", standardshare=" + standardshare
-				+ ",freebookings=" + freebookings + ",schedulercolor=" + schedulercolor + ",access= " + access + "]";
+				+ ",freebookings=" + freebookings + ",schedulercolor=" + schedulercolor + ",access= " + access + ",image="+image+ "]";
 	}
 	public MemberModel() {
 		super();
@@ -56,7 +63,7 @@ public class MemberModel {
 	
 	public MemberModel(int memberId, String email, String firstname, String lastname, String password, String password2,
 			Date startdate, Date enddate, String premiumshare, String standardshare, String freebookings,
-			String schedulercolor, String access) {
+			String schedulercolor, String access, String image) {
 		super();
 		this.memberId = memberId;
 		this.email = email;
@@ -71,6 +78,13 @@ public class MemberModel {
 		this.freebookings = freebookings;
 		this.schedulercolor = schedulercolor;
 		this.access = access;
+		this.image = image;
+	}
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
 	}
 	public int getMemberId() {
 		return memberId;

@@ -23,7 +23,7 @@ public class MemberController {
 	private AddMemberRepo AMrepo;
 	@PostMapping("/details")
 	public MemberModel createMember(@RequestBody MemberModel addmember) {
-//		System.out.println(addmember.getFirstname());
+		System.out.println(addmember);
 		return AMrepo.save(addmember);
 	}
 	

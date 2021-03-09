@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import javax.persistence.Column;
@@ -36,6 +37,8 @@ public class WatercraftModel {
 	private String fuelType;
 	@Column(name = "boatclass")
 	private String boatClass;
+	@Column (name = "watercraftimage")
+	private String image;
 
 	public String getBoatClass() {
 		return boatClass;
@@ -55,7 +58,7 @@ public class WatercraftModel {
 		super();
 	}
 	public WatercraftModel(int watercraftId, String watercraftName, int makeYear, String description, String builder,
-			String hullType, Float length, String category, String model, String fuelType) {
+			String hullType, Float length, String category, String model, String fuelType, String image) {
 		super();
 		this.watercraftId = watercraftId;
 		this.watercraftName = watercraftName;
@@ -67,6 +70,13 @@ public class WatercraftModel {
 		this.category = category;
 		this.model = model;
 		this.fuelType = fuelType;
+		this.image = image;
+	}
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
 	}
 	public int getWatercraftId() {
 		return watercraftId;
