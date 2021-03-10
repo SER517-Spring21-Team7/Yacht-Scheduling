@@ -160,6 +160,7 @@ export default function AddMember() {
     const [onEnterExampleList, setOnEnterExampleList] = useState([]);
     
     const onEnterExample = (value) => {
+        console.log(value);
         setOnEnterExampleList(getMatchedList(value));
     };
 
