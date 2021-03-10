@@ -72,20 +72,49 @@ const useStyles = makeStyles((theme) => ({
 function Login({ setAccess }) {
   // const bcrypt = require("bcrypt");
   const classes = useStyles();
-  const [email, setEmail] = useState();
+  const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const access = await loginUser({
-      email,
-      // bcrypt.hashSync(password, saltRounds)
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const access = await loginUser({
+  //     email,
+  //     // bcrypt.hashSync(password, saltRounds)
+  //   });
+  //   alert(access);
+  //   setAccess(access);
+  //   alert("my login page");
+  //   // this.history.push('/MyAccount');
+  // };
+
+  const handleSubmit = event => {
+    event.preventDefault();
+
+    const endpoint = "http://localhost:8080/authenticate";
+
+    const username = this.state.username;
+    const password = this.state.password;
+
+    const user_object = {
+      username: username,
+      password: password
+    };
+
+    axios.post(endpoint, user_object).then(res => {
+      localStorage.setItem("authorization", res.data.token);
+      return this.handleDashboard();
     });
-    alert(access);
-    setAccess(access);
-    alert("my login page");
-    // this.history.push('/MyAccount');
   };
+
+  handleDashboard() {
+    axios.get("http://localhost:8080/dashboard").then(res => {
+      if (res.data === "success") {
+        this.props.history.push("/dashboard");
+      } else {
+        alert("Authentication failure");
+      }
+    });
+  }
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -111,12 +140,12 @@ function Login({ setAccess }) {
               variant="outlined"
               margin="normal"
               required
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
