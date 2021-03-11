@@ -35,11 +35,10 @@ const ListOfWaterCrafts = () => {
             <Grid container direction="row" alignItems="center">
             {
                 watercrafts.map((singleCraft) => {
-                    const {watercraftId, model } = singleCraft
-                    return <Grid key={watercraftId }>
-                        <Paper className={classes.paper}><Watercrafts name={model}
-                            watercraftId={watercraftId} parentState={watercrafts} parentState1={ setWatercrafts}/>
-                        </Paper>
+                        return <Grid key={singleCraft.watercraftId}>
+                            <Paper className={classes.paper}><Watercrafts {...singleCraft}
+                                parentState={watercrafts} parentState1={ setWatercrafts}/>
+                            </Paper>
                     </Grid> 
                 })
             }
