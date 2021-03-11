@@ -155,7 +155,7 @@ export default function SchedulerSetting() {
     weatherCountry: "",
     weatherCity: "",
     weatherZipCode: "",
-    holidayCalendar: {},
+    holidayCalendar: "",
     maxHolidayDays: 0,
     watercraftTimeZone: "",
     advanceBookingMonth: 0,
@@ -167,7 +167,6 @@ export default function SchedulerSetting() {
   };
 
   const handleChange = (event) => {
-    console.log(event);
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
@@ -211,7 +210,6 @@ export default function SchedulerSetting() {
   };
 
   const handleHolidayCalendarChange = (event) => {
-    console.log(event.target.value);
     setState({
       ...state,
       holidayCalendar: event.target.value,
@@ -220,6 +218,13 @@ export default function SchedulerSetting() {
 
   const handleCreateRedirect = () => {
     history.push("/holidaycalendar/" + "create");
+  };
+
+  const handleEditRedirect = () => {
+    const calendarId = listOfHCalendar.filter(
+      (each) => each.name == state.holidayCalendar
+    )[0].id;
+    history.push("/holidaycalendar/" + calendarId);
   };
 
   useEffect((state) => {
@@ -231,55 +236,47 @@ export default function SchedulerSetting() {
       },
     })
       .then((resp) => resp.json())
-      .then((data) => setListOfHCalendar(data));
-    fetch(
-      "http://localhost:8080/watercraft/" + globalWatercraftId + "/ssetting",
-      {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((resp) => resp.json())
       .then((data) => {
         console.log(data);
-        setState({
-          ...state,
-          premiumDays: data.premiumDays,
-          customSlots: data.timeSlot,
-          sameSetSlots: data.blockAllOneSlotBooking,
-          continuousReservationDays: data.maxContinuousBookingDays,
-          freeReservationHours: data.freeBookingAfterHours,
-          confirmEmailHours: data.confirmationBeforeHours,
-          cancelBookingBeforeStart: data.noResponseCancelAtHours,
-          weatherCountry: data.weatherCountry,
-          weatherCity: data.weatherCity,
-          weatherZipCode: data.weatherZipCode,
-          holidayCalendar: data.holidayCalName,
-          maxHolidayDays: data.maxHolidayBookingDays,
-          watercraftTimeZone: data.timeZone,
-          advanceBookingMonth: data.limitAdvBookingMonths,
-          carryBorrow: data.allowCarryBorrow,
-        });
+        setListOfHCalendar(data);
+      })
+      .then(() => {
+        fetch(
+          "http://localhost:8080/watercraft/" +
+            globalWatercraftId +
+            "/ssetting",
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        )
+          .then((resp) => resp.json())
+          .then((data) => {
+            console.log(data);
+            setState({
+              ...state,
+              premiumDays: data.premiumDays,
+              customSlots: data.timeSlot,
+              sameSetSlots: data.blockAllOneSlotBooking,
+              continuousReservationDays: data.maxContinuousBookingDays,
+              freeReservationHours: data.freeBookingAfterHours,
+              confirmEmailHours: data.confirmationBeforeHours,
+              cancelBookingBeforeStart: data.noResponseCancelAtHours,
+              weatherCountry: data.weatherCountry,
+              weatherCity: data.weatherCity,
+              weatherZipCode: data.weatherZipCode,
+              holidayCalendar: data.holidayCalName,
+              maxHolidayDays: data.maxHolidayBookingDays,
+              watercraftTimeZone: data.timeZone,
+              advanceBookingMonth: data.limitAdvBookingMonths,
+              carryBorrow: data.allowCarryBorrow,
+            });
+          });
       });
-
-  const handleEditRedirect = () => {
-    history.push("/holidaycalendar/" + state.holidayCalendar.id);
-  };
-
-  // useEffect((state) => {
-  //   fetch("http://localhost:8080/holidaycalendar", {
-  //     method: "GET",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //   })
-  //     .then((resp) => resp.json())
-  //     .then((data) => setListOfHCalendar(data));
-  // }, []);
+  }, []);
 
   const saveChanges = () => {
     return fetch(
@@ -695,7 +692,10 @@ export default function SchedulerSetting() {
                     <MenuItem value="">None</MenuItem>
                     {listOfHCalendar.map((eachCalendar) => {
                       return (
-                        <MenuItem key={eachCalendar.id} value={eachCalendar}>
+                        <MenuItem
+                          key={eachCalendar.id}
+                          value={eachCalendar.name}
+                        >
                           {eachCalendar.name}
                         </MenuItem>
                       );
@@ -809,93 +809,6 @@ export default function SchedulerSetting() {
                   label="Allow carrying slots from the previous month and borrow slots from the next month."
                 />
               </Grid>
-              {/* <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={state.ignoreSharePercent}
-                      onChange={handleChange}
-                      name="ignoreSharePercent"
-                      color="primary"
-                    />
-                  }
-                  label="Ignore share percentages - Allow users to book at will."
-                />
-              </Grid>
-              <Grid item md={1} xs={12}>
-                <Typography
-                  className={classes.secTypo}
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  Limit:
-                </Typography>
-              </Grid>
-              <Grid item md={2} xs={12}>
-                <TextField
-                  variant="outlined"
-                  label="reservations"
-                  name="reservationLimit"
-                  value={state.reservationLimit}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item md={1} xs={12}>
-                <Typography
-                  className={classes.secTypo}
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  Every:
-                </Typography>
-              </Grid>
-              <Grid item md={2} xs={12}>
-                <TextField
-                  variant="outlined"
-                  name="reservationLimitPer"
-                  value={state.reservationLimitPer}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item md={2} xs={12}>
-                <FormControl variant="outlined" required>
-                  <Select
-                    name="reservationLimitUnit"
-                    value={state.reservationLimitUnit}
-                    onChange={handleChange}
-                    defaultValue={"Month"}
-                  >
-                    <MenuItem value={"Month"}>Month(s)</MenuItem>
-                    <MenuItem value={"Week"}>Week(s)</MenuItem>
-                    <MenuItem value={"Day"}>Day(s)</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item md={1} xs={12}>
-                <Typography
-                  className={classes.secTypo}
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  Including:
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={3}>
-                <FormControl variant="outlined" required>
-                  <Select
-                    name="reservationLimitInclude"
-                    value={state.reservationLimitInclude}
-                    onChange={handleChange}
-                    defaultValue={"Past"}
-                  >
-                    <MenuItem value={"Past"}>Past Reservations</MenuItem>
-                    <MenuItem value={"Future"}>Future Reservations</MenuItem>
-                    <MenuItem value={"Both"}>
-                      Past & Future Reservations
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid> */}
             </Grid>
           </form>
         </AccordionDetails>
