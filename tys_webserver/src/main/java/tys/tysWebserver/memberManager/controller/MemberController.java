@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import tys.tysWebserver.accountManager.controller.UserAccountController;
+import tys.tysWebserver.accountManager.model.UserNotificationSetting;
+import tys.tysWebserver.accountManager.model.UserProfile;
 import tys.tysWebserver.memberManager.model.MemberModel;
 import tys.tysWebserver.memberManager.repository.AddMemberRepo;
 
@@ -21,10 +24,21 @@ public class MemberController {
 	
 	@Autowired
 	private AddMemberRepo AMrepo;
+	
+	@Autowired
+	UserAccountController userAccController;
+	
 	@PostMapping("/details")
 	public MemberModel createMember(@RequestBody MemberModel addmember) {
 		System.out.println(addmember);
-		return AMrepo.save(addmember);
+		MemberModel savedMember = AMrepo.save(addmember);
+		UserProfile userProfile = new UserProfile();
+		userProfile.setUserId(savedMember.getMemberId());
+		userProfile.setFirstName(savedMember.getFirstname());
+		userProfile.setLastName(savedMember.getLastname());
+		userAccController.createUserProfile(userProfile);
+		userAccController.createDefaultUserNotification(savedMember.getMemberId());
+		return savedMember;
 	}
 	
 	@CrossOrigin(origins = "http://localhost:3000")
