@@ -1,19 +1,7 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
-import Watercrafts from "./listWaterCraft/Watercrafts";
-import ListOfWaterCrafts from "./listWaterCraft/ListOfWaterCrafts";
-// import Login from "./components/Login/Login.js";
-// import Toolbar from "./components/Sidebar/ToolbarUI";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router} from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
-import AddWatercraft from "./components/AddWatercraftComponent/AddWatercraft";
-import MyAccount from "./components/MyAccount/MyAccount";
-import { EditWatercraft } from "./editWaterCraft/EditWatercraft";
-import AddMember from "./components/AddMember/AddMember";
-import SearchMember from "./components/AddMember/SearchMember";
-import SchedulerSetting from "./components/SchedulerSettings/SchedulerSetting";
-import ListMember from "./listMember/ListMember";
-import HolidayCalendar from "./components/SchedulerSettings/HolidayCalendar";
 import MiniDrawer from "./components/Sidebar/Sidebar";
 
 const useStyle = makeStyles((theme) => ({
@@ -59,34 +47,7 @@ function App() {
   return (
     <>
       <Router>
-        {/* <Toolbar passChildData={setChildData}/> */}
         <MiniDrawer />
-        {/* <Switch>
-          <div
-            className={
-              childData
-                ? classes.stylingComponents
-                : classes.stylingComponentsFalse
-            }
-          >
-            <Route path="/listwatercraft" exact component={ListOfWaterCrafts} />
-            <Route path="/watercrafts">
-              <AddWatercraft data={null} />
-            </Route>
-            <Route path="/member" component={AddMember} />
-            <Route path="/viewmember" component={ListMember} />
-            <Route path="/MyAccount" component={MyAccount} />
-            <Route
-              path="/editWatercraft/:idOfWatercraft"
-              component={EditWatercraft}
-            />
-            <Route path="/listMember" component={ListMember} />
-            <Route path="/scheduler" component={SchedulerSetting} />
-            <Route path="/" exact />
-            <Route path="/watercrafts" component={AddWatercraft} />
-            <Route path="/holidaycalendar" component={HolidayCalendar} />
-          </div>
-        </Switch> */}
       </Router>
     </>
   );

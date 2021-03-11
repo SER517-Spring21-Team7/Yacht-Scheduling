@@ -14,6 +14,8 @@ import {
   Box,
 } from "@material-ui/core";
 import clsx from "clsx";
+import S3 from 'react-aws-s3'
+import imageCompression from 'browser-image-compression'
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -49,11 +51,19 @@ const initialValues = {
   boatClass: "",
   builder: "",
   hullType: "",
+  image: "",
   length: "",
   category: "",
   model: "",
   fuelType: "",
 };
+
+const config = {
+  bucketName: 'tys-user-image',
+  region: 'us-west-2',
+  accessKeyId: 'AKIAVM6FVNOGNDLX6DEY',
+  secretAccessKey: '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',
+}
 
 export default function AddWatercraft(props) {
   console.log(props.data);
@@ -72,6 +82,39 @@ export default function AddWatercraft(props) {
       [name]: value,
     });
   };
+
+  const handleImageInput = (e) => {
+
+    let imageFile = e.target.files[0];
+    let options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true
+    }
+
+    imageCompression(imageFile, options)
+    .then(function (compressedFile){
+        let file = new File([compressedFile], "file1.png", {type: "image/jpg"});
+        return file
+    })
+    .then(fileToUpload =>{
+        const ReactS3Client = new S3(config);
+        ReactS3Client
+        .uploadFile(fileToUpload)
+        .then(data => {
+            console.log(data.location)
+            return data.location
+        })
+        .then(url => {
+            setValues({
+                ...values,
+                image: url
+            })
+        })
+        .catch(err => console.error(err))
+    })
+}
+
   const buttonClicked = (event) => {
     return fetch("http://localhost:8080/watercraft/details", {
       method: "POST",
@@ -147,7 +190,13 @@ export default function AddWatercraft(props) {
             />
           </Grid>
           <Grid item xs={6}>
-            {/* Blank grid */}
+            <TextField
+              type="file"
+              accept="image/*"
+              variant="outlined"
+              onChange={handleImageInput}
+            >
+            </TextField>
           </Grid>
           <Grid item xs={6}>
             <TextField
@@ -161,7 +210,7 @@ export default function AddWatercraft(props) {
             />
           </Grid>
           <Grid item xs={6}>
-            {/* Blank grid */}
+            {/* Spacing only */}
           </Grid>
           <Grid item xs={6}>
             <FormControl variant="outlined">

@@ -21,37 +21,41 @@ import {
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import ColorPicker from "material-ui-color-picker";
-import SearchMember from "./SearchMember";
-import S3 from "react-aws-s3";
-import imageCompression from "browser-image-compression";
+import SearchMember from './SearchMember'
+import S3 from 'react-aws-s3'
+import imageCompression from 'browser-image-compression'
 
 const tempState = {
   drop: [],
 };
 const initialValues = {
-  email: "",
-  watercraft: "",
-  firstname: "",
-  lastname: "",
-  password: "",
-  password2: "",
-  startdate: null,
-  enddate: null,
-  premiumshare: "",
-  standardshare: "",
-  freebookings: "",
-  schedulercolor: "",
-  access: "",
-  image: "",
-};
-const useStyle = makeStyles((theme) => ({
-  root: {
-    width: "80%",
-    marginTop: theme.spacing(5),
-    marginLeft: theme.spacing(15),
-    "& .MuiFormControl-root": {
-      width: "70%",
-      margin: theme.spacing(1.5),
+    email: '',
+    watercraft:'',
+    firstname: '',
+    lastname: '',
+    password: '',
+    password2: '',
+    startdate: null,
+    enddate: null,
+    premiumshare: '',
+    standardshare: '',
+    freebookings: '',
+    schedulercolor: '',
+    access: '',
+    image: '',
+}
+const useStyle = makeStyles(theme =>({
+    root: {
+        width: "80%",
+        marginTop: theme.spacing(5),
+        marginLeft: theme.spacing(15),
+        '& .MuiFormControl-root':{
+            width: '70%',
+            margin:theme.spacing(1.5)
+        },
+        '& .MuiButtonBase-root':{
+            marginLeft: '38%',
+        }
     },
     "& .MuiButtonBase-root": {
       marginLeft: "38%",
@@ -66,11 +70,11 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 const config = {
-  bucketName: "tys-user-image",
-  region: "us-west-2",
-  accessKeyId: "AKIAVM6FVNOGNDLX6DEY",
-  secretAccessKey: "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",
-};
+    bucketName: 'tys-user-image',
+    region: 'us-west-2',
+    accessKeyId: 'AKIAVM6FVNOGNDLX6DEY',
+    secretAccessKey: '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',
+}
 
 export default function AddMember() {
   const classes = useStyle();
@@ -284,7 +288,6 @@ export default function AddMember() {
           <Grid item xs={12} sm={9}>
             {/* Alignment only */}
           </Grid>
-
           <Grid item xs={12} sm={6}>
             <TextField
               variant="outlined"
@@ -406,7 +409,6 @@ export default function AddMember() {
               onChange={handleImageInput}
             ></TextField>
             {/* <input type='file' id='memberImage' name='memberPhoto'>
-
                     </input> */}
           </Grid>
         </Grid>

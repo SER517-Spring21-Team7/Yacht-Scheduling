@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
+import {Grid} from "@material-ui/core"
 import Toolbar from "@material-ui/core/Toolbar";
 import { List, Box } from "@material-ui/core/";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -15,8 +16,6 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import { NavLink, Link } from "react-router-dom";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import tysLogo from "../../tysLogo.png";
@@ -25,11 +24,11 @@ import AddMember from "../AddMember/AddMember";
 import AddWatercraft from "../AddWatercraftComponent/AddWatercraft";
 import MyAccount from "../MyAccount/MyAccount";
 import { EditWatercraft } from "../../editWaterCraft/EditWatercraft";
-import SearchMember from "../AddMember/SearchMember";
 import SchedulerSetting from "../SchedulerSettings/SchedulerSetting";
 import ListMember from "../../listMember/ListMember";
 import HolidayCalendar from "../SchedulerSettings/HolidayCalendar";
 import { SidebarData } from "../Sidebar/SidebarData";
+import ToolbarSearch from './ToolbarSearch'
 
 const drawerWidth = 240;
 
@@ -93,6 +92,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  search:{
+    padding: theme.spacing(0, 2),
+  }
 }));
 
 export default function MiniDrawer() {
@@ -119,28 +121,37 @@ export default function MiniDrawer() {
         })}
       >
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, {
-              [classes.hide]: open,
-            })}
-          >
-            <MenuIcon />
-          </IconButton>
-          <img
-            src={tysLogo}
-            alt="Logo"
-            style={{
-              height: "7vh",
-              width: "15vw",
-              // margin: '1%',
-              zIndex: "1",
-              borderRadius: "5px",
-            }}
-          />
+          <Grid  alignItems={"center"} container>
+            <Grid item xs={0.5} sm={0.5}>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
+                className={clsx(classes.menuButton, {
+                  [classes.hide]: open,
+                })}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Grid>
+            <Grid item xs={1} sm={4}>
+              <img
+                src={tysLogo}
+                alt="Logo"
+                style={{
+                  height: "7vh",
+                  width: "15vw",
+                  // margin: '1%',
+                  zIndex: "1",
+                  borderRadius: "5px",
+                }}
+              />
+            </Grid>
+            <Grid item xs={1}>
+              <ToolbarSearch/>
+            </Grid>
+          </Grid>
         </Toolbar>
       </AppBar>
       <Drawer
