@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
@@ -26,6 +26,7 @@ import {
 import SaveIcon from "@material-ui/icons/Save";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import HolidayCalendar from "./HolidayCalendar";
+import GlobalContext from "../GlobalContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,6 +88,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SchedulerSetting() {
   const classes = useStyles();
   const history = useHistory();
+  const globalWatercraftId = useContext(GlobalContext);
   const [expanded, setExpanded] = React.useState(false);
   const hoursArr = [6, 12, 24, 36, 48, 60, 72];
   const timezoneArr = [
@@ -153,11 +155,6 @@ export default function SchedulerSetting() {
     watercraftTimeZone: "",
     advanceBookingMonth: 0,
     carryBorrow: false,
-    ignoreSharePercent: false,
-    reservationLimit: 0,
-    reservationLimitPer: 0,
-    reservationLimitUnit: "",
-    reservationLimitInclude: "",
   });
 
   const handleChangeExpansion = (panel) => (event, isExpanded) => {
@@ -211,42 +208,79 @@ export default function SchedulerSetting() {
   const handleRedirect = () => {
     history.push("/holidaycalendar");
   };
-  //   useEffect((state) => {
-  //     fetch("http://localhost:8080/user/3/nsetting", {
-  //       method: "GET",
-  //       headers: {
-  //         Accept: "application/json",
-  //         "Content-Type": "application/json",
-  //       },
-  //     })
-  //       .then((resp) => resp.json())
-  //       .then((data) =>
-  //         setState({
-  //           ...state,
 
-  //         })
-  //       );
-  //   }, []);
+  useEffect((state) => {
+    console.log("Inside SS use effect" + globalWatercraftId);
+    fetch(
+      "http://localhost:8080/watercraft/" + globalWatercraftId + "/ssetting",
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data);
+        setState({
+          ...state,
+          premiumDays: data.premiumDays,
+          customSlots: data.timeSlot,
+          sameSetSlots: data.blockAllOneSlotBooking,
+          continuousReservationDays: data.maxContinuousBookingDays,
+          freeReservationHours: data.freeBookingAfterHours,
+          confirmEmailHours: data.confirmationBeforeHours,
+          cancelBookingBeforeStart: data.noResponseCancelAtHours,
+          weatherCountry: data.weatherCountry,
+          weatherCity: data.weatherCity,
+          weatherZipCode: data.weatherZipCode,
+          holidayCalendar: data.holidayCalName,
+          maxHolidayDays: data.maxHolidayBookingDays,
+          watercraftTimeZone: data.timeZone,
+          advanceBookingMonth: data.limitAdvBookingMonths,
+          carryBorrow: data.allowCarryBorrow,
+        });
+      });
+  }, []);
 
-  //   const saveChanges = () => {
-  //     return fetch("http://localhost:8080/user/3/nsetting", {
-  //       method: "PUT",
-  //       headers: {
-  //         Accept: "application/json",
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         ...state,
-  //       }),
-  //     })
-  //       .then((response) => response.json())
-  //       .then((json) => {
-  //         console.log("Notification setting updated.");
-  //       })
-  //       .catch((error) => {
-  //         console.error("Notification setting update failed.");
-  //       });
-  //   };
+  const saveChanges = () => {
+    return fetch(
+      "http://localhost:8080/watercraft/" + globalWatercraftId + "/ssetting",
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          premiumDays: state.premiumDays,
+          timeSlot: state.customSlots,
+          blockAllOneSlotBooking: state.sameSetSlots,
+          maxContinuousBookingDays: state.continuousReservationDays,
+          freeBookingAfterHours: state.freeReservationHours,
+          confirmationBeforeHours: state.confirmEmailHours,
+          noResponseCancelAtHours: state.cancelBookingBeforeStart,
+          weatherCountry: state.weatherCountry,
+          weatherCity: state.weatherCity,
+          weatherZipCode: state.weatherZipCode,
+          holidayCalName: state.holidayCalendar,
+          maxHolidayBookingDays: state.maxHolidayDays,
+          timeZone: state.watercraftTimeZone,
+          limitAdvBookingMonths: state.advanceBookingMonth,
+          allowCarryBorrow: state.carryBorrow,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        console.log("Notification setting updated.");
+      })
+      .catch((error) => {
+        console.error("Notification setting update failed.");
+      });
+  };
 
   return (
     <div>
@@ -258,6 +292,7 @@ export default function SchedulerSetting() {
           align="center"
         >
           Scheduler Settings
+          {globalWatercraftId}
         </Typography>
       </Container>
       <Accordion
@@ -734,7 +769,7 @@ export default function SchedulerSetting() {
                   label="Allow carrying slots from the previous month and borrow slots from the next month."
                 />
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -820,7 +855,7 @@ export default function SchedulerSetting() {
                     </MenuItem>
                   </Select>
                 </FormControl>
-              </Grid>
+              </Grid> */}
             </Grid>
           </form>
         </AccordionDetails>
@@ -833,7 +868,7 @@ export default function SchedulerSetting() {
           size="medium"
           className={classes.button}
           startIcon={<SaveIcon />}
-          //onClick={saveChanges}
+          onClick={saveChanges}
         >
           Save settings
         </Button>
