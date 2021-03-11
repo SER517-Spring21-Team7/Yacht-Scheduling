@@ -11,6 +11,9 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import tysLogo from "../../tysLogo.png";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
+
 
 function Copyright() {
   return (
@@ -23,16 +26,6 @@ function Copyright() {
       {"."}
     </Typography>
   );
-}
-
-async function loginUser(credentials) {
-  return fetch("http://localhost:8080/login/admin", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(credentials),
-  }).then((data) => data.json());
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -71,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Login({ setAccess }) {
   // const bcrypt = require("bcrypt");
+  const history = useHistory();
   const classes = useStyles();
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
@@ -91,25 +85,22 @@ function Login({ setAccess }) {
     event.preventDefault();
 
     const endpoint = "http://localhost:8080/authenticate";
-
-    const username = this.state.username;
-    const password = this.state.password;
-
+    
     const user_object = {
       username: username,
       password: password
     };
 
     axios.post(endpoint, user_object).then(res => {
-      localStorage.setItem("authorization", res.data.token);
-      return this.handleDashboard();
+      sessionStorage.setItem("authorization", res.data.token);
+      return handleDashboard();
     });
   };
 
-  handleDashboard() {
-    axios.get("http://localhost:8080/dashboard").then(res => {
+  const handleDashboard = () => {
+    axios.get("http://localhost:8080/listwatercraft").then(res => {
       if (res.data === "success") {
-        this.props.history.push("/dashboard");
+        history.push("/");
       } else {
         alert("Authentication failure");
       }

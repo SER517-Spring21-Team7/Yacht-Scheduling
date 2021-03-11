@@ -1,8 +1,10 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router} from "react-router-dom";
+import { BrowserRouter as Router, Route} from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import MiniDrawer from "./components/Sidebar/Sidebar";
+import Login from "./components/Login/Login";
+import PrivateRoute from "./components/Login/Login";
 
 const useStyle = makeStyles((theme) => ({
   stylingComponents: {
@@ -37,17 +39,13 @@ function App() {
   const token = getToken();
 
   const [childData, setChildData] = useState(true);
-  //const classes = useStyle();
-  //const token = getAccess();
 
-  //if(!token) {
-  //  return <Login setAccess={setAccess} />
-  // }
   const classes = useStyle();
   return (
     <>
       <Router>
-        <MiniDrawer />
+      <Route path="/login" component={Login} />
+      <PrivateRoute path="/" component={MiniDrawer} />
       </Router>
     </>
   );
