@@ -1,50 +1,53 @@
-import './App.css';
-import Watercrafts from './listWaterCraft/Watercrafts';
-import ListOfWaterCrafts from './listWaterCraft/ListOfWaterCrafts';
-import Login from './components/login/Login.js';
-import Toolbar from './components/Sidebar/ToolbarUI';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-import {makeStyles} from '@material-ui/core'
-import AddWatercraft from './components/AddWatercraftComponent/AddWatercraft';
-import MyAccount from './components/MyAccount/MyAccount';
+import "./App.css";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router} from "react-router-dom";
+import { makeStyles } from "@material-ui/core";
+import MiniDrawer from "./components/Sidebar/Sidebar";
 
-
-const useStyle = makeStyles(theme =>({
+const useStyle = makeStyles((theme) => ({
   stylingComponents: {
-          width: '80%',
-          marginLeft: '20%',
-          marginTop: '4.5%'
-        }
-}))
+    marginLeft: "20%",
+  },
+  stylingComponentsFalse: {
+    marginLeft: "0px",
+  },
+}));
 
 function setAccess(userAccess) {
-  sessionStorage.setItem('access', JSON.stringify(userAccess));
+  sessionStorage.setItem("access", JSON.stringify(userAccess));
 }
-  
+
 function getAccess() {
-  const accessString = sessionStorage.getItem('access');
+  const accessString = sessionStorage.getItem("access");
   const userAccess = JSON.parse(accessString);
-  return userAccess?.access
+  return userAccess?.access;
 }
-  
+
+function setToken(userToken) {
+  sessionStorage.setItem("token", JSON.stringify(userToken));
+}
+
+function getToken() {
+  const tokenString = sessionStorage.getItem("token");
+  const userToken = JSON.parse(tokenString);
+  return userToken?.token;
+}
+
 function App() {
+  const token = getToken();
+
+  const [childData, setChildData] = useState(true);
+  //const classes = useStyle();
   //const token = getAccess();
-  
+
   //if(!token) {
   //  return <Login setAccess={setAccess} />
-  //}
+  // }
   const classes = useStyle();
   return (
     <>
       <Router>
-        <Toolbar/>
-        <Switch>
-          <div className={classes.stylingComponents}>
-            <Route path='/listwatercraft' exact component={ListOfWaterCrafts} />
-            <Route path='/watercrafts' component={AddWatercraft} />
-            <Route path='/MyAccount' component={MyAccount} />
-          </div>
-        </Switch>
+        <MiniDrawer />
       </Router>
     </>
   );

@@ -24,20 +24,17 @@ const ListOfWaterCrafts = () => {
             method: "GET"
         });
         const watercrafts = await response.json();
-        console.log(watercrafts);
         setWatercrafts(watercrafts);
     }
     useEffect(() => { 
         getWaterCraft();
     },[])
-    // console.log(craft);
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <Grid container direction="row" justify="space-between" alignItems="center">
+            <Grid container direction="row" alignItems="center">
             {
                 watercrafts.map((singleCraft) => {
-                    console.log(singleCraft.watercraftId);
                     const {watercraftId, model } = singleCraft
                     return <Grid key={watercraftId }>
                         <Paper className={classes.paper}><Watercrafts name={model}
