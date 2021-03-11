@@ -147,7 +147,7 @@ export default function SchedulerSetting() {
   const [state, setState] = React.useState({
     premiumDays: [],
     customSlots: [],
-    sameSetSlots: true,
+    preventSameSetSlots: false,
     continuousReservationDays: 0,
     freeReservationHours: 0,
     confirmEmailHours: 0,
@@ -170,19 +170,19 @@ export default function SchedulerSetting() {
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
-  const handleSetSlotChange = (event) => {
-    if (event.target.checked) {
-      setState({
-        ...state,
-        sameSetSlots: false,
-      });
-    } else {
-      setState({
-        ...state,
-        sameSetSlots: true,
-      });
-    }
-  };
+  // const handleSetSlotChange = (event) => {
+  //   if (event.target.checked) {
+  //     setState({
+  //       ...state,
+  //       preventSameSetSlots: true,
+  //     });
+  //   } else {
+  //     setState({
+  //       ...state,
+  //       preventSameSetSlots: false,
+  //     });
+  //   }
+  // };
 
   const handlePremiumCheckboxChange = (event) => {
     if (event.target.checked) {
@@ -260,7 +260,7 @@ export default function SchedulerSetting() {
               ...state,
               premiumDays: data.premiumDays,
               customSlots: data.timeSlot,
-              sameSetSlots: data.blockAllOneSlotBooking,
+              preventSameSetSlots: data.blockAllOneSlotBooking,
               continuousReservationDays: data.maxContinuousBookingDays,
               freeReservationHours: data.freeBookingAfterHours,
               confirmEmailHours: data.confirmationBeforeHours,
@@ -290,7 +290,7 @@ export default function SchedulerSetting() {
         body: JSON.stringify({
           premiumDays: state.premiumDays,
           timeSlot: state.customSlots,
-          blockAllOneSlotBooking: state.sameSetSlots,
+          blockAllOneSlotBooking: state.preventSameSetSlots,
           maxContinuousBookingDays: state.continuousReservationDays,
           freeBookingAfterHours: state.freeReservationHours,
           confirmationBeforeHours: state.confirmEmailHours,
@@ -370,16 +370,19 @@ export default function SchedulerSetting() {
                       "Saturday",
                     ].map((day) => {
                       return (
-                        <div>
-                          <Checkbox
-                            id={day}
-                            value={day}
-                            onChange={handlePremiumCheckboxChange}
-                          />
-                          <label class="custom-control-label" for={day}>
-                            {day}
-                          </label>
-                        </div>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              id={day}
+                              value={day}
+                              checked={state.premiumDays.includes(day)}
+                              onChange={handlePremiumCheckboxChange}
+                              name="carryBorrow"
+                              color="primary"
+                            />
+                          }
+                          label={day}
+                        />
                       );
                     })}
                   </div>
@@ -398,18 +401,18 @@ export default function SchedulerSetting() {
                 <TimeSlots customSlots={state.customSlots} />
               </Grid>
               <Grid item xs={12}>
-                <br />
-                <div>
-                  <Checkbox
-                    id="oneSetSlots"
-                    value={state.sameSetSlots}
-                    onChange={handleSetSlotChange}
-                  />
-                  <label class="custom-control-label" for="oneSetSlots">
-                    Prevent members from using their entire share percentage on
-                    one set of slots.
-                  </label>
-                </div>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={state.preventSameSetSlots}
+                      onChange={handleChange}
+                      name="preventSameSetSlots"
+                      color="primary"
+                    />
+                  }
+                  label="Prevent members from using their entire share percentage on
+                  one set of slots."
+                />
               </Grid>
               <Grid item xs={12}>
                 <br />
