@@ -85,11 +85,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const InitialHCalendar = [];
+
 export default function SchedulerSetting() {
   const classes = useStyles();
   const history = useHistory();
   const globalWatercraftId = useContext(GlobalContext);
   const [expanded, setExpanded] = React.useState(false);
+  const [listOfHCalendar, setListOfHCalendar] = React.useState(
+    InitialHCalendar
+  );
   const hoursArr = [6, 12, 24, 36, 48, 60, 72];
   const timezoneArr = [
     "Australia/ACT",
@@ -150,7 +155,7 @@ export default function SchedulerSetting() {
     weatherCountry: "",
     weatherCity: "",
     weatherZipCode: "",
-    holidayCalendar: "",
+    holidayCalendar: {},
     maxHolidayDays: 0,
     watercraftTimeZone: "",
     advanceBookingMonth: 0,
@@ -205,12 +210,28 @@ export default function SchedulerSetting() {
     });
   };
 
-  const handleRedirect = () => {
-    history.push("/holidaycalendar");
+  const handleHolidayCalendarChange = (event) => {
+    console.log(event.target.value);
+    setState({
+      ...state,
+      holidayCalendar: event.target.value,
+    });
+  };
+
+  const handleCreateRedirect = () => {
+    history.push("/holidaycalendar/" + "create");
   };
 
   useEffect((state) => {
-    console.log("Inside SS use effect" + globalWatercraftId);
+    fetch("http://localhost:8080/holidaycalendar", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => setListOfHCalendar(data));
     fetch(
       "http://localhost:8080/watercraft/" + globalWatercraftId + "/ssetting",
       {
@@ -243,7 +264,22 @@ export default function SchedulerSetting() {
           carryBorrow: data.allowCarryBorrow,
         });
       });
-  }, []);
+
+  const handleEditRedirect = () => {
+    history.push("/holidaycalendar/" + state.holidayCalendar.id);
+  };
+
+  // useEffect((state) => {
+  //   fetch("http://localhost:8080/holidaycalendar", {
+  //     method: "GET",
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  //     .then((resp) => resp.json())
+  //     .then((data) => setListOfHCalendar(data));
+  // }, []);
 
   const saveChanges = () => {
     return fetch(
@@ -285,14 +321,15 @@ export default function SchedulerSetting() {
   return (
     <div>
       <Container>
-        <Typography
-          color="textPrimary"
-          gutterBottom
-          variant="h3"
-          align="center"
-        >
-          Scheduler Settings
-          {globalWatercraftId}
+        <Typography>
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize={20}
+            textAlign="center"
+            m={1}
+          >
+            Scheduler Settings
+          </Box>
         </Typography>
       </Container>
       <Accordion
@@ -653,13 +690,16 @@ export default function SchedulerSetting() {
                     label="Holiday Calendar"
                     name="holidayCalendar"
                     value={state.holidayCalendar}
-                    onChange={handleChange}
+                    onChange={handleHolidayCalendarChange}
                   >
                     <MenuItem value="">None</MenuItem>
-                    <MenuItem value={"Australia"}>Australia</MenuItem>
-                    <MenuItem value={"Canada"}>Canada</MenuItem>
-                    <MenuItem value={"United Kingdom"}>United Kingdom</MenuItem>
-                    <MenuItem value={"United States"}>United States</MenuItem>
+                    {listOfHCalendar.map((eachCalendar) => {
+                      return (
+                        <MenuItem key={eachCalendar.id} value={eachCalendar}>
+                          {eachCalendar.name}
+                        </MenuItem>
+                      );
+                    })}
                   </Select>
                 </FormControl>
               </Grid>
@@ -669,8 +709,8 @@ export default function SchedulerSetting() {
                   aria-label="outlined primary button group"
                   style={{ marginTop: "10%", marginLeft: "0%" }}
                 >
-                  <Button>Edit</Button>
-                  <Button onClick={() => handleRedirect()}>Create</Button>
+                  <Button onClick={() => handleEditRedirect()}>Edit</Button>
+                  <Button onClick={() => handleCreateRedirect()}>Create</Button>
                 </ButtonGroup>
               </Grid>
               <Grid item md={3}>

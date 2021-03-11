@@ -44,19 +44,8 @@ public class SchedulerSetting {
 	private TimeZone timeZone;
 	@Column(name = "allowcarryborrow")
 	private boolean allowCarryBorrow;
-	@Column(name = "ignoresharepercent")
-	private boolean ignoreSharePercent;
 	@Column(name = "limitadvbookingmonths")
 	private int limitAdvBookingMonths;
-	// TODO few fields about limiting reservation per day is pending
-	@Column(name = "reservationlimit")
-	private int reservationLimit;
-	@Column(name = "reservationlimitper")
-	private int reservationLimitPer;
-	@Column(name = "reservationlimitunit")
-	private String reservationLimitUnit;
-	@Column(name = "reservationlimitinclude")
-	private String reservationLimitInclude;
 
 	public SchedulerSetting() {
 		super();
@@ -71,18 +60,15 @@ public class SchedulerSetting {
 				+ noResponseCancelAtHours + ", weatherCountry=" + weatherCountry + ", weatherCity=" + weatherCity
 				+ ", weatherZipCode=" + weatherZipCode + ", holidayCalName=" + holidayCalName
 				+ ", maxHolidayBookingDays=" + maxHolidayBookingDays + ", timeZone=" + timeZone + ", allowCarryBorrow="
-				+ allowCarryBorrow + ", ignoreSharePercent=" + ignoreSharePercent + ", limitAdvBookingMonths="
-				+ limitAdvBookingMonths + ", reservationLimit=" + reservationLimit + ", reservationLimitPer="
-				+ reservationLimitPer + ", reservationLimitUnit=" + reservationLimitUnit + ", reservationLimitInclude="
-				+ reservationLimitInclude + "]";
+				+ allowCarryBorrow + ", limitAdvBookingMonths="
+				+ limitAdvBookingMonths + "]";
 	}
 
 	public SchedulerSetting(int watercraftId, List<String> premiumDays, List<TimeSlot> timeSlot,
 			boolean blockAllOneSlotBooking, int maxContinuousBookingDays, int freeBookingAfterHours,
 			int confirmationBeforeHours, int noResponseCancelAtHours, String weatherCountry, String weatherCity,
 			String weatherZipCode, String holidayCalName, int maxHolidayBookingDays, TimeZone timeZone,
-			boolean allowCarryBorrow, boolean ignoreSharePercent, int limitAdvBookingMonths, int reservationLimit,
-			int reservationLimitPer, String reservationLimitUnit, String reservationLimitInclude) {
+			boolean allowCarryBorrow, int limitAdvBookingMonths) {
 		super();
 		this.watercraftId = watercraftId;
 		this.premiumDays = premiumDays;
@@ -99,12 +85,7 @@ public class SchedulerSetting {
 		this.maxHolidayBookingDays = maxHolidayBookingDays;
 		this.timeZone = timeZone;
 		this.allowCarryBorrow = allowCarryBorrow;
-		this.ignoreSharePercent = ignoreSharePercent;
 		this.limitAdvBookingMonths = limitAdvBookingMonths;
-		this.reservationLimit = reservationLimit;
-		this.reservationLimitPer = reservationLimitPer;
-		this.reservationLimitUnit = reservationLimitUnit;
-		this.reservationLimitInclude = reservationLimitInclude;
 	}
 
 	public int getWatercraftId() {
@@ -227,52 +208,12 @@ public class SchedulerSetting {
 		this.allowCarryBorrow = allowCarryBorrow;
 	}
 
-	public boolean isIgnoreSharePercent() {
-		return ignoreSharePercent;
-	}
-
-	public void setIgnoreSharePercent(boolean ignoreSharePercent) {
-		this.ignoreSharePercent = ignoreSharePercent;
-	}
-
 	public int getLimitAdvBookingMonths() {
 		return limitAdvBookingMonths;
 	}
 
 	public void setLimitAdvBookingMonths(int limitAdvBookingMonths) {
 		this.limitAdvBookingMonths = limitAdvBookingMonths;
-	}
-
-	public int getReservationLimit() {
-		return reservationLimit;
-	}
-
-	public void setReservationLimit(int limitReservation) {
-		this.reservationLimit = limitReservation;
-	}
-
-	public int getReservationLimitPer() {
-		return reservationLimitPer;
-	}
-
-	public void setReservationLimitPer(int limitReservationTo) {
-		this.reservationLimitPer = limitReservationTo;
-	}
-
-	public String getReservationLimitUnit() {
-		return reservationLimitUnit;
-	}
-
-	public void setReservationLimitUnit(String limitReservationUnit) {
-		this.reservationLimitUnit = limitReservationUnit;
-	}
-
-	public String getReservationLimitInclude() {
-		return reservationLimitInclude;
-	}
-
-	public void setReservationLimitInclude(String limitReservationInclude) {
-		this.reservationLimitInclude = limitReservationInclude;
 	}
 
 }

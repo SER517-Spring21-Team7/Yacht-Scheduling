@@ -1,12 +1,14 @@
 package tys.tysWebserver.scheduler.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,22 +51,34 @@ public class SchedulerSettingController {
 		ssObject.setMaxHolidayBookingDays(ssRequest.getMaxHolidayBookingDays());
 		ssObject.setTimeZone(ssRequest.getTimeZone());
 		ssObject.setAllowCarryBorrow(ssRequest.isAllowCarryBorrow());
-		ssObject.setIgnoreSharePercent(ssRequest.isIgnoreSharePercent());
 		ssObject.setLimitAdvBookingMonths(ssRequest.getLimitAdvBookingMonths());
-		ssObject.setReservationLimit(ssRequest.getReservationLimit());
-		ssObject.setReservationLimitPer(ssRequest.getReservationLimitPer());
-		ssObject.setReservationLimitUnit(ssRequest.getReservationLimitUnit());
-		ssObject.setReservationLimitInclude(ssRequest.getReservationLimitInclude());
 		final SchedulerSetting updatedSetting = ssr.save(ssObject);
 		return ResponseEntity.ok(updatedSetting);
 	}
 
-	@PostMapping("/watercraft/{id}/ssetting")
-	public ResponseEntity<SchedulerSetting> addSchedulerSettingById(@PathVariable(value = "id") Integer watercraftId,
-			@RequestBody SchedulerSetting ssRequest) throws ResourceNotFoundException {
-		System.out.println("Request Object is :: " + ssRequest);
-		ssRequest.setWatercraftId(watercraftId);
-		final SchedulerSetting savedSetting = ssr.save(ssRequest);
+	public ResponseEntity<SchedulerSetting> addSchedulerSettingById(int watercraftId) throws ResourceNotFoundException {
+		SchedulerSetting ssObject = new SchedulerSetting();
+		ssObject.setWatercraftId(watercraftId);
+		// These are default values for scheduler setting, to be set for every new watercraft added
+		List<String> premiumDays = new ArrayList<String>();
+		premiumDays.add("Saturday");
+		premiumDays.add("Sunday");
+		ssObject.setPremiumDays(premiumDays);
+		ssObject.setTimeSlot(null); //Time slot must be set manually??
+		ssObject.setBlockAllOneSlotBooking(true);
+		ssObject.setMaxContinuousBookingDays(7);
+		ssObject.setFreeBookingAfterHours(12);
+		ssObject.setConfirmationBeforeHours(72);
+		ssObject.setNoResponseCancelAtHours(24);
+		ssObject.setWeatherCountry("");
+		ssObject.setWeatherCity("");
+		ssObject.setWeatherZipCode("");
+		ssObject.setHolidayCalName("");
+		ssObject.setMaxHolidayBookingDays(2);
+		ssObject.setTimeZone(null);
+		ssObject.setAllowCarryBorrow(true);
+		ssObject.setLimitAdvBookingMonths(3);
+		final SchedulerSetting savedSetting = ssr.save(ssObject);
 		return ResponseEntity.ok(savedSetting);
 	}
 
