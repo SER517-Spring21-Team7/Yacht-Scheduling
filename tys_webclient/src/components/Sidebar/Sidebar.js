@@ -220,9 +220,12 @@ export default function MiniDrawer() {
           />
           <Route path="/listMember" component={ListMember} />
           <Route path="/scheduler" component={SchedulerSetting} />
-          <Route path="/" exact/>
+          <Route path="/" exact />
           <Route path="/watercrafts" component={AddWatercraft} />
-          <Route path="/holidaycalendar" component={HolidayCalendar} />
+          <Route
+            path="/holidaycalendar/:idOfHolidayCalendar"
+            component={HolidayCalendar}
+          />
         </Switch>
       </main>
     </div>
