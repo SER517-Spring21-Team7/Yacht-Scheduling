@@ -42,8 +42,8 @@ const initialValues = {
   freebookings: "",
   schedulercolor: "",
   access: "",
-  image: "",
 };
+const watercraftObjectListInitial = [];
 const useStyle = makeStyles((theme) => ({
   root: {
     width: "80%",
@@ -65,17 +65,11 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-const config = {
-  bucketName: "tys-user-image",
-  region: "us-west-2",
-  accessKeyId: "AKIAVM6FVNOGNDLX6DEY",
-  secretAccessKey: "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",
-};
-
 export default function AddMember() {
   const classes = useStyle();
   const [values, setValues] = useState(initialValues);
   const [tempStateValues, setTempStateValues] = useState(tempState);
+  const [watercraftObjectList, setWatercraftObjectList] = useState(watercraftObjectListInitial);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -108,38 +102,6 @@ export default function AddMember() {
     });
   };
 
-  const handleImageInput = (e) => {
-    let imageFile = e.target.files[0];
-    let options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1920,
-      useWebWorker: true,
-    };
-
-    imageCompression(imageFile, options)
-      .then(function (compressedFile) {
-        let file = new File([compressedFile], "file1.png", {
-          type: "image/jpg",
-        });
-        return file;
-      })
-      .then((fileToUpload) => {
-        const ReactS3Client = new S3(config);
-        ReactS3Client.uploadFile(fileToUpload)
-          .then((data) => {
-            console.log(data.location);
-            return data.location;
-          })
-          .then((url) => {
-            setValues({
-              ...values,
-              image: url,
-            });
-          })
-          .catch((err) => console.error(err));
-      });
-  };
-
   const buttonClicked = (event) => {
     console.log(values);
     return fetch("http://localhost:8080/member/details", {
@@ -150,6 +112,7 @@ export default function AddMember() {
       },
       body: JSON.stringify({
         ...values,
+        watercraftId: watercraftObjectList.filter((each) => each.watercraftName === values.watercraft)[0].watercraftId
       }),
     })
       .then((response) => response.json())
@@ -172,6 +135,7 @@ export default function AddMember() {
     for (let i = 0; i < watercraftResponse.length; i++) {
       watercraftList.push(watercraftResponse[i]["watercraftName"]);
     }
+    setWatercraftObjectList(watercraftResponse);
     setTempStateValues({
       ...tempStateValues,
       drop: watercraftList,
@@ -396,16 +360,6 @@ export default function AddMember() {
                 />
               </RadioGroup>
             </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              type="file"
-              accept="image/*"
-              variant="outlined"
-              onChange={handleImageInput}
-            ></TextField>
-            {/* <input type='file' id='memberImage' name='memberPhoto'>
-                    </input> */}
           </Grid>
         </Grid>
         <Button
