@@ -202,6 +202,14 @@ export default function SchedulerSetting() {
     }
   };
 
+  const handleTimeSlots = (timeSlots) => {
+    setState({
+      ...state,
+      customSlots: timeSlots,
+    });
+    console.log("Custom slots are::" + timeSlots);
+  };
+
   const handleContinousReservationChange = (event) => {
     setState({
       ...state,
@@ -398,7 +406,10 @@ export default function SchedulerSetting() {
                 >
                   Booking Slot Timings:
                 </Typography>
-                <TimeSlots customSlots={state.customSlots} />
+                <TimeSlots
+                  customSlots={state.customSlots}
+                  parentCallback={handleTimeSlots}
+                />
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
