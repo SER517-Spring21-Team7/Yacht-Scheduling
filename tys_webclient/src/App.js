@@ -45,7 +45,7 @@ function App() {
     <>
       <Router>
       <Route path="/login" component={Login} />
-      <Route path="/" component={MiniDrawer} />
+      <PrivateRoute path="/" component={MiniDrawer} />
       </Router>
     </>
   );

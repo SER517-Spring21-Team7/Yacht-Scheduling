@@ -1,12 +1,9 @@
 import axios from 'axios';
 //var axios = require("axios");
 
-const instance = axios.create();
+//const instanceOf = axios.create();
 
-//const jwtToken = sessionStorage.getItem("authorization");
-console.log("jwtToken");
-instance.interceptors.request.use(
-  (config) => {
+axios.interceptors.request.use(config => {
     console.log("in interceptor");
     const jwtToken = sessionStorage.getItem("authorization");
     if (jwtToken) {
@@ -14,10 +11,14 @@ instance.interceptors.request.use(
       console.log('config' + config);
     }
     return config;
-  },
-  (error) => {
-    Promise.reject(err);
-  }
-);
+  }, error => {
+  // Do something with request error
+  return Promise.reject(error);
+});
 
-export default instance;
+
+axios.interceptors.response.use(res => {
+  console.log(res.data.json);
+  // Important: response interceptors **must** return the response.
+  return res;
+});
