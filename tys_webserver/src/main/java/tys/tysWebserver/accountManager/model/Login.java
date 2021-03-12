@@ -16,11 +16,10 @@ import com.sun.istack.NotNull;
 public class Login {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	@NotNull
 	@Column(name = "userid")
-	private long id;
-	
+	private int id;
+
 	@Column(unique = true, name = "email")
 	@NotNull
 	private String email;
@@ -29,10 +28,28 @@ public class Login {
 	@NotNull
 	private String password;
 	
-	public Login( String email, String password ) {
+	@Column(name = "role")
+	@NotNull
+	private String role;
+	
+	public Login() {
 		super();
+	}
+
+	public Login(int id, String email, String password, String role ) {
+		super();
+		this.id = id;
 		this.email = email;
 		this.password = password;
+		this.role = role;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getEmail() {
@@ -49,6 +66,14 @@ public class Login {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 //	public Date getCreationDate() {
