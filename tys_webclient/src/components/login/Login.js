@@ -92,23 +92,14 @@ function Login({ setAccess }) {
     };
 
     axios.post(endpoint, user_object).then(res => {
-      sessionStorage.setItem("authorization", res.data.token);
-      sessionStorage.setItem("role", res.data.role);
-      history.push('/');
-      //return handleDashboard();
+      console.log(res);
+        sessionStorage.setItem("authorization", res.data.token);
+        sessionStorage.setItem("role", res.data.role);
+        history.push('/');
+    }, error => {
+      alert("Authentication failure, retry");
     });
   };
-
-  const handleDashboard = () => {
-    axios.get("http://localhost:8080/").then(res => {
-      console.log(res);
-      if (res.data === "success") {
-        history.push('/');
-      } else {
-        alert("Authentication failure");
-      }
-    });
-  }
 
   return (
     <Grid container component="main" className={classes.root}>
