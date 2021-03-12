@@ -12,6 +12,66 @@ import {
   Button,
 } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
+import Avatar from "@material-ui/core/Avatar";
+import logo from "./rs_test.jpg";
+import * as FaIcons from "react-icons/fa";
+import S3 from "react-aws-s3";
+import imageCompression from "browser-image-compression";
+
+const config = {
+  bucketName: "tys-user-image",
+  region: "us-west-2",
+  accessKeyId: "AKIAVM6FVNOGNDLX6DEY",
+  secretAccessKey: "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",
+};
+
+const timezoneArr = [
+  "Australia/ACT",
+  "Australia/Adelaide",
+  "Australia/Brisbane",
+  "Australia/Broken_Hill",
+  "Australia/Canberra",
+  "Australia/Currie",
+  "Australia/Darwin",
+  "Australia/Eucla",
+  "Australia/Hobart",
+  "Australia/LHI",
+  "Australia/Lindeman",
+  "Australia/Lord_Howe",
+  "Australia/Melbourne",
+  "Australia/NSW",
+  "Australia/North",
+  "Australia/Perth",
+  "Australia/Queensland",
+  "Australia/South",
+  "Australia/Sydney",
+  "Australia/Tasmania",
+  "Australia/Victoria",
+  "Australia/West",
+  "Australia/Yancowinna",
+  "Canada/Atlantic",
+  "Canada/Central",
+  "Canada/Eastern",
+  "Canada/Mountain",
+  "Canada/Newfoundland",
+  "Canada/Pacific",
+  "Canada/Saskatchewan",
+  "Canada/Yukon",
+  "Etc/UTC",
+  "Europe/London",
+  "US/Alaska",
+  "US/Aleutian",
+  "US/Arizona",
+  "US/Central",
+  "US/East-Indiana",
+  "US/Eastern",
+  "US/Hawaii",
+  "US/Indiana-Starke",
+  "US/Michigan",
+  "US/Mountain",
+  "US/Pacific",
+  "US/Pacific-New",
+];
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -41,6 +101,31 @@ const useStyle = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(2),
   },
+  customFileUpload: {
+    display: "inlineBlock",
+    cursor: "pointer",
+    padding: "1px 30px",
+    border: "1px solid #ccc",
+  },
+  large: {
+    // marginTop: theme.spacing(2),
+    // marginLeft: theme.spacing(3),
+    width: theme.spacing(10),
+    height: theme.spacing(10),
+  },
+  typo: {
+    marginTop: theme.spacing(4),
+    marginLeft: theme.spacing(3),
+    color: "#90caf9",
+  },
+  profilePicture:{
+    display: "flex",
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+    alignItems: 'center',
+    
+  }
 }));
 
 const initialValues = {
@@ -55,6 +140,7 @@ const initialValues = {
   city: "",
   state: "",
   zipCode: "",
+  image:"",
 };
 
 export default function MyProfile() {
@@ -67,6 +153,38 @@ export default function MyProfile() {
       ...values,
       [name]: value,
     });
+  };
+
+  const handleImageInput = (e) => {
+    let imageFile = e.target.files[0];
+    let options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    };
+
+    imageCompression(imageFile, options)
+      .then(function (compressedFile) {
+        let file = new File([compressedFile], "file1.png", {
+          type: "image/jpg",
+        });
+        return file;
+      })
+      .then((fileToUpload) => {
+        const ReactS3Client = new S3(config);
+        ReactS3Client.uploadFile(fileToUpload)
+          .then((data) => {
+            console.log(data.location);
+            return data.location;
+          })
+          .then((url) => {
+            setValues({
+              ...values,
+              image: url,
+            });
+          })
+          .catch((err) => console.error(err));
+      });
   };
 
   useEffect((values) => {
@@ -118,6 +236,18 @@ export default function MyProfile() {
 
   return (
     <>
+      <div className={classes.profilePicture}>
+        <div style={{textAlign:"center"}}>
+          <Avatar alt="Test" className={classes.large} src={logo}/>
+          <label for="fileUpload" className={classes.customFileUpload}>
+            <FaIcons.FaUpload/>
+          </label>
+          <input id="fileUpload" type="file" style={{display:"none"}} onChange={handleImageInput}/>
+        </div>
+        <Typography variant="h4" gutterBottom className={classes.typo}>
+          Welcome, User!
+        </Typography>
+      </div>
       <form className={classes.root}>
         <Typography>
           <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
@@ -177,10 +307,14 @@ export default function MyProfile() {
                 value={values.timezone}
                 onChange={handleInputChange}
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={"Diesel"}>Diesel</MenuItem>
+                <MenuItem value="">None</MenuItem>
+                    {timezoneArr.map((tz) => {
+                      return (
+                        <MenuItem key={tz} value={tz}>
+                          {tz}
+                        </MenuItem>
+                      );
+                    })}
               </Select>
             </FormControl>
           </Grid>
@@ -196,7 +330,10 @@ export default function MyProfile() {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={"Diesel"}>Diesel</MenuItem>
+                <MenuItem value={"Australia"}>Australia</MenuItem>
+                <MenuItem value={"Canada"}>Canada</MenuItem>
+                <MenuItem value={"United Kingdom"}>United Kingdom</MenuItem>
+                <MenuItem value={"United States"}>United States</MenuItem>
               </Select>
             </FormControl>
           </Grid>
