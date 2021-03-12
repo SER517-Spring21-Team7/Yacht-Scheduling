@@ -34,20 +34,22 @@ public class UserProfile {
 	private String state;
 	@Column(name = "zipCode")
 	private String zipCode;
+	@Column(name = "image")
+	private String image;
 	
 	@Override
 	public String toString() {
 		return "UserProfile [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", mobile="
 				+ mobile + ", alternateMobile=" + alternateMobile + ", timezone=" + timezone + ", country=" + country
 				+ ", address_1=" + address_1 + ", address_2=" + address_2 + ", city=" + city + ", state=" + state
-				+ ", zipCode=" + zipCode + "]";
+				+ ", zipCode=" + zipCode + ", image="+ image + "]";
 	}
 	public UserProfile() {
 		super();
 	}
 	public UserProfile(int userId, String firstName, String lastName, String mobile, String alternateMobile,
 			String timezone, String country, String address_1, String address_2, String city, String state,
-			String zipCode) {
+			String zipCode, String image) {
 		super();
 		this.userId = userId;
 		this.firstName = firstName;
@@ -61,6 +63,7 @@ public class UserProfile {
 		this.city = city;
 		this.state = state;
 		this.zipCode = zipCode;
+		this.image = image;
 	}
 	public int getUserId() {
 		return userId;
@@ -133,6 +136,12 @@ public class UserProfile {
 	}
 	public void setZipCode(String zipCode) {
 		this.zipCode = zipCode;
+	}
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 }

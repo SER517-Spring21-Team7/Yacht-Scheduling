@@ -102,6 +102,7 @@ public class UserAccountController {
 		upObject.setCity(upRequest.getCity());
 		upObject.setState(upRequest.getState());
 		upObject.setZipCode(upRequest.getZipCode());
+		upObject.setImage(upRequest.getImage());
 		final UserProfile updatedProfile = UPRepo.save(upObject);
 		return ResponseEntity.ok(updatedProfile);
 	}
