@@ -14,12 +14,14 @@ import {
   Box,
 } from "@material-ui/core";
 import clsx from "clsx";
+import S3 from 'react-aws-s3'
+import imageCompression from 'browser-image-compression'
 
 const useStyle = makeStyles((theme) => ({
   root: {
     width: "80%",
-    marginTop: theme.spacing(5),
-    marginLeft: theme.spacing(15),
+    // marginTop: theme.spacing(5),
+    // marginLeft: theme.spacing(15),
     "& .MuiFormControl-root": {
       width: "70%",
       margin: theme.spacing(1.5),
@@ -28,9 +30,9 @@ const useStyle = makeStyles((theme) => ({
       marginLeft: "38%",
     },
   },
-  margin: {
-    margin: theme.spacing(1),
-  },
+  // margin: {
+  //   margin: theme.spacing(1),
+  // },
   textField: {
     width: "25ch",
   },
@@ -49,11 +51,19 @@ const initialValues = {
   boatClass: "",
   builder: "",
   hullType: "",
+  image: "",
   length: "",
   category: "",
   model: "",
   fuelType: "",
 };
+
+const config = {
+  bucketName: 'tys-user-image',
+  region: 'us-west-2',
+  accessKeyId: 'AKIAVM6FVNOGNDLX6DEY',
+  secretAccessKey: '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',
+}
 
 export default function AddWatercraft(props) {
   console.log(props.data);
@@ -72,6 +82,39 @@ export default function AddWatercraft(props) {
       [name]: value,
     });
   };
+
+  const handleImageInput = (e) => {
+
+    let imageFile = e.target.files[0];
+    let options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true
+    }
+
+    imageCompression(imageFile, options)
+    .then(function (compressedFile){
+        let file = new File([compressedFile], "file1.png", {type: "image/jpg"});
+        return file
+    })
+    .then(fileToUpload =>{
+        const ReactS3Client = new S3(config);
+        ReactS3Client
+        .uploadFile(fileToUpload)
+        .then(data => {
+            console.log(data.location)
+            return data.location
+        })
+        .then(url => {
+            setValues({
+                ...values,
+                image: url
+            })
+        })
+        .catch(err => console.error(err))
+    })
+}
+
   const buttonClicked = (event) => {
     return fetch("http://localhost:8080/watercraft/details", {
       method: "POST",
@@ -127,7 +170,12 @@ export default function AddWatercraft(props) {
     <div>
       <form className={classes.root}>
         <Typography>
-          <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
+          <Box
+            fontWeight="fontWeightBold"
+            fontSize={20}
+            textAlign="center"
+            m={1}
+          >
             Add Watercraft Details
           </Box>
         </Typography>
@@ -142,7 +190,13 @@ export default function AddWatercraft(props) {
             />
           </Grid>
           <Grid item xs={6}>
-            {/* Blank grid */}
+            <TextField
+              type="file"
+              accept="image/*"
+              variant="outlined"
+              onChange={handleImageInput}
+            >
+            </TextField>
           </Grid>
           <Grid item xs={6}>
             <TextField
@@ -156,7 +210,7 @@ export default function AddWatercraft(props) {
             />
           </Grid>
           <Grid item xs={6}>
-            {/* Blank grid */}
+            {/* Spacing only */}
           </Grid>
           <Grid item xs={6}>
             <FormControl variant="outlined">

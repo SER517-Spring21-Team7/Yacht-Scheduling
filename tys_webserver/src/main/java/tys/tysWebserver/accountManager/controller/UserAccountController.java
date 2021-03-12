@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import tys.tysWebserver.accountManager.model.UserNotificationSetting;
 import tys.tysWebserver.accountManager.model.UserProfile;
 import tys.tysWebserver.accountManager.repository.UserNotificationSettingRepo;
 import tys.tysWebserver.accountManager.repository.UserProfileRepo;
+import tys.tysWebserver.memberManager.model.MemberModel;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -53,6 +55,25 @@ public class UserAccountController {
 		final UserNotificationSetting updatedSetting = UNSRepo.save(unsObject);
 		return ResponseEntity.ok(updatedSetting);
 	}
+	
+	public UserNotificationSetting createDefaultUserNotification(int userId) {
+		UserNotificationSetting unsObject = new UserNotificationSetting();
+		unsObject.setUserId(userId);
+		// These are default values for notification setting, to be set for every new account created 
+		unsObject.setAddedToExpense(true);
+		unsObject.setEventCancel(true);
+		unsObject.setEventChange(true);
+		unsObject.setEventSuggestion(false);
+		unsObject.setOthersReservationAdmin(true);
+		unsObject.setOthersReservationMember(true);
+		unsObject.setRequestApproval(false);
+		unsObject.setWatercraftInvite(false);
+		unsObject.setScheduleSomeTime(true);
+		unsObject.setSendMessage(true);
+		unsObject.setUpcomingScheduleReminder("Monthly");
+		System.out.println(unsObject);
+		return UNSRepo.save(unsObject);
+	}
 
 	// Below methods are for profile related API
 	@GetMapping("/user/{id}/profile")
@@ -81,7 +102,13 @@ public class UserAccountController {
 		upObject.setCity(upRequest.getCity());
 		upObject.setState(upRequest.getState());
 		upObject.setZipCode(upRequest.getZipCode());
+		upObject.setImage(upRequest.getImage());
 		final UserProfile updatedProfile = UPRepo.save(upObject);
 		return ResponseEntity.ok(updatedProfile);
+	}
+	
+	public UserProfile createUserProfile(UserProfile userProfile) {
+		System.out.println(userProfile);
+		return UPRepo.save(userProfile);
 	}
 }
