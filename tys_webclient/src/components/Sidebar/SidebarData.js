@@ -59,4 +59,10 @@ export const SidebarData = [
     icon: <FaIcons.FaRegUserCircle />,
     cName: "nav-text",
   },
+  {
+    title: "Emergency Contact",
+    path: "/emergency",
+    icon: <FaIcons.FaBriefcaseMedical />,
+    cName: "nav-text",
+  },
 ];
