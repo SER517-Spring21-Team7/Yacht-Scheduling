@@ -30,6 +30,7 @@ import HolidayCalendar from "../SchedulerSettings/HolidayCalendar";
 import { SidebarData } from "../Sidebar/SidebarData";
 import ToolbarSearch from "./ToolbarSearch";
 import GlobalContext from "./../GlobalContext";
+import Emergency from "./../EmergencyContact/Emergency"
 
 const drawerWidth = 240;
 
@@ -234,6 +235,7 @@ export default function MiniDrawer() {
               path="/holidaycalendar/:idOfHolidayCalendar"
               component={HolidayCalendar}
             />
+            <Route path="/emergency" component={Emergency} />
           </Switch>
         </main>
       </div>
