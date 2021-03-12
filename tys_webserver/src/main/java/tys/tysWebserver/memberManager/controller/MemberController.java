@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import tys.tysWebserver.memberManager.model.MemberModel;
-import tys.tysWebserver.memberManager.repository.MemberRepo;
+import tys.tysWebserver.memberManager.repository.MemberRepository;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
@@ -21,7 +21,7 @@ import tys.tysWebserver.memberManager.repository.MemberRepo;
 public class MemberController {
 	
 	@Autowired
-	private MemberRepo AMrepo;
+	private MemberRepository AMrepo;
 	@PostMapping("/details")
 	public MemberModel createMember(@RequestBody MemberModel addmember) {
 		System.out.println(addmember);
@@ -35,9 +35,12 @@ public class MemberController {
 		return data;
 	}
 	
+	@CrossOrigin(origins = "http://localhost:3000")
+	@GetMapping("/searchMember")
 	public List<MemberModel> searchMember(@RequestParam String searchQuery) {
 //		List<MemberModel> data = AMrepo.
-		return null;
+		List<MemberModel> ans = AMrepo.findByFirstnameIgnoreCaseContaining(searchQuery);
+		return ans;
 	}
 
 }

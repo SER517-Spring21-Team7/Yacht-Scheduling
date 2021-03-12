@@ -159,9 +159,28 @@ export default function AddMember() {
     };
     const [onEnterExampleList, setOnEnterExampleList] = useState([]);
     
+    var url1 = "http://localhost:8080/member/searchMember?searchQuery=";
+    const getMemberSearch = async () => { 
+        console.log(url1);
+        const response = await fetch(url1, {
+            method: "GET"
+        });
+        const members = await response.json();
+        console.log(members);
+        setOnEnterExampleList(members);
+    }
+
     const onEnterExample = (value) => {
         console.log(value);
-        setOnEnterExampleList(getMatchedList(value));
+        url1 = url1.concat(value);
+        getMemberSearch();
+        // do database call
+        // set in onEnterExample list
+        // setOnEnterExampleList(getMatchedList(value));
+    };
+
+    const fillDetails = (model) => {
+        setValues(model);
     };
 
     return (
@@ -181,7 +200,7 @@ export default function AddMember() {
                 classNames="test-class"
                 />
                 <ExampleList
-                    list={onEnterExampleList}
+                    list={onEnterExampleList} updateForm={ fillDetails}
                 />
             <Grid container className={classes.containerStyle}>
                 <Grid item xs={12} sm={6}>
