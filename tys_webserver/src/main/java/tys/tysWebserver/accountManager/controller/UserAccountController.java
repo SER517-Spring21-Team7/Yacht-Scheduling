@@ -1,8 +1,11 @@
 package tys.tysWebserver.accountManager.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -110,5 +113,14 @@ public class UserAccountController {
 	public UserProfile createUserProfile(UserProfile userProfile) {
 		System.out.println(userProfile);
 		return UPRepo.save(userProfile);
+	}
+
+	public List<UserProfile> getAllProfilesByUserIds(List<Integer> userIds) throws ResourceNotFoundException {
+		List<UserProfile> userProfiles = UPRepo.findAllById(userIds);
+		if (ObjectUtils.isEmpty(userProfiles)) {
+			throw new ResourceNotFoundException("No profiles found");
+		}
+
+		return userProfiles;
 	}
 }

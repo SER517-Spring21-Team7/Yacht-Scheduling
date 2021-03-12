@@ -1,8 +1,11 @@
 package tys.tysWebserver.memberManager.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,4 +59,25 @@ public class MemberController {
 		return data;
 	}
 
+	@CrossOrigin(origins = "http://localhost:3000")
+	@GetMapping("/getAllMemberDetails")
+	public List<MemberModel> getAllMemberDetails() {
+		List<MemberModel> data = AMrepo.findAll();
+		if (ObjectUtils.isEmpty(data))
+			return null;
+
+		List<Integer> memberIds = new ArrayList<>();
+		data.forEach((member) -> memberIds.add(member.getMemberId()));
+		List<UserProfile> profiles = userAccController.getAllProfilesByUserIds(memberIds);
+
+		if (ObjectUtils.isEmpty(profiles))
+			return null;
+
+		HashMap<Integer, String> imageMap = new HashMap<>();
+		profiles.forEach((profile) -> imageMap.put(profile.getUserId(), profile.getImage()));
+
+		data.forEach((member) -> member.setImage(imageMap.get(member.getMemberId())));
+
+		return data;
+	}
 }
