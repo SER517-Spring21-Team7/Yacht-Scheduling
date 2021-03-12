@@ -93,6 +93,7 @@ function Login({ setAccess }) {
 
     axios.post(endpoint, user_object).then(res => {
       sessionStorage.setItem("authorization", res.data.token);
+      sessionStorage.setItem("role", res.data.role);
       history.push('/');
       //return handleDashboard();
     });
