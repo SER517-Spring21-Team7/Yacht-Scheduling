@@ -85,7 +85,7 @@ function Login({ setAccess }) {
     event.preventDefault();
 
     const endpoint = "http://localhost:8080/authenticate";
-    
+
     const user_object = {
       username: username,
       password: password
@@ -93,14 +93,16 @@ function Login({ setAccess }) {
 
     axios.post(endpoint, user_object).then(res => {
       sessionStorage.setItem("authorization", res.data.token);
-      return handleDashboard();
+      history.push('/');
+      //return handleDashboard();
     });
   };
 
   const handleDashboard = () => {
-    axios.get("http://localhost:8080/listwatercraft").then(res => {
+    axios.get("http://localhost:8080/").then(res => {
+      console.log(res);
       if (res.data === "success") {
-        history.push("/");
+        history.push('/');
       } else {
         alert("Authentication failure");
       }

@@ -1,6 +1,7 @@
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
 import './ToolbarSearch.css'
+import axios from 'axios';
 
 var languages = [];
 
@@ -31,9 +32,7 @@ class SearchWatercraft extends React.Component {
   componentDidMount() {
     const url = "http://localhost:8080/watercraft/getAllWaterCraft"
     const watercraftList = []
-    const response = fetch(url, {
-        method: "GET"
-    })
+    const response = axios.get(url)
     .then((response) => response.json())
     .then((watercraftResponse)=> {
         languages = watercraftResponse.map(a => Object.assign({}, a));
