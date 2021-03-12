@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
-import {Grid} from "@material-ui/core"
+import { Grid } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import { List, Box } from "@material-ui/core/";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -28,7 +28,8 @@ import SchedulerSetting from "../SchedulerSettings/SchedulerSetting";
 import ListMember from "../../listMember/ListMember";
 import HolidayCalendar from "../SchedulerSettings/HolidayCalendar";
 import { SidebarData } from "../Sidebar/SidebarData";
-import ToolbarSearch from './ToolbarSearch'
+import ToolbarSearch from "./ToolbarSearch";
+import GlobalContext from "./../GlobalContext";
 
 const drawerWidth = 240;
 
@@ -92,15 +93,16 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
-  search:{
+  search: {
     padding: theme.spacing(0, 2),
-  }
+  },
 }));
 
 export default function MiniDrawer() {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
+  const [selectedWatercraft, setSelectedWatercraft] = React.useState(0);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -110,124 +112,131 @@ export default function MiniDrawer() {
     setOpen(false);
   };
 
+  const handleGlobalWatercraft = (watercraftId) => {
+    setSelectedWatercraft(watercraftId);
+    console.log("Sidebar watercraft id::" + watercraftId);
+  };
+
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        style={{ backgroundColor: "#4db6ac" }}
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
-          <Grid  alignItems={"center"} container>
-            <Grid item xs={0.5} sm={0.5}>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                edge="start"
-                className={clsx(classes.menuButton, {
-                  [classes.hide]: open,
-                })}
-              >
-                <MenuIcon />
-              </IconButton>
+    <GlobalContext.Provider value={selectedWatercraft}>
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          style={{ backgroundColor: "#4db6ac" }}
+          className={clsx(classes.appBar, {
+            [classes.appBarShift]: open,
+          })}
+        >
+          <Toolbar>
+            <Grid alignItems={"center"} container>
+              <Grid item xs={0.5} sm={0.5}>
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={handleDrawerOpen}
+                  edge="start"
+                  className={clsx(classes.menuButton, {
+                    [classes.hide]: open,
+                  })}
+                >
+                  <MenuIcon />
+                </IconButton>
+              </Grid>
+              <Grid item xs={1} sm={4}>
+                <img
+                  src={tysLogo}
+                  alt="Logo"
+                  style={{
+                    height: "7vh",
+                    width: "15vw",
+                    // margin: '1%',
+                    zIndex: "1",
+                    borderRadius: "5px",
+                  }}
+                />
+              </Grid>
+              <Grid item xs={1}>
+                <ToolbarSearch parentCallback={handleGlobalWatercraft} />
+              </Grid>
             </Grid>
-            <Grid item xs={1} sm={4}>
-              <img
-                src={tysLogo}
-                alt="Logo"
-                style={{
-                  height: "7vh",
-                  width: "15vw",
-                  // margin: '1%',
-                  zIndex: "1",
-                  borderRadius: "5px",
-                }}
-              />
-            </Grid>
-            <Grid item xs={1}>
-              <ToolbarSearch/>
-            </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open,
-        })}
-        classes={{
-          paper: clsx({
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          className={clsx(classes.drawer, {
             [classes.drawerOpen]: open,
             [classes.drawerClose]: !open,
-          }),
-        }}
-      >
-        <div className={classes.toolbar}>
-          <Typography>
-            <Box
-              fontWeight="fontWeightBold"
-              fontSize={20}
-              textAlign="left"
-              paddingRight="2vw"
-              m={2}
+          })}
+          classes={{
+            paper: clsx({
+              [classes.drawerOpen]: open,
+              [classes.drawerClose]: !open,
+            }),
+          }}
+        >
+          <div className={classes.toolbar}>
+            <Typography>
+              <Box
+                fontWeight="fontWeightBold"
+                fontSize={20}
+                textAlign="left"
+                paddingRight="2vw"
+                m={2}
+              >
+                Menu
+              </Box>
+            </Typography>
+            <IconButton
+              onClick={handleDrawerClose}
+              style={{ backgroundColor: "#e0f2f1" }}
             >
-              Menu
-            </Box>
-          </Typography>
-          <IconButton
-            onClick={handleDrawerClose}
-            style={{ backgroundColor: "#e0f2f1" }}
-          >
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </div>
-        <Divider />
-        <List style={{ fontSize: "1.8rem", backgroundColor: "#e0f2f1" }}>
-          {SidebarData.map((text, index) => (
-            <ListItem button key={text.title} component={Link} to={text.path}>
-              <ListItemIcon>{text.icon}</ListItemIcon>
-              <ListItemText primary={text.title} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
-        <Switch>
-          <Route exact path="/" render={() => <div>Home Page</div>} />
-          {/* <Route path="watercraft" render={() => <div> Page inbox</div>} />
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
+          </div>
+          <Divider />
+          <List style={{ fontSize: "1.8rem", backgroundColor: "#e0f2f1" }}>
+            {SidebarData.map((text, index) => (
+              <ListItem button key={text.title} component={Link} to={text.path}>
+                <ListItemIcon>{text.icon}</ListItemIcon>
+                <ListItemText primary={text.title} />
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+        </Drawer>
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+          <Switch>
+            <Route exact path="/" render={() => <div>Home Page</div>} />
+            {/* <Route path="watercraft" render={() => <div> Page inbox</div>} />
             <Route path="/Starred" render={() => <div>Page starred</div>} /> */}
-          <Route path="/listwatercraft" exact component={ListOfWaterCrafts} />
-          <Route path="/watercrafts">
-            <AddWatercraft data={null} />
-          </Route>
-          <Route path="/member" component={AddMember} />
-          <Route path="/viewmember" component={ListMember} />
-          <Route path="/MyAccount" component={MyAccount} />
-          <Route
-            path="/editWatercraft/:idOfWatercraft"
-            component={EditWatercraft}
-          />
-          <Route path="/listMember" component={ListMember} />
-          <Route path="/scheduler" component={SchedulerSetting} />
-          <Route path="/" exact />
-          <Route path="/watercrafts" component={AddWatercraft} />
-          <Route
-            path="/holidaycalendar/:idOfHolidayCalendar"
-            component={HolidayCalendar}
-          />
-        </Switch>
-      </main>
-    </div>
+            <Route path="/listwatercraft" exact component={ListOfWaterCrafts} />
+            <Route path="/watercrafts">
+              <AddWatercraft data={null} />
+            </Route>
+            <Route path="/member" component={AddMember} />
+            <Route path="/viewmember" component={ListMember} />
+            <Route path="/MyAccount" component={MyAccount} />
+            <Route
+              path="/editWatercraft/:idOfWatercraft"
+              component={EditWatercraft}
+            />
+            <Route path="/listMember" component={ListMember} />
+            <Route path="/scheduler" component={SchedulerSetting} />
+            <Route path="/" exact />
+            <Route path="/watercrafts" component={AddWatercraft} />
+            <Route
+              path="/holidaycalendar/:idOfHolidayCalendar"
+              component={HolidayCalendar}
+            />
+          </Switch>
+        </main>
+      </div>
+    </GlobalContext.Provider>
   );
 }

@@ -141,7 +141,7 @@ export default function HolidayCalendar() {
 
   useEffect(() => {
     handleClickOpen();
-    if (idOfHolidayCalendar != "create") {
+    if (idOfHolidayCalendar !== "create") {
       console.log("Fetching for ID:: " + idOfHolidayCalendar);
       fetch("http://localhost:8080/holidaycalendar/" + idOfHolidayCalendar, {
         method: "GET",
@@ -290,7 +290,7 @@ export default function HolidayCalendar() {
           </Button>
         </DialogContent>
         <DialogActions>
-          {idOfHolidayCalendar != "create" ? (
+          {idOfHolidayCalendar !== "create" ? (
             <Button onClick={handleUpdate} variant="contained" color="primary">
               Update
             </Button>
