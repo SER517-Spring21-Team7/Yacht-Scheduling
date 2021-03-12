@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     
 const ListMember = () => {
     const [members, setMembers] = useState([]);
-    const url = "http://localhost:8080/member/getAllMember"
+    const url = "http://localhost:8080/member/getAllMemberDetails"
     const getAllMember = async () => { 
         const response = await fetch(url, {
             method: "GET"
