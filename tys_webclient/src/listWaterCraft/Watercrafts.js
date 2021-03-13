@@ -32,15 +32,16 @@ const useStyles = makeStyles({
 });
 
 const Watercrafts = (props) => {
+  const {watercraftId, watercraftName, image, parentState, parentState1} = props;
   const classes = useStyles();
   const history = useHistory();
   const deleteWaterCraft = async (id) => {
-    var listOfWatercrafts = props.parentState;
+    var listOfWatercrafts = parentState;
 
     listOfWatercrafts = listOfWatercrafts.filter(
       (item) => item.watercraftId !== id
     );
-    props.parentState1(listOfWatercrafts);
+    parentState1(listOfWatercrafts);
     const url = "http://localhost:8080/watercraft/deleteWaterCraft/" + id;
     const response = await fetch(url, {
       method: "DELETE",
@@ -56,7 +57,7 @@ const Watercrafts = (props) => {
           <CardActionArea>
             <CardMedia
               className={classes.media}
-              image="https://api1.nauticalmonkey.com/uploadedImages/ab68874bf7d941cb815e5ba28d0a7b07_small.jpg"
+              image={image}
               title="Boat"
             />
           </CardActionArea>
@@ -65,7 +66,7 @@ const Watercrafts = (props) => {
           <CardActionArea>
             <CardContent>
               <Typography gutterBottom variant="h5" component="h2">
-                {props.name}
+                {watercraftName}
               </Typography>
               <Typography variant="h6" color="textSecondary" component="p">
                 List of users component
@@ -83,7 +84,7 @@ const Watercrafts = (props) => {
             size="small"
             color="primary"
             variant="contained"
-            onClick={() => handleRedirect(props.watercraftId)}
+            onClick={() => handleRedirect(watercraftId)}
           >
             Edit
           </Button>
@@ -91,7 +92,7 @@ const Watercrafts = (props) => {
             size="small"
             color="primary"
             variant="contained"
-            onClick={() => deleteWaterCraft(props.watercraftId)}
+            onClick={() => deleteWaterCraft(watercraftId)}
           >
             Delete
           </Button>
