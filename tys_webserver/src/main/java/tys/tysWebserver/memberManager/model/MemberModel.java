@@ -1,6 +1,5 @@
 package tys.tysWebserver.memberManager.model;
 
-import java.sql.Blob;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -10,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-
-import org.hibernate.type.BlobType;
 
 @Entity
 @Table(name = "memberdetails")
