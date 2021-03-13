@@ -22,7 +22,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -65,6 +65,7 @@ export default function HolidayCalendar() {
   //this.state.props = props;
   const classes = useStyles();
   const history = useHistory();
+  const { idOfHolidayCalendar } = useParams();
   const [open, setOpen] = React.useState(false);
   const [rows, setRows] = React.useState(blankrows);
   const [calendarDetail, setCalendarDetail] = React.useState(
@@ -134,30 +135,31 @@ export default function HolidayCalendar() {
         handleClose();
       })
       .catch((error) => {
-        console.error("Holiday Calendat creation failed!");
+        console.error("Holiday Calendar creation failed!");
       });
   };
 
   useEffect(() => {
     handleClickOpen();
-    //if (this.state.isEdit) {
-    //   fetch("http://localhost:8080/holidaycalendar/27", {
-    //     method: "GET",
-    //     headers: {
-    //       Accept: "application/json",
-    //       "Content-Type": "application/json",
-    //     },
-    //   })
-    //     .then((resp) => resp.json())
-    //     .then((data) => {
-    //       console.log("data" + data.id);
-    //       setCalendarDetail({ calendarName: data.name, calendarId: data.id });
-    //       console.log("name" + data.name);
-    //       console.log("id" + data.id);
-    //       console.log("cal det" + calendarDetail);
-    //       setRows(data.listOfHoliday);
-    //     });
-    //   //}
+    if (idOfHolidayCalendar !== "create") {
+      console.log("Fetching for ID:: " + idOfHolidayCalendar);
+      fetch("http://localhost:8080/holidaycalendar/" + idOfHolidayCalendar, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          console.log("data" + data.id);
+          setCalendarDetail({ calendarName: data.name, calendarId: data.id });
+          console.log("name" + data.name);
+          console.log("id" + data.id);
+          console.log("cal det" + calendarDetail);
+          setRows(data.listOfHoliday);
+        });
+    }
   }, []);
 
   const handleUpdate = () => {
@@ -288,12 +290,16 @@ export default function HolidayCalendar() {
           </Button>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleUpdate} variant="contained" color="primary">
-            Update
-          </Button>
-          <Button onClick={handleSave} variant="contained" color="primary">
-            Save
-          </Button>
+          {idOfHolidayCalendar !== "create" ? (
+            <Button onClick={handleUpdate} variant="contained" color="primary">
+              Update
+            </Button>
+          ) : (
+            <Button onClick={handleSave} variant="contained" color="primary">
+              Save
+            </Button>
+          )}
+
           <Button onClick={handleClose} variant="contained">
             Close
           </Button>

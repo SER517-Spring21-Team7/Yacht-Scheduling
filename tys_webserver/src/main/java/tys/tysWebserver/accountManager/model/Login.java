@@ -1,6 +1,7 @@
 package tys.tysWebserver.accountManager.model;
 
 import java.util.Collection;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,10 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import com.sun.istack.NotNull;
 
 @Entity
@@ -19,12 +18,12 @@ import com.sun.istack.NotNull;
 public class Login implements UserDetails {
 
 	private static final long serialVersionUID = 275156211311325740L;
-
+  
 	@Id
 	@NotNull
 	@Column(name = "userid")
 	private int id;
-	
+
 	@Column(unique = true, name = "email")
 	@NotNull
 	private String email;
@@ -124,5 +123,4 @@ public class Login implements UserDetails {
 		this.username = username;
 		
 	}
-	
 }
