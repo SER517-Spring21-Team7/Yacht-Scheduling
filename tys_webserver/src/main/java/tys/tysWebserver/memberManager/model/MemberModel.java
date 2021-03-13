@@ -46,6 +46,8 @@ public class MemberModel {
 	private String schedulercolor;
 	@Column(name = "access")
 	private String access;
+	@Column(name = "image")
+	private String image;
 
 	@Override
 	public String toString() {
@@ -54,11 +56,16 @@ public class MemberModel {
 				+ ", enddate=" + enddate + ", premiumshare=" + premiumshare + ", standardshare=" + standardshare
 				+ ",freebookings=" + freebookings + ",schedulercolor=" + schedulercolor + ",access= " + access + "]";
 	}
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
+	}
 	public MemberModel() {
 		super();
 	}
-	
-	
+
 	public MemberModel(int memberId, String email, int watercraftId, String firstname, String lastname, String password, String password2,
 			Date startdate, Date enddate, String premiumshare, String standardshare, String freebookings,
 			String schedulercolor, String access) {
@@ -78,6 +85,7 @@ public class MemberModel {
 		this.schedulercolor = schedulercolor;
 		this.access = access;
 	}
+
 	public int getMemberId() {
 		return memberId;
 	}
@@ -162,6 +170,4 @@ public class MemberModel {
 	public void setAccess(String access) {
 		this.access = access;
 	}
-	
-	
 }
