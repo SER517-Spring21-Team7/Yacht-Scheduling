@@ -1,0 +1,39 @@
+.react-search-field-demo {
+  padding: 20px;
+}
+
+#search h3, h5 {
+  margin: 20px 0;
+}
+
+#search ul, li {
+  list-style: none;
+  margin: 0;
+  font-size: 13px;
+  width: 100%;
+}
+
+#search ul {
+  display: inline-flex;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+#search .list-example {
+  border: 1px solid #ddd;
+  width: 400px;
+  margin: 15px 0;
+  display: table;
+}
+
+#search .list-body {
+  display: flex;
+  flex-direction: column;
+}
+
+#search .github-button {
+  padding: 0 5px;
+  display: inline-block;
+}
+
+
