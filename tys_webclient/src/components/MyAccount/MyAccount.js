@@ -9,8 +9,6 @@ import PropTypes from "prop-types";
 import MyProfile from "./MyProfile";
 import NotificationSetting from "./NotificationSetting";
 import ManagePassword from "./ManagePassword";
-import Avatar from "@material-ui/core/Avatar";
-import logo from "./rs_test.jpg";
 
 TabPanel.propTypes = {
   children: PropTypes.node,
@@ -52,17 +50,6 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
     },
   },
-  large: {
-    marginTop: theme.spacing(2),
-    marginLeft: theme.spacing(3),
-    width: theme.spacing(10),
-    height: theme.spacing(10),
-  },
-  typo: {
-    marginTop: theme.spacing(4),
-    marginLeft: theme.spacing(3),
-    color: "#90caf9",
-  },
 }));
 
 export default function MyAccount() {
@@ -89,13 +76,6 @@ export default function MyAccount() {
           <Tab label="Manage Password" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
-      <div className={classes.root}>
-        {/* src={logo} */}
-        <Avatar alt="Test" className={classes.large} />
-        <Typography variant="h4" gutterBottom className={classes.typo}>
-          Welcome, User!
-        </Typography>
-      </div>
       <TabPanel value={indexValue} index={0}>
         <MyProfile />
       </TabPanel>

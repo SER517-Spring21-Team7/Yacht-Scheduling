@@ -1,9 +1,28 @@
-import React, {useState, useEffect} from 'react'
-import 'date-fns';
-import { Typography, Grid, makeStyles, Box, TextField, FormControlLabel, FormControl, InputLabel, Select, MenuItem, RadioGroup, Radio, Button } from '@material-ui/core'
-import { MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+import React, { useState, useEffect } from "react";
+import "date-fns";
+import {
+  Typography,
+  Grid,
+  makeStyles,
+  Box,
+  TextField,
+  FormControlLabel,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  RadioGroup,
+  Radio,
+  Button,
+} from "@material-ui/core";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 import ColorPicker from "material-ui-color-picker";
+import S3 from "react-aws-s3";
+import imageCompression from "browser-image-compression";
 import SearchMember from './SearchMember'
 import SearchField from "react-search-field";
 import TypeChecker from 'typeco';
@@ -24,117 +43,113 @@ const exampleList = [
 ];
 
 const initialValues = {
-    email: '',
-    watercraft:'',
-    firstname: '',
-    lastname: '',
-    password: '',
-    password2: '',
-    startdate: null,
-    enddate: null,
-    premiumshare: '',
-    standardshare: '',
-    freebookings: '',
-    schedulercolor: '',
-    access: '',
-}
-const useStyle = makeStyles(theme =>({
-    root: {
-        width: "80%",
-        marginTop: theme.spacing(5),
-        marginLeft: theme.spacing(15),
-        '& .MuiFormControl-root':{
-            width: '70%',
-            margin:theme.spacing(1.5)
-        },
-        '& .MuiButtonBase-root':{
-            marginLeft: '38%',
-        }
+  email: "",
+  watercraft: "",
+  firstname: "",
+  lastname: "",
+  password: "",
+  password2: "",
+  startdate: null,
+  enddate: null,
+  premiumshare: "",
+  standardshare: "",
+  freebookings: "",
+  schedulercolor: "",
+  access: "",
+};
+const watercraftObjectListInitial = [];
+const useStyle = makeStyles((theme) => ({
+  root: {
+    width: "80%",
+    marginTop: theme.spacing(5),
+    marginLeft: theme.spacing(15),
+    "& .MuiFormControl-root": {
+      width: "70%",
+      margin: theme.spacing(1.5),
     },
-    containerStyle:{
-        backgroundColor: '#f5f5f5',
-        width: '100%',
-        marginTop: theme.spacing(1),
-        marginLeft: theme.spacing(0),
+    "& .MuiButtonBase-root": {
+      marginLeft: "38%",
     },
-    
-}))
-
+  },
+  containerStyle: {
+    backgroundColor: "#f5f5f5",
+    width: "100%",
+    marginTop: theme.spacing(1),
+    marginLeft: theme.spacing(0),
+  },
+}));
 
 export default function AddMember() {
+  const classes = useStyle();
+  const [values, setValues] = useState(initialValues);
+  const [tempStateValues, setTempStateValues] = useState(tempState);
+  const [watercraftObjectList, setWatercraftObjectList] = useState(watercraftObjectListInitial);
 
-    const classes = useStyle();
-    const [values, setValues] = useState(initialValues);
-    const [tempStateValues, setTempStateValues] = useState(tempState);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value,
+    });
+  };
 
+  const handleStartDateChange = (e) => {
+    setValues({
+      ...values,
+      startdate: new Date(e),
+    });
+  };
 
-    const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        setValues({
-            ...values,
-            [name]:value
-        })
+  const handleEndDateChange = (e) => {
+    if (values.startdate < e) {
+      setValues({
+        ...values,
+        enddate: new Date(e),
+      });
     }
+  };
 
-    const handleStartDateChange = (e) => {
-        setValues({
-            ...values,
-            startdate: new Date(e)
-        })
-    }
+  const handleColorChange = (e) => {
+    setValues({
+      ...values,
+      schedulercolor: e,
+    });
+  };
 
-    const handleEndDateChange = (e) => {
-        if(values.startdate < e) {
-            setValues({
-                ...values,
-                enddate: new Date(e)
-            })
-        }
-    }
+  const buttonClicked = (event) => {
+    console.log(values);
+    return fetch("http://localhost:8080/member/details", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...values,
+        watercraftId: watercraftObjectList.filter((each) => each.watercraftName === values.watercraft)[0].watercraftId
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        alert("Member successfully added!");
+        setValues(initialValues);
+      })
+      .catch((error) => {
+        alert("It seems we have some issue! Please retry.");
+      });
+  };
 
-    const handleColorChange = (e) => {
-        setValues({
-            ...values,
-            schedulercolor: e
-        })
-    }
-
-    const buttonClicked = (event) => {
-        console.log(values)
-        return fetch("http://localhost:8080/member/details",{
-            method: "POST",
-            headers:{
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                ...values,
-            }),
-        })
-        .then((response) => response.json())
-        .then((json) =>{
-            alert("Member successfully added!")
-            setValues(initialValues);
-        })
-        .catch((error)=>{
-            alert("It seems we have some issue! Please retry.")
-        });
-    };
-
-    const url = "http://localhost:8080/watercraft/getAllWaterCraft"
-    const watercraftList = []
-    const getWaterCraft = async () => { 
+  const url = "http://localhost:8080/watercraft/getAllWaterCraft";
+  const watercraftList = [];
+    const getWaterCraft = async () => {
         const response = await fetch(url, {
-            method: "GET"
+            method: "GET",
         });
         const watercraftResponse = await response.json();
-        for (let i = 0; i < watercraftResponse.length; i++){
-            watercraftList.push(watercraftResponse[i]["watercraftName"])
+        for (let i = 0; i < watercraftResponse.length; i++) {
+            watercraftList.push(watercraftResponse[i]["watercraftName"]);
         }
-        setTempStateValues({
-            ...tempStateValues,
-            drop: watercraftList
-        });
+        setWatercraftObjectList(watercraftResponse);
     }
 
     const [members, setMembers] = useState([]);

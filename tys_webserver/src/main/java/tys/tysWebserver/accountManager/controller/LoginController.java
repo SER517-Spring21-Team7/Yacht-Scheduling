@@ -30,4 +30,9 @@ public class LoginController {
 //		else
 			return new ResponseEntity<>(Boolean.FALSE, HttpStatus.OK);
 	}
+	
+	public void createCredentials(int userId, String email, String password, String role) {
+		Login newLogin = new Login(userId, email, password, role);
+		loginRepo.save(newLogin);
+	}
 }

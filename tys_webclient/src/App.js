@@ -1,24 +1,27 @@
 import "./App.css";
+
 import Watercrafts from "./listWaterCraft/Watercrafts";
 import ListOfWaterCrafts from "./listWaterCraft/ListOfWaterCrafts";
 // import Login from "./components/Login/Login.js";
-import Toolbar from "./components/Sidebar/ToolbarUI";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { makeStyles } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+
+import { makeStyles, Toolbar } from "@material-ui/core";
+import MiniDrawer from "./components/Sidebar/Sidebar";
 import AddWatercraft from "./components/AddWatercraftComponent/AddWatercraft";
-import MyAccount from "./components/MyAccount/MyAccount";
-import { EditWatercraft } from "./editWaterCraft/EditWatercraft";
 import AddMember from "./components/AddMember/AddMember";
-import SearchMember from "./components/AddMember/SearchMember";
-import SchedulerSetting from "./components/SchedulerSettings/SchedulerSetting";
+import MyAccount from "./components/MyAccount/MyAccount";
 import ListMember from "./listMember/ListMember";
+import { EditWatercraft } from "./editWaterCraft/EditWatercraft";
+import SchedulerSetting from "./components/SchedulerSettings/SchedulerSetting";
 import HolidayCalendar from "./components/SchedulerSettings/HolidayCalendar";
 
 const useStyle = makeStyles((theme) => ({
   stylingComponents: {
-    width: "80%",
     marginLeft: "20%",
-    marginTop: "4.5%",
+  },
+  stylingComponentsFalse: {
+    marginLeft: "0px",
   },
 }));
 
@@ -44,6 +47,8 @@ function getToken() {
 
 function App() {
   const token = getToken();
+
+  const [childData, setChildData] = useState(true);
   //const classes = useStyle();
   //const token = getAccess();
 
@@ -75,7 +80,8 @@ function App() {
             <Route path="/watercrafts" component={AddWatercraft} />
             <Route path="/holidaycalendar" component={HolidayCalendar} />
           </div>
-        </Switch>
+      </Switch>
+      <MiniDrawer />
       </Router>
     </>
   );
