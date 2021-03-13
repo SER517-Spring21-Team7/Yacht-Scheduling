@@ -1,5 +1,6 @@
 package tys.tysWebserver.accountManager.model;
 
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -8,13 +9,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import com.sun.istack.NotNull;
 
 @Entity
 @Table(name="userlogin")
-public class Login {
+public class Login implements UserDetails {
 
+	private static final long serialVersionUID = 275156211311325740L;
+  
 	@Id
 	@NotNull
 	@Column(name = "userid")
@@ -27,6 +31,10 @@ public class Login {
 	@Column(name = "password")
 	@NotNull
 	private String password;
+	
+	@Column(name = "username")
+	@NotNull
+	private String username;
 	
 	@Column(name = "role")
 	@NotNull
@@ -45,7 +53,7 @@ public class Login {
 	}
 	
 	public int getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(int id) {
@@ -76,12 +84,43 @@ public class Login {
 		this.role = role;
 	}
 
-//	public Date getCreationDate() {
-//		return creationDate;
-//	}
-//
-//	public void setCreationDate(Date creationDate) {
-//		this.creationDate = creationDate;
-//	}
-	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getUsername() {
+		return username;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+		
+	}
 }
