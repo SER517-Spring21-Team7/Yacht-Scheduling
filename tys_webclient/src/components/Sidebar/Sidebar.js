@@ -227,10 +227,8 @@ export default function MiniDrawer() {
               path="/editWatercraft/:idOfWatercraft"
               component={EditWatercraft}
             />
-            <Route path="/listMember" component={ListMember} />
             <Route path="/scheduler" component={SchedulerSetting} />
             <Route path="/" exact />
-            <Route path="/watercrafts" component={AddWatercraft} />
             <Route
               path="/holidaycalendar/:idOfHolidayCalendar"
               component={HolidayCalendar}

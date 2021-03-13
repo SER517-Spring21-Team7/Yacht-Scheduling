@@ -21,13 +21,27 @@ import {
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import ColorPicker from "material-ui-color-picker";
-import SearchMember from "./SearchMember";
 import S3 from "react-aws-s3";
 import imageCompression from "browser-image-compression";
+import SearchMember from './SearchMember'
+import SearchField from "react-search-field";
+import TypeChecker from 'typeco';
+import ExampleList from './ExampleList';
 
-const tempState = {
-  drop: [],
-};
+const tempState ={
+    drop:[]
+}
+const exampleList = [
+  {
+    name: 'Joe Smith',
+    email: 'joesmith@gmail.com',
+  },
+  {
+    name: 'Alan Donald',
+    email: 'alan@gmail.com',
+  },
+];
+
 const initialValues = {
   email: "",
   watercraft: "",
@@ -127,251 +141,276 @@ export default function AddMember() {
 
   const url = "http://localhost:8080/watercraft/getAllWaterCraft";
   const watercraftList = [];
-  const getWaterCraft = async () => {
-    const response = await fetch(url, {
-      method: "GET",
-    });
-    const watercraftResponse = await response.json();
-    for (let i = 0; i < watercraftResponse.length; i++) {
-      watercraftList.push(watercraftResponse[i]["watercraftName"]);
+    const getWaterCraft = async () => {
+        const response = await fetch(url, {
+            method: "GET",
+        });
+        const watercraftResponse = await response.json();
+        for (let i = 0; i < watercraftResponse.length; i++) {
+            watercraftList.push(watercraftResponse[i]["watercraftName"]);
+        }
+        setWatercraftObjectList(watercraftResponse);
     }
-    setWatercraftObjectList(watercraftResponse);
-    setTempStateValues({
-      ...tempStateValues,
-      drop: watercraftList,
-    });
-  };
-  useEffect(() => {
-    getWaterCraft();
-  }, []);
 
-  return (
-    <>
-      <form className={classes.root}>
-        <Typography>
-          <Box
-            fontWeight="fontWeightBold"
-            fontSize={20}
-            textAlign="center"
-            m={1}
-          >
-            Search Existing Member or Enter Details
-          </Box>
-        </Typography>
-        <div style={{ marginTop: "0px" }}>
-          <SearchMember />
-        </div>
-        <Grid container className={classes.containerStyle}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              variant="outlined"
-              required
-              id="email"
-              type="text"
-              name="email"
-              label="Email"
-              value={values.email}
-              onChange={handleInputChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl variant="outlined">
-              <InputLabel>Watercraft</InputLabel>
-              <Select
-                label="Watercraft"
-                name="watercraft"
-                value={values.watercraft}
-                onChange={handleInputChange}
-              >
-                <MenuItem>
-                  <em>None</em>
-                </MenuItem>
-                {tempStateValues.drop.map((craft, index) => {
-                  return (
-                    <MenuItem key={index} value={craft}>
-                      {craft}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              variant="outlined"
-              required
-              id="firstname"
-              name="firstname"
-              label="First Name"
-              value={values.firstname}
-              onChange={handleInputChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              variant="outlined"
-              required
-              id="lastname"
-              name="lastname"
-              label="Last Name"
-              value={values.lastname}
-              onChange={handleInputChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              variant="outlined"
-              required
-              id="password"
-              name="password"
-              label="Password"
-              value={values.password}
-              onChange={handleInputChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              variant="outlined"
-              required
-              id="password2"
-              name="password2"
-              label="Re-enter Password"
-              value={values.password2}
-              onChange={handleInputChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={9}>
-            {/* Alignment only */}
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              variant="outlined"
-              required
-              type="number"
-              id="premiumshare"
-              name="premiumshare"
-              label="Premium Share (%)"
-              value={values.premiumshare}
-              onChange={handleInputChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              variant="outlined"
-              required
-              type="number"
-              id="standardshare"
-              name="standardshare"
-              label="Standard Share (%)"
-              value={values.standardshare}
-              onChange={handleInputChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              variant="outlined"
-              required
-              type="number"
-              id="freebookings"
-              name="freebookings"
-              label="Free Booking(s) per month"
-              value={values.freebookings}
-              onChange={handleInputChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <Grid container justify="space-around">
-                <KeyboardDatePicker
-                  format="MM/dd/yyyy"
-                  margin="normal"
-                  id="startdate"
-                  name="startdate"
-                  label="Start Date"
-                  value={values.startdate}
-                  onChange={handleStartDateChange}
-                  KeyboardButtonProps={{
-                    "aria-label": "change date",
-                  }}
+    const [members, setMembers] = useState([]);
+
+    const getAllMember = async () => { 
+        const response = await fetch(url, {
+            method: "GET"
+        });
+        const members = await response.json();
+        console.log(members);
+        setMembers(members);
+    }
+
+    useEffect(() => { 
+        getWaterCraft();
+    }, [])
+
+    const getMatchedList = (searchText) => {
+        // if (searchText === '') return '';
+        if (TypeChecker.isEmpty(searchText)) return exampleList;
+        return exampleList.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+    };
+    const [onEnterExampleList, setOnEnterExampleList] = useState([]);
+    
+    var url1 = "http://localhost:8080/member/searchMember?searchQuery=";
+    const getMemberSearch = async () => { 
+        console.log(url1);
+        const response = await fetch(url1, {
+            method: "GET"
+        });
+        const members = await response.json();
+        console.log(members);
+        setOnEnterExampleList(members);
+    }
+
+    const onEnterExample = (value) => {
+        console.log(value);
+        url1 = url1.concat(value);
+        getMemberSearch();
+        // do database call
+        // set in onEnterExample list
+        // setOnEnterExampleList(getMatchedList(value));
+    };
+
+    const fillDetails = (model) => {
+        setValues(model);
+    };
+
+    return (
+        <>
+        <form className={classes.root}>
+        
+            <Typography style={{margin:'5%'}}>
+                <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
+                    <h2>Search Existing Member or Enter Details</h2>
+                </Box>
+            </Typography>
+                {/* <div><SearchMember/></div> */}
+                <SearchField
+                placeholder="Search Member"
+                onEnter={onEnterExample}
+                searchText=""
+                classNames="test-class"
                 />
-              </Grid>
-            </MuiPickersUtilsProvider>
-          </Grid>
-          <Grid item xs={12} sm={3}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-              <Grid container justify="space-around">
-                <KeyboardDatePicker
-                  format="MM/dd/yyyy"
-                  margin="normal"
-                  id="enddate"
-                  name="enddate"
-                  label="End Date"
-                  value={values.enddate}
-                  onChange={handleEndDateChange}
-                  KeyboardButtonProps={{
-                    "aria-label": "change date",
-                  }}
+                <ExampleList
+                    list={onEnterExampleList} updateForm={ fillDetails}
                 />
-              </Grid>
-            </MuiPickersUtilsProvider>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <div style={{ display: "flex" }}>
-              <label style={{ padding: "5%", display: "inline" }}>Color</label>
-              <ColorPicker
-                name="color"
-                defaultValue="Select Scheduler Color"
-                style={{
-                  backgroundColor: values.schedulercolor,
-                  borderRadius: "5px",
-                }}
-                onChange={handleColorChange}
-                value={values.schedulercolor}
-              />
-            </div>
-          </Grid>
-          <Grid item xs={12} sm={2}></Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl component="fieldset">
-              <RadioGroup
-                aria-label="access"
-                name="access"
-                value={values.access}
-                onChange={handleInputChange}
-                row
-              >
-                <FormControlLabel
-                  value="Admin"
-                  control={<Radio />}
-                  label="Admin"
-                />
-                <FormControlLabel
-                  value="Member"
-                  control={<Radio />}
-                  label="Member"
-                />
-              </RadioGroup>
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Button
-          size="large"
-          variant="contained"
-          color="secondary"
-          style={{ width: "20%", marginTop: "2.5%", paddingLeft: "0px" }}
-          onClick={buttonClicked}
-        >
-          Add Member
-        </Button>
-      </form>
-    </>
-  );
+            <Grid container className={classes.containerStyle}>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    variant="outlined"
+                    required
+                    id="email"
+                    type="text"
+                    name="email"
+                    label="Email"
+                    value={values.email}
+                    onChange={handleInputChange}
+                    fullWidth
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                <FormControl variant="outlined">
+                        <InputLabel>Watercraft</InputLabel>
+                        <Select
+                            label="Watercraft"
+                            name="watercraft"
+                            value={values.watercraft}
+                            onChange={handleInputChange}>
+                            <MenuItem>
+                                <em>None</em>
+                            </MenuItem>
+                            {
+                                tempStateValues.drop.map((craft, index) => {
+                                    return (
+                                        <MenuItem key={index} value={craft}>{craft}</MenuItem>
+                                    )
+                                })
+                            } 
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    variant="outlined"
+                    required
+                    id="firstname"
+                    name="firstname"
+                    label="First Name"
+                    value={values.firstname}
+                    onChange={handleInputChange}
+                    fullWidth
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    variant="outlined"
+                    required
+                    id="lastname"
+                    name="lastname"
+                    label="Last Name"
+                    value={values.lastname}
+                    onChange={handleInputChange}
+                    fullWidth
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    variant="outlined"
+                    required
+                    id="password"
+                    name="password"
+                    label="Password"
+                    value={values.password}
+                    onChange={handleInputChange}
+                    fullWidth
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    variant="outlined"
+                    required
+                    id="password2"
+                    name="password2"
+                    label="Re-enter Password"
+                    value={values.password2}
+                    onChange={handleInputChange}
+                    fullWidth
+                    />
+                </Grid>
+                <Grid item xs={12} sm={9}>
+                    {/* Alignment only */}
+                </Grid>
+    
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    variant="outlined"
+                    required
+                    type="number"
+                    id="premiumshare"
+                    name="premiumshare"
+                    label="Premium Share (%)"
+                    value={values.premiumshare}
+                    onChange={handleInputChange}
+                    fullWidth
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    variant="outlined"
+                    required
+                    type="number"
+                    id="standardshare"
+                    name="standardshare"
+                    label="Standard Share (%)"
+                    value={values.standardshare}
+                    onChange={handleInputChange}
+                    fullWidth
+                    />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <TextField
+                    variant="outlined"
+                    required
+                    type="number"
+                    id="freebookings"
+                    name="freebookings"
+                    label="Free Booking(s) per month"
+                    value={values.freebookings}
+                    onChange={handleInputChange}
+                    fullWidth
+                    />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <Grid container justify="space-around">
+                            <KeyboardDatePicker
+                            format="MM/dd/yyyy"
+                            margin="normal"
+                            id="startdate"
+                            name="startdate"
+                            label="Start Date"
+                            value={values.startdate}
+                            onChange={handleStartDateChange}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change date',
+                            }}
+                        />
+                        </Grid>
+                    </MuiPickersUtilsProvider>
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <Grid container justify="space-around">
+                            <KeyboardDatePicker
+                            format="MM/dd/yyyy"
+                            margin="normal"
+                            id="enddate"
+                            name="enddate"
+                            label="End Date"
+                            value={values.enddate}
+                            onChange={handleEndDateChange}
+                            KeyboardButtonProps={{
+                                'aria-label': 'change date',
+                            }}
+                        />
+                        </Grid>
+                    </MuiPickersUtilsProvider>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <div style={{display:'flex'}}>
+                        <label style={{padding:'5%', display:'inline'}}>Color</label>
+                        <ColorPicker
+                            name="color"
+                            defaultValue="Select Scheduler Color"
+                            style={{backgroundColor:values.schedulercolor, borderRadius:'5px'}}
+                            onChange={handleColorChange}
+                            value={values.schedulercolor}
+                        />
+                    </div>
+                </Grid>
+                <Grid item xs={12} sm={2}>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <FormControl component="fieldset">
+                        <RadioGroup aria-label="access" name="access" value={values.access} onChange={handleInputChange} row>
+                            <FormControlLabel value="Admin" control={<Radio />} label="Admin" />
+                            <FormControlLabel value="Member" control={<Radio />} label="Member"/>
+                        </RadioGroup>
+                    </FormControl>
+                </Grid>
+            </Grid>  
+            <Button 
+                size="large" 
+                variant="contained" 
+                color="secondary"
+                style={{width:'20%', marginTop:'2.5%', paddingLeft: '0px'}}
+                onClick={buttonClicked}>
+                Add Member
+            </Button>
+        </form>
+        </>
+    )
 }

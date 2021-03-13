@@ -1,10 +1,16 @@
 import "./App.css";
+
+import Watercrafts from "./listWaterCraft/Watercrafts";
+import ListOfWaterCrafts from "./listWaterCraft/ListOfWaterCrafts";
+// import Login from "./components/Login/Login.js";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route} from "react-router-dom";
+
 import { makeStyles } from "@material-ui/core";
 import MiniDrawer from "./components/Sidebar/Sidebar";
 import Login from "./components/Login/Login";
 import PrivateRoute from "./components/Login/PrivateRoute";
+
 
 const useStyle = makeStyles((theme) => ({
   stylingComponents: {
@@ -32,6 +38,7 @@ function App() {
   return (
     <>
       <Router>
+
         { !token &&
       <Route path="/" component={Login} />
         }
