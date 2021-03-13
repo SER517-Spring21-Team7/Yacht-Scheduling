@@ -40,18 +40,18 @@ public class JwtAuthenticationController {
 	
 		final Login userDetails = 
 		userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-		System.out.println(pas.encode("admin") + "--> encoded pass");
+		System.out.println(pas.encode("sarang") + "--> encoded pass");
 		System.out.println(authenticationRequest.getPassword()+"--> user typed pass");
 		System.out.println(userDetails.getPassword()+"--> db read pass");
 		System.out.println(pas.matches(authenticationRequest.getPassword(),userDetails.getPassword()));
 		if(pas.matches(authenticationRequest.getPassword(), userDetails.getPassword())) {
 			final String token = jwtTokenUtil.generateToken(userDetails);
-			return ResponseEntity.ok(new JwtResponse(token, userDetails.getRole()));
+			System.out.println(userDetails.getId());
+			return ResponseEntity.ok(new JwtResponse(token, userDetails.getRole(), userDetails.getId()));
 		}
 		else {
 			System.out.println("Not matching Passwords");
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
 		}
 	}
 }
