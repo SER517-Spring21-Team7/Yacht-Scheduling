@@ -1,71 +1,66 @@
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
 import './ToolbarSearch.css'
+import axios from 'axios';
 
 var languages = [];
 
-const getSuggestions = value => {
+const getSuggestions = (value) => {
   const inputValue = value.trim().toLowerCase();
   const inputLength = inputValue.length;
 
-  return inputLength === 0 ? [] : languages.filter(lang =>
-    lang.watercraftName.toLowerCase().slice(0, inputLength) === inputValue
-  );
+  return inputLength === 0
+    ? []
+    : languages.filter(
+        (lang) =>
+          lang.watercraftName.toLowerCase().slice(0, inputLength) === inputValue
+      );
 };
 
-const getSuggestionValue = suggestion => suggestion.watercraftName;
-const renderSuggestion = suggestion => (
-  <div>
-    {suggestion.watercraftName}
-  </div>
-);
+const getSuggestionValue = (suggestion) => suggestion.watercraftName;
+const renderSuggestion = (suggestion) => <div>{suggestion.watercraftName}</div>;
 
 class SearchWatercraft extends React.Component {
   constructor() {
     super();
     this.state = {
-      value: '',
-      suggestions: []
+      value: "",
+      suggestions: [],
     };
   }
   componentDidMount() {
     const url = "http://localhost:8080/watercraft/getAllWaterCraft"
     const watercraftList = []
-    const response = fetch(url, {
-        method: "GET"
-    })
-    .then((response) => response.json())
+    const response = axios.get(url)
     .then((watercraftResponse)=> {
-        languages = watercraftResponse.map(a => Object.assign({}, a));
+        languages = watercraftResponse.data.map(a => Object.assign({}, a));
         console.log(languages)
     })
-    
 };
 
   onChange = (event, { newValue }) => {
     console.log("inside onChange");
     this.setState({
-      value: newValue
-    })
-    for (let i = 0; i < languages.length; i++){
-        if(languages[i].watercraftName===newValue){
-            const globalWatercraftId = languages[i].watercraftId
-            console.log(globalWatercraftId)
-        }
+      value: newValue,
+    });
+    for (let i = 0; i < languages.length; i++) {
+      if (languages[i].watercraftName === newValue) {
+        const globalWatercraftId = languages[i].watercraftId;
+        console.log(globalWatercraftId);
+        this.props.parentCallback(globalWatercraftId);
+      }
     }
-    // const MyContext = React.createContext(globalWatercraftId);
-
   };
 
   onSuggestionsFetchRequested = ({ value }) => {
     this.setState({
-      suggestions: getSuggestions(value)
+      suggestions: getSuggestions(value),
     });
   };
 
   onSuggestionsClearRequested = () => {
     this.setState({
-      suggestions: []
+      suggestions: [],
     });
   };
 
@@ -73,9 +68,9 @@ class SearchWatercraft extends React.Component {
     const { value, suggestions } = this.state;
 
     const inputProps = {
-      placeholder: 'Select Watercraft',
+      placeholder: "Select Watercraft",
       value,
-      onChange: this.onChange
+      onChange: this.onChange,
     };
 
     return (

@@ -11,16 +11,16 @@ export const SidebarData = [
     cName: "nav-text",
   },
   {
-    title: "Watercraft",
+    title: "Add Watercraft",
     path: "/watercrafts",
     icon: <GiIcons.GiSailboat />,
     cName: "nav-text",
   },
   {
-    title: "Add Member",
+    title: "Enroll Member",
     path: "/member",
     icon: <AiIcons.AiOutlineUserAdd />,
-    
+
     cName: "nav-text",
   },
   {
@@ -35,28 +35,34 @@ export const SidebarData = [
     icon: <GiIcons.GiSailboat />,
     cName: "nav-text",
   },
-  {
-    title: "Service Request",
-    path: "/service",
-    icon: <FaIcons.FaTools />,
-    cName: "nav-text",
-  },
-  {
-    title: "Checklists",
-    path: "/checklist",
-    icon: <FaIcons.FaListAlt />,
-    cName: "nav-text",
-  },
-  {
-    title: "Messages",
-    path: "/messages",
-    icon: <FaIcons.FaEnvelopeOpenText />,
-    cName: "nav-text",
-  },
+  // {
+  //   title: "Service Request",
+  //   path: "/service",
+  //   icon: <FaIcons.FaTools />,
+  //   cName: "nav-text",
+  // },
+  // {
+  //   title: "Checklists",
+  //   path: "/checklist",
+  //   icon: <FaIcons.FaListAlt />,
+  //   cName: "nav-text",
+  // },
+  // {
+  //   title: "Messages",
+  //   path: "/messages",
+  //   icon: <FaIcons.FaEnvelopeOpenText />,
+  //   cName: "nav-text",
+  // },
   {
     title: "My Account",
     path: "/MyAccount",
     icon: <FaIcons.FaRegUserCircle />,
+    cName: "nav-text",
+  },
+  {
+    title: "Emergency Contact",
+    path: "/emergency",
+    icon: <FaIcons.FaBriefcaseMedical />,
     cName: "nav-text",
   },
 ];

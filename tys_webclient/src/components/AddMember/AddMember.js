@@ -1,172 +1,202 @@
-import React, {useState, useEffect} from 'react'
-import 'date-fns';
-import { Typography, Grid, makeStyles, Box, TextField, FormControlLabel, FormControl, InputLabel, Select, MenuItem, RadioGroup, Radio, Button } from '@material-ui/core'
-import { MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+import React, { useState, useEffect } from "react";
+import "date-fns";
+import {
+  Typography,
+  Grid,
+  makeStyles,
+  Box,
+  TextField,
+  FormControlLabel,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  RadioGroup,
+  Radio,
+  Button,
+} from "@material-ui/core";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 import ColorPicker from "material-ui-color-picker";
+import S3 from "react-aws-s3";
+import imageCompression from "browser-image-compression";
 import SearchMember from './SearchMember'
-import S3 from 'react-aws-s3'
-import imageCompression from 'browser-image-compression'
-
+import SearchField from "react-search-field";
+import TypeChecker from 'typeco';
+import ExampleList from './ExampleList';
 
 const tempState ={
     drop:[]
 }
-const initialValues = {
-    email: '',
-    watercraft:'',
-    firstname: '',
-    lastname: '',
-    password: '',
-    password2: '',
-    startdate: null,
-    enddate: null,
-    premiumshare: '',
-    standardshare: '',
-    freebookings: '',
-    schedulercolor: '',
-    access: '',
-    image: '',
-}
-const useStyle = makeStyles(theme =>({
-    root: {
-        width: "80%",
-        marginTop: theme.spacing(5),
-        marginLeft: theme.spacing(15),
-        '& .MuiFormControl-root':{
-            width: '70%',
-            margin:theme.spacing(1.5)
-        },
-        '& .MuiButtonBase-root':{
-            marginLeft: '38%',
-        }
-    },
-    containerStyle:{
-        backgroundColor: '#f5f5f5',
-        width: '100%',
-        marginTop: theme.spacing(1),
-        marginLeft: theme.spacing(0),
-    },
-    
-}))
+const exampleList = [
+  {
+    name: 'Joe Smith',
+    email: 'joesmith@gmail.com',
+  },
+  {
+    name: 'Alan Donald',
+    email: 'alan@gmail.com',
+  },
+];
 
-const config = {
-    bucketName: 'tys-user-image',
-    region: 'us-west-2',
-    accessKeyId: 'AKIAVM6FVNOGNDLX6DEY',
-    secretAccessKey: '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',
-}
+const initialValues = {
+  email: "",
+  watercraft: "",
+  firstname: "",
+  lastname: "",
+  password: "",
+  password2: "",
+  startdate: null,
+  enddate: null,
+  premiumshare: "",
+  standardshare: "",
+  freebookings: "",
+  schedulercolor: "",
+  access: "",
+};
+const watercraftObjectListInitial = [];
+const useStyle = makeStyles((theme) => ({
+  root: {
+    width: "80%",
+    marginTop: theme.spacing(5),
+    marginLeft: theme.spacing(15),
+    "& .MuiFormControl-root": {
+      width: "70%",
+      margin: theme.spacing(1.5),
+    },
+    "& .MuiButtonBase-root": {
+      marginLeft: "38%",
+    },
+  },
+  containerStyle: {
+    backgroundColor: "#f5f5f5",
+    width: "100%",
+    marginTop: theme.spacing(1),
+    marginLeft: theme.spacing(0),
+  },
+}));
 
 export default function AddMember() {
+  const classes = useStyle();
+  const [values, setValues] = useState(initialValues);
+  const [tempStateValues, setTempStateValues] = useState(tempState);
+  const [watercraftObjectList, setWatercraftObjectList] = useState(watercraftObjectListInitial);
 
-    const classes = useStyle();
-    const [values, setValues] = useState(initialValues);
-    const [tempStateValues, setTempStateValues] = useState(tempState);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value,
+    });
+  };
 
+  const handleStartDateChange = (e) => {
+    setValues({
+      ...values,
+      startdate: new Date(e),
+    });
+  };
 
-    const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        setValues({
-            ...values,
-            [name]:value
-        })
+  const handleEndDateChange = (e) => {
+    if (values.startdate < e) {
+      setValues({
+        ...values,
+        enddate: new Date(e),
+      });
     }
+  };
 
-    const handleStartDateChange = (e) => {
-        setValues({
-            ...values,
-            startdate: new Date(e)
-        })
-    }
+  const handleColorChange = (e) => {
+    setValues({
+      ...values,
+      schedulercolor: e,
+    });
+  };
 
-    const handleEndDateChange = (e) => {
-        if(values.startdate < e) {
-            setValues({
-                ...values,
-                enddate: new Date(e)
-            })
-        }
-    }
+  const buttonClicked = (event) => {
+    console.log(values);
+    return fetch("http://localhost:8080/member/details", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...values,
+        watercraftId: watercraftObjectList.filter((each) => each.watercraftName === values.watercraft)[0].watercraftId
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        alert("Member successfully added!");
+        setValues(initialValues);
+      })
+      .catch((error) => {
+        alert("It seems we have some issue! Please retry.");
+      });
+  };
 
-    const handleColorChange = (e) => {
-        setValues({
-            ...values,
-            schedulercolor: e
-        })
-    }
-
-    const handleImageInput = (e) => {
-
-        let imageFile = e.target.files[0];
-        let options = {
-            maxSizeMB: 1,
-            maxWidthOrHeight: 1920,
-            useWebWorker: true
-        }
-
-        imageCompression(imageFile, options)
-        .then(function (compressedFile){
-            let file = new File([compressedFile], "file1.png", {type: "image/jpg"});
-            return file
-        })
-        .then(fileToUpload =>{
-            const ReactS3Client = new S3(config);
-            ReactS3Client
-            .uploadFile(fileToUpload)
-            .then(data => {
-                console.log(data.location)
-                return data.location
-            })
-            .then(url => {
-                setValues({
-                    ...values,
-                    image: url
-                })
-            })
-            .catch(err => console.error(err))
-        })
-    }
-       
-    const buttonClicked = (event) => {
-        console.log(values)
-        return fetch("http://localhost:8080/member/details",{
-            method: "POST",
-            headers:{
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                ...values,
-            }),
-        })
-        .then((response) => response.json())
-        .then((json) =>{
-            alert("Member successfully added!")
-            setValues(initialValues);
-        })
-        .catch((error)=>{
-            alert("It seems we have some issue! Please retry.")
+  const url = "http://localhost:8080/watercraft/getAllWaterCraft";
+  const watercraftList = [];
+    const getWaterCraft = async () => {
+        const response = await fetch(url, {
+            method: "GET",
         });
-    };
+        const watercraftResponse = await response.json();
+        for (let i = 0; i < watercraftResponse.length; i++) {
+            watercraftList.push(watercraftResponse[i]["watercraftName"]);
+        }
+        setWatercraftObjectList(watercraftResponse);
+    }
 
-    const url = "http://localhost:8080/watercraft/getAllWaterCraft"
-    const watercraftList = []
-    const getWaterCraft = async () => { 
+    const [members, setMembers] = useState([]);
+
+    const getAllMember = async () => { 
         const response = await fetch(url, {
             method: "GET"
         });
-        const watercraftResponse = await response.json();
-        for (let i = 0; i < watercraftResponse.length; i++){
-            watercraftList.push(watercraftResponse[i]["watercraftName"])
-        }
-        setTempStateValues({
-            ...tempStateValues,
-            drop: watercraftList
-        });
+        const members = await response.json();
+        console.log(members);
+        setMembers(members);
     }
+
     useEffect(() => { 
         getWaterCraft();
-    },[])
+    }, [])
+
+    const getMatchedList = (searchText) => {
+        // if (searchText === '') return '';
+        if (TypeChecker.isEmpty(searchText)) return exampleList;
+        return exampleList.filter(item => item.name.toLowerCase().includes(searchText.toLowerCase()));
+    };
+    const [onEnterExampleList, setOnEnterExampleList] = useState([]);
+    
+    var url1 = "http://localhost:8080/member/searchMember?searchQuery=";
+    const getMemberSearch = async () => { 
+        console.log(url1);
+        const response = await fetch(url1, {
+            method: "GET"
+        });
+        const members = await response.json();
+        console.log(members);
+        setOnEnterExampleList(members);
+    }
+
+    const onEnterExample = (value) => {
+        console.log(value);
+        url1 = url1.concat(value);
+        getMemberSearch();
+        // do database call
+        // set in onEnterExample list
+        // setOnEnterExampleList(getMatchedList(value));
+    };
+
+    const fillDetails = (model) => {
+        setValues(model);
+    };
 
     return (
         <>
@@ -177,7 +207,16 @@ export default function AddMember() {
                     <h2>Search Existing Member or Enter Details</h2>
                 </Box>
             </Typography>
-            <div><SearchMember/></div>
+                {/* <div><SearchMember/></div> */}
+                <SearchField
+                placeholder="Search Member"
+                onEnter={onEnterExample}
+                searchText=""
+                classNames="test-class"
+                />
+                <ExampleList
+                    list={onEnterExampleList} updateForm={ fillDetails}
+                />
             <Grid container className={classes.containerStyle}>
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -361,18 +400,6 @@ export default function AddMember() {
                             <FormControlLabel value="Member" control={<Radio />} label="Member"/>
                         </RadioGroup>
                     </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                    <TextField
-                    type="file"
-                    accept="image/*"
-                    variant="outlined"
-                    onChange={handleImageInput}
-                    >
-                    </TextField>
-                    {/* <input type='file' id='memberImage' name='memberPhoto'>
-
-                    </input> */}
                 </Grid>
             </Grid>  
             <Button 

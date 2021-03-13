@@ -8,10 +8,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import tys.tysWebserver.accountManager.controller.LoginController;
+import tys.tysWebserver.accountManager.controller.UserAccountController;
+import tys.tysWebserver.accountManager.model.UserNotificationSetting;
+import tys.tysWebserver.accountManager.model.UserProfile;
 import tys.tysWebserver.memberManager.model.MemberModel;
-import tys.tysWebserver.memberManager.repository.AddMemberRepo;
+import tys.tysWebserver.memberManager.repository.MemberRepository;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
@@ -20,11 +25,28 @@ import tys.tysWebserver.memberManager.repository.AddMemberRepo;
 public class MemberController {
 	
 	@Autowired
-	private AddMemberRepo AMrepo;
+	private MemberRepository AMrepo;
+	@Autowired
+	UserAccountController userAccController;
+	
+	@Autowired
+	LoginController loginController;
+	
 	@PostMapping("/details")
 	public MemberModel createMember(@RequestBody MemberModel addmember) {
 		System.out.println(addmember);
-		return AMrepo.save(addmember);
+		MemberModel savedMember = AMrepo.save(addmember);
+		// Create user profile
+		UserProfile userProfile = new UserProfile();
+		userProfile.setUserId(savedMember.getMemberId());
+		userProfile.setFirstName(savedMember.getFirstname());
+		userProfile.setLastName(savedMember.getLastname());
+		userAccController.createUserProfile(userProfile);
+		// Create default notification for user
+		userAccController.createDefaultUserNotification(savedMember.getMemberId());
+		// Create login for user
+		loginController.createCredentials(savedMember.getMemberId() ,addmember.getEmail(), addmember.getPassword(), addmember.getAccess());
+		return savedMember;
 	}
 	
 	@CrossOrigin(origins = "http://localhost:3000")
@@ -32,6 +54,14 @@ public class MemberController {
 	public List<MemberModel> finalAll() {
 		List<MemberModel> data = AMrepo.findAll();
 		return data;
+	}
+	
+	@CrossOrigin(origins = "http://localhost:3000")
+	@GetMapping("/searchMember")
+	public List<MemberModel> searchMember(@RequestParam String searchQuery) {
+//		List<MemberModel> data = AMrepo.
+		List<MemberModel> ans = AMrepo.findByFirstnameIgnoreCaseContaining(searchQuery);
+		return ans;
 	}
 
 }

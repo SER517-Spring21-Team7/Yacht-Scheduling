@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import tys.tysWebserver.scheduler.controller.SchedulerSettingController;
+import tys.tysWebserver.scheduler.repository.SchedulerSettingRepo;
 import tys.tysWebserver.watercraftManager.model.WatercraftModel;
 import tys.tysWebserver.watercraftManager.repository.AddWatercraftRepo;
 
@@ -27,11 +29,15 @@ public class WatercraftController {
 	@Autowired
 	private AddWatercraftRepo AWrepo;
 	
+	@Autowired
+	SchedulerSettingController SSController;
+	
 	@PostMapping("/details")
 	public WatercraftModel createWatercraft(@RequestBody WatercraftModel addwatercraft) {
 		System.out.println(addwatercraft.getWatercraftName());
-		return AWrepo.save(addwatercraft);
-		
+		WatercraftModel savedWatercraft =  AWrepo.save(addwatercraft);
+		SSController.addSchedulerSettingById(savedWatercraft.getWatercraftId());
+		return savedWatercraft;
 	}
 	
 	@CrossOrigin(origins = "http://localhost:3000")

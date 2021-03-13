@@ -32,7 +32,7 @@ const useStyles = makeStyles({
 });
 
 const Watercrafts = (props) => {
-  const {watercraftId, name, image, parentState, parentState1} = props;
+  const {watercraftId, watercraftName, image, parentState, parentState1} = props;
   const classes = useStyles();
   const history = useHistory();
   const deleteWaterCraft = async (id) => {
@@ -66,7 +66,7 @@ const Watercrafts = (props) => {
           <CardActionArea>
             <CardContent>
               <Typography gutterBottom variant="h5" component="h2">
-                {name}
+                {watercraftName}
               </Typography>
               <Typography variant="h6" color="textSecondary" component="p">
                 List of users component
