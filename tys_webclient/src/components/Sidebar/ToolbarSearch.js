@@ -1,6 +1,7 @@
-import React from "react";
-import Autosuggest from "react-autosuggest";
-import "./ToolbarSearch.css";
+import React from 'react';
+import Autosuggest from 'react-autosuggest';
+import './ToolbarSearch.css'
+import axios from 'axios';
 
 var languages = [];
 
@@ -28,17 +29,14 @@ class SearchWatercraft extends React.Component {
     };
   }
   componentDidMount() {
-    const url = "http://localhost:8080/watercraft/getAllWaterCraft";
-    const watercraftList = [];
-    const response = fetch(url, {
-      method: "GET",
+    const url = "http://localhost:8080/watercraft/getAllWaterCraft"
+    const watercraftList = []
+    const response = axios.get(url)
+    .then((watercraftResponse)=> {
+        languages = watercraftResponse.data.map(a => Object.assign({}, a));
+        console.log(languages)
     })
-      .then((response) => response.json())
-      .then((watercraftResponse) => {
-        languages = watercraftResponse.map((a) => Object.assign({}, a));
-        console.log(languages);
-      });
-  }
+};
 
   onChange = (event, { newValue }) => {
     console.log("inside onChange");

@@ -11,6 +11,9 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import tysLogo from "../../tysLogo.png";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
+
 
 function Copyright() {
   return (
@@ -23,16 +26,6 @@ function Copyright() {
       {"."}
     </Typography>
   );
-}
-
-async function loginUser(credentials) {
-  return fetch("http://localhost:8080/login/admin", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(credentials),
-  }).then((data) => data.json());
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -71,20 +64,44 @@ const useStyles = makeStyles((theme) => ({
 
 function Login({ setAccess }) {
   // const bcrypt = require("bcrypt");
+  const history = useHistory();
   const classes = useStyles();
-  const [email, setEmail] = useState();
+  const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const access = await loginUser({
-      email,
-      // bcrypt.hashSync(password, saltRounds)
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const access = await loginUser({
+  //     email,
+  //     // bcrypt.hashSync(password, saltRounds)
+  //   });
+  //   alert(access);
+  //   setAccess(access);
+  //   alert("my login page");
+  //   // this.history.push('/MyAccount');
+  // };
+
+  const handleSubmit = event => {
+    event.preventDefault();
+
+    const endpoint = "http://localhost:8080/authenticate";
+
+    const user_object = {
+      username: username,
+      password: password
+    };
+
+    axios.post(endpoint, user_object).then(res => {
+
+      sessionStorage.setItem("authorization", res.data.token);
+      console.log(res.data);
+        sessionStorage.setItem("role", res.data.role);
+        sessionStorage.setItem("userId", res.data.id);
+        history.push('/');
+        window.location.reload();
+    }, error => {
+      alert("Authentication failure, retry");
     });
-    alert(access);
-    setAccess(access);
-    alert("my login page");
-    // this.history.push('/MyAccount');
   };
 
   return (
@@ -111,12 +128,12 @@ function Login({ setAccess }) {
               variant="outlined"
               margin="normal"
               required
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
