@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route} from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import MiniDrawer from "./components/Sidebar/Sidebar";
 import Login from "./components/Login/Login";
-import PrivateRoute from "./components/Login/Login";
+import PrivateRoute from "./components/Login/PrivateRoute";
 
 const useStyle = makeStyles((theme) => ({
   stylingComponents: {
@@ -15,37 +15,29 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 
-function setAccess(userAccess) {
-  sessionStorage.setItem("access", JSON.stringify(userAccess));
-}
-
 function getAccess() {
-  const accessString = sessionStorage.getItem("access");
-  const userAccess = JSON.parse(accessString);
-  return userAccess?.access;
-}
-
-function setToken(userToken) {
-  sessionStorage.setItem("token", JSON.stringify(userToken));
+  return sessionStorage.getItem("role");
 }
 
 function getToken() {
-  const tokenString = sessionStorage.getItem("token");
-  const userToken = JSON.parse(tokenString);
-  return userToken?.token;
+  return sessionStorage.getItem("authorization");
 }
 
 function App() {
   const token = getToken();
-
+  console.log(token);
   const [childData, setChildData] = useState(true);
 
   const classes = useStyle();
   return (
     <>
       <Router>
-      <Route path="/login" component={Login} />
-      <PrivateRoute path="/" component={MiniDrawer} />
+        { !token &&
+      <Route path="/" component={Login} />
+        }
+    { token && 
+        <PrivateRoute path="/" component={MiniDrawer} />
+    }
       </Router>
     </>
   );

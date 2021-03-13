@@ -33,9 +33,8 @@ class SearchWatercraft extends React.Component {
     const url = "http://localhost:8080/watercraft/getAllWaterCraft"
     const watercraftList = []
     const response = axios.get(url)
-    .then((response) => response.json())
     .then((watercraftResponse)=> {
-        languages = watercraftResponse.map(a => Object.assign({}, a));
+        languages = watercraftResponse.data.map(a => Object.assign({}, a));
         console.log(languages)
     })
     

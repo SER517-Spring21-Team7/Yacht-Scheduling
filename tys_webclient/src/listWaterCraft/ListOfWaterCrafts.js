@@ -21,10 +21,10 @@ const ListOfWaterCrafts = () => {
     const [watercrafts, setWatercrafts] = useState([]);
     const url = "http://localhost:8080/watercraft/getAllWaterCraft"
     const getWaterCraft = async () => { 
-        const response = await axios.get(url);
-        const watercrafts = response.json();
+        const response = await axios.get(url)
+        const watercrafts = response.data;
         console.log(watercrafts);
-        setWatercrafts();
+        setWatercrafts(watercrafts);
     }
     useEffect(() => { 
         getWaterCraft();
