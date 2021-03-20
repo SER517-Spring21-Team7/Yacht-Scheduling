@@ -1,4 +1,4 @@
-package tys.tysWebserver.scheduler.model;
+package tys.tysWebserver.accountManager.model;
 
 import java.io.Serializable;
 
