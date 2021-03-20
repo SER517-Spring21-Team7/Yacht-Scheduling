@@ -47,12 +47,12 @@ export const SidebarData = [
   //   icon: <FaIcons.FaListAlt />,
   //   cName: "nav-text",
   // },
-  // {
-  //   title: "Messages",
-  //   path: "/messages",
-  //   icon: <FaIcons.FaEnvelopeOpenText />,
-  //   cName: "nav-text",
-  // },
+  {
+    title: "Reserve Watercraft",
+    path: "/reservation",
+    icon: <FaIcons.FaEnvelopeOpenText />,
+    cName: "nav-text",
+  },
   {
     title: "My Account",
     path: "/MyAccount",
