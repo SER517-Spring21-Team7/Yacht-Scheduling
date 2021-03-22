@@ -36,13 +36,13 @@ public class WatercraftScheduler {
 	private boolean forMaintenance;
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "reservation", joinColumns = @JoinColumn(name = "scheduleid"))
-	private List<Reservation> reservationList = new ArrayList<>();
+	private List<Reservation> reservation = new ArrayList<>();
 	
 	@Override
 	public String toString() {
 		return "WatercraftScheduler [scheduleId=" + scheduleId + ", watercraftId=" + watercraftId + ", userId=" + userId
 				+ ", bookedBy=" + bookedBy + ", bookingDate=" + bookingDate + ", notFromUserQuota=" + notFromUserQuota
-				+ ", forMaintenance=" + forMaintenance + ", reservationList=" + reservationList + "]";
+				+ ", forMaintenance=" + forMaintenance + ", reservation=" + reservation + "]";
 	}
 
 	public WatercraftScheduler() {
@@ -50,7 +50,7 @@ public class WatercraftScheduler {
 	}
 
 	public WatercraftScheduler(int scheduleId, int watercraftId, int userId, String bookedBy, Date bookingDate,
-			boolean notFromUserQuota, boolean forMaintenance, List<Reservation> reservationList) {
+			boolean notFromUserQuota, boolean forMaintenance, List<Reservation> reservation) {
 		super();
 		this.scheduleId = scheduleId;
 		this.watercraftId = watercraftId;
@@ -59,7 +59,7 @@ public class WatercraftScheduler {
 		this.bookingDate = bookingDate;
 		this.notFromUserQuota = notFromUserQuota;
 		this.forMaintenance = forMaintenance;
-		this.reservationList = reservationList;
+		this.reservation = reservation;
 	}
 
 	public int getScheduleId() {
@@ -118,12 +118,12 @@ public class WatercraftScheduler {
 		this.forMaintenance = forMaintenance;
 	}
 
-	public List<Reservation> getReservationList() {
-		return reservationList;
+	public List<Reservation> getReservation() {
+		return reservation;
 	}
 
-	public void setReservationList(List<Reservation> reservationList) {
-		this.reservationList = reservationList;
+	public void setReservation(List<Reservation> reservation) {
+		this.reservation = reservation;
 	}	
 	
 }
