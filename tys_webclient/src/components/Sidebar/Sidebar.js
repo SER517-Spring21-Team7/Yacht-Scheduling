@@ -31,6 +31,7 @@ import { SidebarData } from "../Sidebar/SidebarData";
 import ToolbarSearch from "./ToolbarSearch";
 import GlobalContext from "./../GlobalContext";
 import Emergency from "./../EmergencyContact/Emergency"
+import DisplayAlert from "../../displayAlert/DisplayAlert";
 
 const drawerWidth = 240;
 
@@ -234,6 +235,7 @@ export default function MiniDrawer() {
               component={HolidayCalendar}
             />
             <Route path="/emergency" component={Emergency} />
+            <Route path="/displayAlert" component={DisplayAlert} />
           </Switch>
         </main>
       </div>
