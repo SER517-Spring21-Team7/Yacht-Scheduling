@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import tys.tysWebserver.accountManager.model.JwtRequest;
+import tys.tysWebserver.accountManager.model.JwtResponse;
 import tys.tysWebserver.accountManager.model.Login;
-import tys.tysWebserver.scheduler.model.JwtRequest;
-import tys.tysWebserver.scheduler.model.JwtResponse;
 
 @RestController
 @CrossOrigin
