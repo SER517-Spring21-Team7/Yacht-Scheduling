@@ -17,11 +17,11 @@ export const SidebarData = [
     cName: "nav-text",
   },
   {
-    title: "Enroll Member",
-    path: "/member",
-    icon: <AiIcons.AiOutlineUserAdd />,
-
+    title: "Reserve Watercraft",
+    path: "/reservation",
+    icon: <AiIcons.AiOutlineSchedule />,
     cName: "nav-text",
+    
   },
   {
     title: "View Member",
@@ -30,9 +30,17 @@ export const SidebarData = [
     cName: "nav-text",
   },
   {
+    title: "Enroll Member",
+    path: "/member",
+    icon: <AiIcons.AiOutlineUserAdd />,
+
+    cName: "nav-text",
+  },
+
+  {
     title: "Scheduler Settings",
     path: "/scheduler",
-    icon: <GiIcons.GiSailboat />,
+    icon: <FaIcons.FaCog />,
     cName: "nav-text",
   },
   // {
@@ -47,12 +55,6 @@ export const SidebarData = [
   //   icon: <FaIcons.FaListAlt />,
   //   cName: "nav-text",
   // },
-  {
-    title: "Reserve Watercraft",
-    path: "/reservation",
-    icon: <FaIcons.FaEnvelopeOpenText />,
-    cName: "nav-text",
-  },
   {
     title: "My Account",
     path: "/MyAccount",

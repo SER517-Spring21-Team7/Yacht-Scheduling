@@ -21,9 +21,6 @@ import {
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import ColorPicker from "material-ui-color-picker";
-import S3 from "react-aws-s3";
-import imageCompression from "browser-image-compression";
-import SearchMember from './SearchMember'
 import SearchField from "react-search-field";
 import TypeChecker from 'typeco';
 import ExampleList from './ExampleList';

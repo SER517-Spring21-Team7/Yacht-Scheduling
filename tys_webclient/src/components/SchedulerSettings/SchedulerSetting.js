@@ -3,10 +3,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import { Typography, Grid, AppBar, Paper } from "@material-ui/core";
+import { Typography, Grid } from "@material-ui/core";
 import TimeSlots from "./TimeSlots";
 import { useHistory } from "react-router-dom";
 
@@ -168,6 +165,15 @@ export default function SchedulerSetting() {
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.value });
+  };
+
+  const handleCheckboxChange = (event) => {
+    if (event.target.checked) {
+      setState({ ...state, [event.target.name]: true });
+    } else {
+      setState({ ...state, [event.target.name]: false });
+    }
+    
   };
 
   // const handleSetSlotChange = (event) => {
@@ -815,7 +821,7 @@ export default function SchedulerSetting() {
                   control={
                     <Checkbox
                       checked={state.carryBorrow}
-                      onChange={handleChange}
+                      onChange={handleCheckboxChange}
                       name="carryBorrow"
                       color="primary"
                     />

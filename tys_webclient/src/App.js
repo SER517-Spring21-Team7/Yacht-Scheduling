@@ -1,10 +1,6 @@
 import "./App.css";
-
-import Watercrafts from "./listWaterCraft/Watercrafts";
-import ListOfWaterCrafts from "./listWaterCraft/ListOfWaterCrafts";
-// import Login from "./components/Login/Login.js";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import React, { useState } from "react";
 
 import { makeStyles } from "@material-ui/core";
 import MiniDrawer from "./components/Sidebar/Sidebar";
