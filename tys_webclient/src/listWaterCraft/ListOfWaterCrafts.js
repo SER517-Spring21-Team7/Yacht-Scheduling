@@ -19,12 +19,18 @@ const useStyles = makeStyles((theme) => ({
 const ListOfWaterCrafts = () => {
 
     const [watercrafts, setWatercrafts] = useState([]);
-    const url = "http://localhost:8080/watercraft/getAllWaterCraft"
+    const urlAll = "http://localhost:8080/watercraft/getAllWaterCraft";
+    const urlMember = "http://localhost:8080/watercraft/getWaterCraftByMemberId/"+sessionStorage.getItem("userId");
     const getWaterCraft = async () => { 
-
-        const response = await axios.get(url)
+         var url = null;
+        if(sessionStorage.getItem('role') === 'Admin') {
+            url = urlAll;
+        }
+        else {
+            url = urlMember;
+        }
+        const response = await axios.get(url);
         const watercrafts = response.data;
-        console.log(watercrafts);
         setWatercrafts(watercrafts);
     }
     useEffect(() => { 
