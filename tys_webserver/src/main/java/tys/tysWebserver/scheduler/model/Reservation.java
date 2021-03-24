@@ -1,5 +1,7 @@
 package tys.tysWebserver.scheduler.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.GeneratedValue;
@@ -8,39 +10,35 @@ import javax.persistence.Id;
 @Embeddable
 public class Reservation {
 	
-	@Column(name="slotnumber")
-	private int slotNumber; // sequence starting from 1 to total number of slots in the booking, help is deletion
+	@Column(name="fordate")
+	private Date forDate;
 	@Column(name="starthour")
 	private int startHour;
 	@Column(name="endhour")
 	private int endHour;
-	@Column(name="optionalnote")
-	private String optionalNote;
 	
 	@Override
 	public String toString() {
-		return "Reservation [slotNumber=" + slotNumber + ", startHour=" + startHour + ", endHour=" + endHour
-				+ ", optionalNote=" + optionalNote + "]";
+		return "Reservation [forDate=" + forDate + ", startHour=" + startHour + ", endHour=" + endHour + "]";
 	}
 
 	public Reservation() {
 		super();
 	}
 
-	public Reservation(int slotNumber, int startHour, int endHour, String optionalNote) {
+	public Reservation(Date forDate, int startHour, int endHour) {
 		super();
-		this.slotNumber = slotNumber;
+		this.forDate = forDate;
 		this.startHour = startHour;
 		this.endHour = endHour;
-		this.optionalNote = optionalNote;
-	}
-	
-	public int getSlotNumber() {
-		return slotNumber;
 	}
 
-	public void setSlotNumber(int slotNumber) {
-		this.slotNumber = slotNumber;
+	public Date getForDate() {
+		return forDate;
+	}
+
+	public void setForDate(Date forDate) {
+		this.forDate = forDate;
 	}
 
 	public int getStartHour() {
@@ -57,14 +55,6 @@ public class Reservation {
 
 	public void setEndHour(int endHour) {
 		this.endHour = endHour;
-	}
-
-	public String getOptionalNote() {
-		return optionalNote;
-	}
-
-	public void setOptionalNote(String optionalNote) {
-		this.optionalNote = optionalNote;
 	}
 	
 }

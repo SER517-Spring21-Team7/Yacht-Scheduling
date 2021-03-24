@@ -26,39 +26,48 @@ public class WatercraftScheduler {
 	private int watercraftId;
 	@Column(name ="userid")
 	private int userId;
-	@Column(name ="bookedby")
-	private String bookedBy;
+	@Column(name ="membername")
+	private String memberName; // Change it to memeber name
 	@Column(name ="bookingdate")
 	private Date bookingDate;
 	@Column(name ="notfromuserquota")
 	private boolean notFromUserQuota;
 	@Column(name ="formaintenance")
 	private boolean forMaintenance;
+	@Column(name ="conciergerequired")
+	private boolean conciergeRequired;
+	@Column(name ="crewrequired")
+	private boolean crewRequired;
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "reservation", joinColumns = @JoinColumn(name = "scheduleid"))
 	private List<Reservation> reservation = new ArrayList<>();
-	
+
 	@Override
 	public String toString() {
 		return "WatercraftScheduler [scheduleId=" + scheduleId + ", watercraftId=" + watercraftId + ", userId=" + userId
-				+ ", bookedBy=" + bookedBy + ", bookingDate=" + bookingDate + ", notFromUserQuota=" + notFromUserQuota
-				+ ", forMaintenance=" + forMaintenance + ", reservation=" + reservation + "]";
+				+ ", memberName=" + memberName + ", bookingDate=" + bookingDate + ", notFromUserQuota=" + notFromUserQuota
+				+ ", forMaintenance=" + forMaintenance + ", conciergeRequired=" + conciergeRequired + ", crewRequired="
+				+ crewRequired + ", reservation=" + reservation + "]";
 	}
 
 	public WatercraftScheduler() {
 		super();
 	}
 
-	public WatercraftScheduler(int scheduleId, int watercraftId, int userId, String bookedBy, Date bookingDate,
-			boolean notFromUserQuota, boolean forMaintenance, List<Reservation> reservation) {
+	public WatercraftScheduler(int scheduleId, int watercraftId, int userId, String memberName, Date bookingDate,
+			boolean notFromUserQuota, boolean forMaintenance, boolean conciergeRequired, boolean crewRequired,
+			List<Reservation> reservation) {
 		super();
 		this.scheduleId = scheduleId;
 		this.watercraftId = watercraftId;
 		this.userId = userId;
-		this.bookedBy = bookedBy;
+		this.memberName = memberName;
 		this.bookingDate = bookingDate;
 		this.notFromUserQuota = notFromUserQuota;
 		this.forMaintenance = forMaintenance;
+		this.conciergeRequired = conciergeRequired;
+		this.crewRequired = crewRequired;
 		this.reservation = reservation;
 	}
 
@@ -86,12 +95,12 @@ public class WatercraftScheduler {
 		this.userId = userId;
 	}
 
-	public String getBookedBy() {
-		return bookedBy;
+	public String getMemberName() {
+		return memberName;
 	}
 
-	public void setBookedBy(String bookedBy) {
-		this.bookedBy = bookedBy;
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
 	}
 
 	public Date getBookingDate() {
@@ -124,6 +133,22 @@ public class WatercraftScheduler {
 
 	public void setReservation(List<Reservation> reservation) {
 		this.reservation = reservation;
-	}	
+	}
+	
+	public boolean isConciergeRequired() {
+		return conciergeRequired;
+	}
+
+	public void setConciergeRequired(boolean conciergeRequired) {
+		this.conciergeRequired = conciergeRequired;
+	}
+
+	public boolean isCrewRequired() {
+		return crewRequired;
+	}
+
+	public void setCrewRequired(boolean crewRequired) {
+		this.crewRequired = crewRequired;
+	}
 	
 }
