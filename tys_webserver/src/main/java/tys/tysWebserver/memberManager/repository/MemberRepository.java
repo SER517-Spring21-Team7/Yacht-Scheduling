@@ -13,4 +13,6 @@ public interface MemberRepository extends JpaRepository<MemberModel, Integer>, M
 		
 	@Transactional
 	List<MemberModel> findByFirstnameIgnoreCaseContaining(String name);
+	
+	List<MemberModel> findAllByMemberId(Integer id);
 }

@@ -79,11 +79,12 @@ public class UserAccountController {
 	}
 
 	// Below methods are for profile related API
-	@GetMapping("/user/{id}/profile")
-	public ResponseEntity<UserProfile> getUserProfileById(@PathVariable(value = "id") Integer userId)
+	@GetMapping("/userprofile/{id}")
+	public ResponseEntity<UserProfile> getUserProfileById(@PathVariable Integer id)
 			throws ResourceNotFoundException {
-		UserProfile upObject = UPRepo.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("Profile not found for id :: " + userId));
+		System.out.println("get request for profile============================"+id );
+		UserProfile upObject = UPRepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Profile not found for id :: " +id));
 		return ResponseEntity.ok().body(upObject);
 	}
 	
