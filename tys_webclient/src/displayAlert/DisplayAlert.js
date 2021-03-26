@@ -64,11 +64,11 @@ const DisplayAlert = () => {
     const buttonClicked = (event) => { 
         console.log(values);
         var saveJson = {
-            "description": values.description,
-            "watercraftId":values.watercraft.watercraftId
+            "text": values.description,
+            "watercraftId":values.watercraft === null ? null : values.watercraft.watercraftId
         }
         console.log(saveJson);
-        axios.post("http://localhost:8080/member/displayAlert/add", saveJson)
+        axios.post("http://localhost:8080/displayAlert/add", saveJson)
         .then(function (response) {
             console.log(response);
         })
