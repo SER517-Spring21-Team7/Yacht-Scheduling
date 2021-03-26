@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
@@ -90,6 +90,7 @@ const InitialHCalendar = [];
 export default function SchedulerSetting() {
   const classes = useStyles();
   const history = useHistory();
+  const childRef = useRef();
   const globalWatercraftId = useContext(GlobalContext);
   const [expanded, setExpanded] = React.useState(false);
   const [listOfHCalendar, setListOfHCalendar] = React.useState(
@@ -203,11 +204,16 @@ export default function SchedulerSetting() {
   };
 
   const handleTimeSlots = (timeSlots) => {
+    console.log(
+      "Custom slots start hour::" + timeSlots[timeSlots.length - 1].startHour
+    );
+    console.log(
+      "Custom slots end hour::" + timeSlots[timeSlots.length - 1].endHour
+    );
     setState({
       ...state,
       customSlots: timeSlots,
     });
-    console.log("Custom slots are::" + timeSlots);
   };
 
   const handleContinousReservationChange = (event) => {
@@ -282,6 +288,7 @@ export default function SchedulerSetting() {
               advanceBookingMonth: data.limitAdvBookingMonths,
               carryBorrow: data.allowCarryBorrow,
             });
+            childRef.current.updateSlotState(data.timeSlot);
           });
       });
   }, []);
@@ -407,8 +414,9 @@ export default function SchedulerSetting() {
                   Booking Slot Timings:
                 </Typography>
                 <TimeSlots
+                  ref={childRef}
                   customSlots={state.customSlots}
-                  parentCallback={handleTimeSlots}
+                  handleTimeSlots={handleTimeSlots}
                 />
               </Grid>
               <Grid item xs={12}>
