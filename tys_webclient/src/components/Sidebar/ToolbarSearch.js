@@ -35,15 +35,25 @@ class SearchWatercraft extends React.Component {
     const response = axios.get(url)
     .then((watercraftResponse)=> {
         languages = watercraftResponse.data.map(a => Object.assign({}, a));
+        return languages;
+    }).then((languages) => {
+      var universalWatercraftId = sessionStorage.getItem('globalWatercraftId')
+      languages.map((each) => {
+        if (each.watercraftId === parseInt(universalWatercraftId)) {
+          this.setState({
+            value: each.watercraftName,
+          })
+        }
+      })
     })
 };
 
   onChange = (event, { newValue }) => {
-    this.setState({
-      value: newValue,
-    });
-    for (let i = 0; i < languages.length; i++) {
-      if (languages[i].watercraftName === newValue) {
+        this.setState({
+        value: newValue,
+      });
+      for (let i = 0; i < languages.length; i++) {
+        if (languages[i].watercraftName === newValue) {
         const globalWatercraftId = languages[i].watercraftId;
         this.props.parentCallback(globalWatercraftId);
       }

@@ -144,8 +144,12 @@ export default function AddMember() {
         });
         const watercraftResponse = await response.json();
         for (let i = 0; i < watercraftResponse.length; i++) {
-            watercraftList.push(watercraftResponse[i]["watercraftName"]);
+            watercraftList.push(watercraftResponse[i].watercraftName);
         }
+        setTempStateValues({
+          ...tempStateValues,
+          drop: watercraftList
+        });
         setWatercraftObjectList(watercraftResponse);
     }
 

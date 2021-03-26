@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import FullCalendar, { getSlotClassNames } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction";
-import {Dialog, DialogActions, DialogContent, DialogTitle, ThemeProvider, Typography} from '@material-ui/core';
+import {Dialog, DialogActions, DialogContent, DialogTitle, Typography} from '@material-ui/core';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -30,7 +30,7 @@ const initialValues = {
   toslot:"",
   bookingDate: new Date(),
   memberName:"",
-  member: null,
+  member: {},
   conciergeRequired: false,
   crewRequired: false,
   forMaintenence: false,
@@ -52,9 +52,11 @@ function WatercraftSchedulerUI() {
   const [eventList, setEventList] = useState(emptyEventList);
   const globalWatercraftId = useContext(GlobalContext);
 
-  const url = "http://localhost:8080/getschedule/103"
+  var universalWatercraftId = sessionStorage.getItem('globalWatercraftId');
+
+  const url = "http://localhost:8080/getschedule/" + universalWatercraftId
   var response;
-  const getReservations = async () => { 
+  const getReservations = () => { 
     axios.get(url).then((res) => {
       response = res.data;
       for (let i = 0; i < response.length; i++) {
@@ -77,7 +79,7 @@ function WatercraftSchedulerUI() {
     setEventList(joinedEvents)
   }
 
-  const urlSlots = "http://localhost:8080/watercraft/54/ssetting"
+  const urlSlots = "http://localhost:8080/watercraft/" + universalWatercraftId + "/ssetting"
   var responseSettings, startHour, endHour, slotString;
   const getSlot = (events) => {
     axios.get(urlSlots).then((res) => {
@@ -96,12 +98,11 @@ function WatercraftSchedulerUI() {
     })
   }
 
-  const urlMembers = "http://localhost:8080/member/getMemberByWatercraft/61"
+  const urlMembers = "http://localhost:8080/member/getMemberByWatercraft/" + universalWatercraftId
   var responseMembers;
   const getMembers = (events) => {
     axios.get(urlMembers).then((res) => {
       responseMembers = res.data;
-      console.log(responseMembers)
       for(let i=0; i < responseMembers.length; i++){
         memberDropDown.push(responseMembers[i])
       }
@@ -123,9 +124,12 @@ function WatercraftSchedulerUI() {
   const handleDialogOpen = () => {
     setOpen(true);
   };
-  const handleDialogClose = () => {
+  const handleDialogCloseOnConfirm = () => {
     setOpen(false);
     confirmReservation();
+  };
+  const handleDialogCloseOnCancel = () => {
+    setOpen(false);
   };
 
   const handleStartDateChange = (e) => {
@@ -135,7 +139,7 @@ function WatercraftSchedulerUI() {
     });
   };
   const handleEndDateChange = (e) => {
-    if (values.startdate < e) {
+    if (values.startdate <= e) {
       setValues({
         ...values,
         enddate: new Date(e),
@@ -165,19 +169,26 @@ function WatercraftSchedulerUI() {
       setValues({ ...values, [e.target.name]: false });
     }
   }
-  // const handleCheckboxQuota = (e) =>{
-  //   if (e.target.checked) {
-  //     setValues({ ...values, [e.target.name]: true });
-  //   } else {
-  //     setValues({ ...values, [e.target.name]: false });
-  //   }
-  // }
+  const handleCheckboxQuota = (e) =>{
+    if (e.target.checked) {
+      setValues({ ...values, [e.target.name]: true });
+    } else {
+      setValues({ ...values, [e.target.name]: false });
+    }
+  }
+
+  const handleCheckboxMaintenence = (e) =>{
+    if (e.target.checked) {
+      setValues({ ...values, [e.target.name]: true });
+    } else {
+      setValues({ ...values, [e.target.name]: false });
+    }
+  }
 
   const confirmReservation = () => {
 
     var reservationList = []
     var slotting = false;
-    console.log(values.startdate)
     const count = values.enddate.getDate() - values.startdate.getDate();
     for (let i = 0; i <= count; i++) {
       slotDropDown.map((eachSlot) => {
@@ -191,7 +202,6 @@ function WatercraftSchedulerUI() {
         reservationList.push(eachResSlot)
       })
     }
-    console.log(values.startdate)
 
     const removeFront = []
     for (var i = 0; i < reservationList.length; i++) {
@@ -205,8 +215,6 @@ function WatercraftSchedulerUI() {
     
     const removeBack = []
     for (var i = reservationList.length - 1; i >= 0; i--) {
-      console.log(reservationList[i].slotString)
-      console.log(values.toslot)
       if(reservationList[i].slotString.localeCompare(values.toslot) === 0){
         break
       } else {
@@ -225,10 +233,15 @@ function WatercraftSchedulerUI() {
       notFromUserQuota: values.notFromUserQuota,
       reservation: values.reservation,
       userId: values.member.memberId,
-      watercraftId: globalWatercraftId,
+      watercraftId: universalWatercraftId,
       reservation: reservationList
     };
-    console.log(reservationObject)
+
+    const endpoint = "http://localhost:8080/addschedule";
+    axios.post(endpoint, reservationObject).then(res => {
+    }, error => {
+      alert("Failed to create reservation! Please try again.");
+    });
   }
 
     return (
@@ -239,9 +252,9 @@ function WatercraftSchedulerUI() {
             initialView="dayGridMonth"
             weekends={true}
             events={eventList}
-            eventColor={'lightgreen'}
+            eventColor={'lightblue'}
             />
-            <Dialog open={open} onClose={handleDialogClose} aria-labelledby="form-dialog-title" fullWidth maxWidth="sm">
+            <Dialog open={open} onClose={handleDialogCloseOnCancel} aria-labelledby="form-dialog-title" fullWidth maxWidth="sm">
               <DialogTitle id="form-dialog-title">Make Reservation</DialogTitle>
               <DialogContent>
                 <Grid container>
@@ -366,23 +379,30 @@ function WatercraftSchedulerUI() {
                         label="Request Crew"
                         />
                       </Grid>
+
+                      <Grid item sm={12} fullWidth>
+                        <FormControlLabel
+                        control={<Checkbox onChange={handleCheckboxQuota} name="notFromUserQuota" checked={values.notFromUserQuota} />}
+                        label="Do not include this booking in the user's quota"
+                        />
+                      </Grid>
+                      <Grid item sm={12} fullWidth>
+                        <FormControlLabel
+                        control={<Checkbox onChange={handleCheckboxMaintenence} name="forMaintenence" checked={values.forMaintenence} />}
+                        label="Reserve for Maintenence"
+                        />
+                      </Grid>
                     </Grid>
                   </div>
 
-                  {/* <Grid item sm={12} fullWidth>
-                    <FormControlLabel
-                    control={<Checkbox onChange={handleCheckboxQuota} name="checkedQuota" checked={values.checkedQuota} />}
-                    label="Do not include this booking in the user's quota"
-                    />
-                  </Grid> */}
               </Grid>
               </DialogContent>
 
               <DialogActions>
-                <Button onClick={handleDialogClose} color="secondary">
+                <Button onClick={handleDialogCloseOnCancel} color="secondary">
                   Cancel
                 </Button>
-                <Button onClick={handleDialogClose} color="primary">
+                <Button onClick={handleDialogCloseOnConfirm} color="primary">
                   Confirm
                 </Button>
               </DialogActions>
