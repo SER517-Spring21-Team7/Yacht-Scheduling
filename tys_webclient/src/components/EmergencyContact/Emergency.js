@@ -4,7 +4,6 @@ import {
     Grid,
     makeStyles,
     Box,
-    colors,
   } from "@material-ui/core";
 import * as FaIcons from "react-icons/fa";
 

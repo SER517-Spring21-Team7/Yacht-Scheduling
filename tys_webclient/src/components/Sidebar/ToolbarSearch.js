@@ -2,6 +2,7 @@ import React from 'react';
 import Autosuggest from 'react-autosuggest';
 import './ToolbarSearch.css'
 import axios from 'axios';
+import * as AiIcons from "react-icons/ai";
 
 var languages = [];
 
@@ -34,19 +35,26 @@ class SearchWatercraft extends React.Component {
     const response = axios.get(url)
     .then((watercraftResponse)=> {
         languages = watercraftResponse.data.map(a => Object.assign({}, a));
-        console.log(languages)
+        return languages;
+    }).then((languages) => {
+      var universalWatercraftId = sessionStorage.getItem('globalWatercraftId')
+      languages.map((each) => {
+        if (each.watercraftId === parseInt(universalWatercraftId)) {
+          this.setState({
+            value: each.watercraftName,
+          })
+        }
+      })
     })
 };
 
   onChange = (event, { newValue }) => {
-    console.log("inside onChange");
-    this.setState({
-      value: newValue,
-    });
-    for (let i = 0; i < languages.length; i++) {
-      if (languages[i].watercraftName === newValue) {
+        this.setState({
+        value: newValue,
+      });
+      for (let i = 0; i < languages.length; i++) {
+        if (languages[i].watercraftName === newValue) {
         const globalWatercraftId = languages[i].watercraftId;
-        console.log(globalWatercraftId);
         this.props.parentCallback(globalWatercraftId);
       }
     }
@@ -74,6 +82,7 @@ class SearchWatercraft extends React.Component {
     };
 
     return (
+      <>
       <Autosuggest
         suggestions={suggestions}
         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
@@ -82,6 +91,7 @@ class SearchWatercraft extends React.Component {
         renderSuggestion={renderSuggestion}
         inputProps={inputProps}
       />
+      </>
     );
   }
 }

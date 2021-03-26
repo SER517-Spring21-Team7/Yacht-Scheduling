@@ -31,6 +31,7 @@ import { SidebarData } from "../Sidebar/SidebarData";
 import ToolbarSearch from "./ToolbarSearch";
 import GlobalContext from "./../GlobalContext";
 import Emergency from "./../EmergencyContact/Emergency"
+import WatercraftSchedulerUI from './../WatercraftScheduler/WatercraftSchedulerUI'
 
 const drawerWidth = 240;
 
@@ -115,6 +116,8 @@ export default function MiniDrawer() {
 
   const handleGlobalWatercraft = (watercraftId) => {
     setSelectedWatercraft(watercraftId);
+    sessionStorage.setItem("globalWatercraftId", watercraftId);
+    window.location.reload();
     console.log("Sidebar watercraft id::" + watercraftId);
   };
 
@@ -131,7 +134,7 @@ export default function MiniDrawer() {
         >
           <Toolbar>
             <Grid alignItems={"center"} container>
-              <Grid item xs={0.5} sm={0.5}>
+              <Grid item xs="auto" sm="auto">
                 <IconButton
                   color="inherit"
                   aria-label="open drawer"
@@ -213,7 +216,7 @@ export default function MiniDrawer() {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Switch>
-            <Route exact path="/" render={() => <div>Home Page</div>} />
+            <Route exact path="/" exact component={ListOfWaterCrafts}/>
             {/* <Route path="watercraft" render={() => <div> Page inbox</div>} />
             <Route path="/Starred" render={() => <div>Page starred</div>} /> */}
             <Route path="/listwatercraft" exact component={ListOfWaterCrafts} />
@@ -234,6 +237,7 @@ export default function MiniDrawer() {
               component={HolidayCalendar}
             />
             <Route path="/emergency" component={Emergency} />
+            <Route path="/reservation" component={WatercraftSchedulerUI} />
           </Switch>
         </main>
       </div>

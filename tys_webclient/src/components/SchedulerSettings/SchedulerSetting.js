@@ -3,10 +3,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import { Typography, Grid, AppBar, Paper } from "@material-ui/core";
+import { Typography, Grid } from "@material-ui/core";
 import TimeSlots from "./TimeSlots";
 import { useHistory } from "react-router-dom";
 
@@ -91,6 +88,8 @@ export default function SchedulerSetting() {
   const classes = useStyles();
   const history = useHistory();
   const globalWatercraftId = useContext(GlobalContext);
+  var universalWatercraftId = sessionStorage.getItem('globalWatercraftId');
+
   const [expanded, setExpanded] = React.useState(false);
   const [listOfHCalendar, setListOfHCalendar] = React.useState(
     InitialHCalendar
@@ -168,6 +167,15 @@ export default function SchedulerSetting() {
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.value });
+  };
+
+  const handleCheckboxChange = (event) => {
+    if (event.target.checked) {
+      setState({ ...state, [event.target.name]: true });
+    } else {
+      setState({ ...state, [event.target.name]: false });
+    }
+    
   };
 
   // const handleSetSlotChange = (event) => {
@@ -249,46 +257,52 @@ export default function SchedulerSetting() {
         setListOfHCalendar(data);
       })
       .then(() => {
-        fetch(
-          "http://localhost:8080/watercraft/" +
-            globalWatercraftId +
-            "/ssetting",
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-          }
-        )
-          .then((resp) => resp.json())
-          .then((data) => {
-            console.log(data);
-            setState({
-              ...state,
-              premiumDays: data.premiumDays,
-              customSlots: data.timeSlot,
-              preventSameSetSlots: data.blockAllOneSlotBooking,
-              continuousReservationDays: data.maxContinuousBookingDays,
-              freeReservationHours: data.freeBookingAfterHours,
-              confirmEmailHours: data.confirmationBeforeHours,
-              cancelBookingBeforeStart: data.noResponseCancelAtHours,
-              weatherCountry: data.weatherCountry,
-              weatherCity: data.weatherCity,
-              weatherZipCode: data.weatherZipCode,
-              holidayCalendar: data.holidayCalName,
-              maxHolidayDays: data.maxHolidayBookingDays,
-              watercraftTimeZone: data.timeZone,
-              advanceBookingMonth: data.limitAdvBookingMonths,
-              carryBorrow: data.allowCarryBorrow,
+        if(universalWatercraftId){
+          fetch(
+            "http://localhost:8080/watercraft/" +
+              universalWatercraftId +
+              "/ssetting",
+            {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+            }
+          )
+            .then((resp) => resp.json())
+            .then((data) => {
+              console.log(data);
+              setState({
+                ...state,
+                premiumDays: data.premiumDays,
+                customSlots: data.timeSlot,
+                preventSameSetSlots: data.blockAllOneSlotBooking,
+                continuousReservationDays: data.maxContinuousBookingDays,
+                freeReservationHours: data.freeBookingAfterHours,
+                confirmEmailHours: data.confirmationBeforeHours,
+                cancelBookingBeforeStart: data.noResponseCancelAtHours,
+                weatherCountry: data.weatherCountry,
+                weatherCity: data.weatherCity,
+                weatherZipCode: data.weatherZipCode,
+                holidayCalendar: data.holidayCalName,
+                maxHolidayDays: data.maxHolidayBookingDays,
+                watercraftTimeZone: data.timeZone,
+                advanceBookingMonth: data.limitAdvBookingMonths,
+                carryBorrow: data.allowCarryBorrow,
+              });
             });
-          });
-      });
+        }
+        else{
+          alert("Please select watercraft from the search box")
+        }
+      }
+    );
   }, []);
 
   const saveChanges = () => {
     return fetch(
-      "http://localhost:8080/watercraft/" + globalWatercraftId + "/ssetting",
+      "http://localhost:8080/watercraft/" + universalWatercraftId + "/ssetting",
       {
         method: "PUT",
         headers: {
@@ -815,7 +829,7 @@ export default function SchedulerSetting() {
                   control={
                     <Checkbox
                       checked={state.carryBorrow}
-                      onChange={handleChange}
+                      onChange={handleCheckboxChange}
                       name="carryBorrow"
                       color="primary"
                     />
