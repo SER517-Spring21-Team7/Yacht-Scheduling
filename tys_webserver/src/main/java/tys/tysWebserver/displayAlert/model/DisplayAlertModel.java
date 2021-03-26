@@ -24,7 +24,7 @@ public class DisplayAlertModel {
 	private String text;
 	
 	@Column(name = "watercraftId")
-	private int watercraftId;
+	private Integer watercraftId;
 	
 	@Column(name = "addedOn")
 	private Date addedOn;
@@ -51,11 +51,11 @@ public class DisplayAlertModel {
 		this.text = text;
 	}
 
-	public int getWatercraftId() {
+	public Integer getWatercraftId() {
 		return watercraftId;
 	}
 
-	public void setWatercraftId(int watercraftId) {
+	public void setWatercraftId(Integer watercraftId) {
 		this.watercraftId = watercraftId;
 	}
 

@@ -26,9 +26,9 @@ public class DisplayAlertController {
 	
 	@PostMapping("/add")
 	public ResponseEntity<DisplayAlertModel> addAlert(@RequestBody DisplayAlertModel displayAlertModel) {
-		System.out.println(displayAlertModel.toString());
 		displayAlertModel.setAddedOn(new Date());
 		displayAlertRepo.save(displayAlertModel);
+		System.out.println(displayAlertModel.toString());
 		return ResponseEntity.ok(displayAlertModel);
 	}
 	
