@@ -12,6 +12,7 @@ import {
   Paper,
   TableRow,
 } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -49,7 +50,11 @@ const TimeSlots = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     updateSlotState(slotsFromParent) {
-      setSlots(slotsFromParent.concat(blankSlot));
+      if (slotsFromParent.length === 0) {
+        setSlots(slotsFromParent.concat(blankSlot));
+      } else {
+        setSlots(slotsFromParent);
+      }
     },
   }));
 
@@ -63,6 +68,12 @@ const TimeSlots = forwardRef((props, ref) => {
     console.log(newSlots);
     setSlots(newSlots);
     //props.parentCallback(newSlots);
+  };
+
+  const deleteSlot = (slotnum) => {
+    const newTempSlots = slots.filter((each) => each.rownum !== slotnum);
+    setSlots(newTempSlots);
+    handleTimeSlots(newTempSlots);
   };
 
   const handleStartTimeChange = (row, value) => {
@@ -110,12 +121,6 @@ const TimeSlots = forwardRef((props, ref) => {
                 align="center"
               >
                 End Time
-              </TableCell>
-              <TableCell
-                style={{ fontWeight: "bolder", fontSize: "1rem" }}
-                align="center"
-              >
-                Edit
               </TableCell>
               <TableCell
                 style={{ fontWeight: "bolder", fontSize: "1rem" }}
@@ -199,8 +204,14 @@ const TimeSlots = forwardRef((props, ref) => {
                       </Grid>
                     </MuiPickersUtilsProvider>
                   </TableCell>
-                  <TableCell>Edit Row</TableCell>
-                  <TableCell>Delete Row</TableCell>
+                  <TableCell>
+                    <Button
+                      color="secondary"
+                      size="large"
+                      startIcon={<DeleteIcon />}
+                      onClick={() => deleteSlot(slot.rownum)}
+                    ></Button>
+                  </TableCell>
                 </TableRow>
               );
             })}

@@ -171,19 +171,33 @@ export default function SchedulerSetting() {
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
-  // const handleSetSlotChange = (event) => {
-  //   if (event.target.checked) {
-  //     setState({
-  //       ...state,
-  //       preventSameSetSlots: true,
-  //     });
-  //   } else {
-  //     setState({
-  //       ...state,
-  //       preventSameSetSlots: false,
-  //     });
-  //   }
-  // };
+  const handleSetSlotChange = (event) => {
+    if (event.target.checked) {
+      setState({
+        ...state,
+        preventSameSetSlots: true,
+      });
+    } else {
+      setState({
+        ...state,
+        preventSameSetSlots: false,
+      });
+    }
+  };
+
+  const handleCarryBorrowChange = (event) => {
+    if (event.target.checked) {
+      setState({
+        ...state,
+        carryBorrow: true,
+      });
+    } else {
+      setState({
+        ...state,
+        carryBorrow: false,
+      });
+    }
+  };
 
   const handlePremiumCheckboxChange = (event) => {
     if (event.target.checked) {
@@ -204,12 +218,6 @@ export default function SchedulerSetting() {
   };
 
   const handleTimeSlots = (timeSlots) => {
-    console.log(
-      "Custom slots start hour::" + timeSlots[timeSlots.length - 1].startHour
-    );
-    console.log(
-      "Custom slots end hour::" + timeSlots[timeSlots.length - 1].endHour
-    );
     setState({
       ...state,
       customSlots: timeSlots,
@@ -424,7 +432,7 @@ export default function SchedulerSetting() {
                   control={
                     <Checkbox
                       checked={state.preventSameSetSlots}
-                      onChange={handleChange}
+                      onChange={handleSetSlotChange}
                       name="preventSameSetSlots"
                       color="primary"
                     />
@@ -823,7 +831,7 @@ export default function SchedulerSetting() {
                   control={
                     <Checkbox
                       checked={state.carryBorrow}
-                      onChange={handleChange}
+                      onChange={handleCarryBorrowChange}
                       name="carryBorrow"
                       color="primary"
                     />
