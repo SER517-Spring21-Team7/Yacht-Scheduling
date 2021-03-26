@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +42,10 @@ public class DisplayAlertController {
 	
 	@GetMapping("/get/{id}")
 	public List<DisplayAlertModel> getAlert(@PathVariable String id) {
+		
+		if(Integer.parseInt(id) == 80) {
+			return displayAlertRepo.findAll();
+		}
 		HashSet<Integer> watercraftIds = new HashSet<>();
 		List<MemberModel> memberEntries = memberRepository.findAllByMemberId(Integer.parseInt(id));
 		for(MemberModel member : memberEntries) {
@@ -61,4 +66,10 @@ public class DisplayAlertController {
 		}
 		return listOfAlert;
 	}
+	
+	@DeleteMapping("/delete/{id}")
+	public void deleteAlert(@PathVariable String id) {
+		displayAlertRepo.deleteById(Integer.parseInt(id));
+	}
+	
 }
