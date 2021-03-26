@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import FullCalendar from '@fullcalendar/react'
+import FullCalendar, { getSlotClassNames } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction";
-import {Dialog, DialogActions, DialogContent, DialogTitle} from '@material-ui/core';
+import {Dialog, DialogActions, DialogContent, DialogTitle, ThemeProvider, Typography} from '@material-ui/core';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -16,7 +16,8 @@ import {
   Select,
   MenuItem,
   Button,
-  Checkbox
+  Checkbox,
+  Box,
 } from "@material-ui/core";
 import axios from "axios";
 import GlobalContext from "../GlobalContext";
@@ -27,18 +28,22 @@ const initialValues = {
   fromslot: "",
   enddate: null,
   toslot:"",
-  membername:"",
-  checkedConcierge: false,
-  checkedCrew: false,
-
-  watercraftid: '',
-  userid:'',
-  bookingdate: null,
-  notFromUserQuota: false,
+  bookingDate: new Date(),
+  memberName:"",
+  member: null,
+  conciergeRequired: false,
+  crewRequired: false,
   forMaintenence: false,
+  notFromUserQuota: false,
+  reservation: [],
+  userId:'',
+  watercraftId: '',
+  
 };
 
 const emptyEventList = []
+const slotDropDown = []
+const memberDropDown = []
 
 function WatercraftSchedulerUI() {
 
@@ -56,30 +61,63 @@ function WatercraftSchedulerUI() {
         setEventsCalendar(response[i].reservation)
       }
     })
-}
-
-const setEventsCalendar = (events) => {
-  console.log(events)
-  var customEvents = []
-  for (let i = 0; i < events.length; i++) {
-    var event = {}
-    event.start = events[i].forDate
-    event.end = events[i].forDate
-    event.allDay = true
-    event.title = String(events[i].startHour) + ' - ' + String(events[i].endHour)
-    customEvents.push(event)
   }
-  var joinedEvents = eventList.concat(customEvents);
-  setEventList(joinedEvents)
-}
+
+  const setEventsCalendar = (events) => {
+    var customEvents = []
+    for (let i = 0; i < events.length; i++) {
+      var event = {}
+      event.start = events[i].forDate
+      event.end = events[i].forDate
+      event.allDay = true
+      event.title = String(events[i].startHour) + ' - ' + String(events[i].endHour)
+      customEvents.push(event)
+    }
+    var joinedEvents = eventList.concat(customEvents);
+    setEventList(joinedEvents)
+  }
+
+  const urlSlots = "http://localhost:8080/watercraft/54/ssetting"
+  var responseSettings, startHour, endHour, slotString;
+  const getSlot = (events) => {
+    axios.get(urlSlots).then((res) => {
+      responseSettings = res.data;
+      for(let i=0; i < responseSettings.timeSlot.length; i++){
+        startHour = responseSettings.timeSlot[i].startHour
+        endHour = responseSettings.timeSlot[i].endHour
+        slotString = String(startHour) + " to " + String(endHour)
+        const tempSlotObject = {
+          startHour,
+          endHour,
+          slotString,
+        }
+        slotDropDown.push(tempSlotObject)
+      }
+    })
+  }
+
+  const urlMembers = "http://localhost:8080/member/getMemberByWatercraft/61"
+  var responseMembers;
+  const getMembers = (events) => {
+    axios.get(urlMembers).then((res) => {
+      responseMembers = res.data;
+      console.log(responseMembers)
+      for(let i=0; i < responseMembers.length; i++){
+        memberDropDown.push(responseMembers[i])
+      }
+    })
+  }
 
   useEffect(() => { 
     getReservations();
+    getSlot();
+    getMembers();
   },[])
 
 
   const handleDateClick = (arg) => {
     handleDialogOpen();
+
   }
 
   const handleDialogOpen = () => {
@@ -109,7 +147,7 @@ const setEventsCalendar = (events) => {
     const { name, value } = e.target;
     setValues({
       ...values,
-      [name]: value,
+      [name]:value
     });
   };
 
@@ -127,9 +165,70 @@ const setEventsCalendar = (events) => {
       setValues({ ...values, [e.target.name]: false });
     }
   }
+  // const handleCheckboxQuota = (e) =>{
+  //   if (e.target.checked) {
+  //     setValues({ ...values, [e.target.name]: true });
+  //   } else {
+  //     setValues({ ...values, [e.target.name]: false });
+  //   }
+  // }
 
   const confirmReservation = () => {
-    console.log(values)
+
+    var reservationList = []
+    var slotting = false;
+    console.log(values.startdate)
+    const count = values.enddate.getDate() - values.startdate.getDate();
+    for (let i = 0; i <= count; i++) {
+      slotDropDown.map((eachSlot) => {
+        var eachResSlot = {}
+        var result = new Date(values.startdate);
+        result.setDate(result.getDate() + i);
+        eachResSlot.forDate = result;
+        eachResSlot.startHour = eachSlot.startHour
+        eachResSlot.endHour = eachSlot.endHour
+        eachResSlot.slotString = eachSlot.slotString
+        reservationList.push(eachResSlot)
+      })
+    }
+    console.log(values.startdate)
+
+    const removeFront = []
+    for (var i = 0; i < reservationList.length; i++) {
+      if(reservationList[i].slotString.localeCompare(values.fromslot) === 0){
+        break
+      } else {
+        removeFront.push(reservationList[i])
+      }
+    }
+    reservationList = reservationList.filter( ( el ) => !removeFront.includes( el ) );
+    
+    const removeBack = []
+    for (var i = reservationList.length - 1; i >= 0; i--) {
+      console.log(reservationList[i].slotString)
+      console.log(values.toslot)
+      if(reservationList[i].slotString.localeCompare(values.toslot) === 0){
+        break
+      } else {
+        removeBack.push(reservationList[i])
+      }
+    }
+    reservationList = reservationList.filter( ( el ) => !removeBack.includes( el ) );
+    
+    
+    const reservationObject = {
+      bookingDate: values.bookingDate,
+      memberName: values.member.firstname + ' ' + values.member.lastname,
+      conciergeRequired: values.conciergeRequired,
+      crewRequired: values.crewRequired,
+      forMaintenence: values.forMaintenence,
+      notFromUserQuota: values.notFromUserQuota,
+      reservation: values.reservation,
+      userId: values.member.memberId,
+      watercraftId: globalWatercraftId,
+      reservation: reservationList
+    };
+    console.log(reservationObject)
   }
 
     return (
@@ -168,15 +267,20 @@ const setEventsCalendar = (events) => {
 
                   <Grid item sm={6} fullWidth>
                     <FormControl variant="outlined" fullWidth>
-                      <InputLabel>Select Slot</InputLabel>
+                      <InputLabel>From Slot</InputLabel>
                       <Select
                         label="fromslot"
                         name="fromslot"
                         value={values.fromslot}
                         onChange={handleInputChange}
                       >
-                        <MenuItem value="Slot 1">Slot 1</MenuItem>
-                        <MenuItem value="Slot 2">Slot 2</MenuItem>
+                      {
+                        slotDropDown.map((slot, index) => {
+                                    return (
+                                        <MenuItem key={index} value={slot.slotString}>{slot.slotString}</MenuItem>
+                                    )
+                                })
+                              }
                       </Select>
                     </FormControl>
                   </Grid>
@@ -202,21 +306,25 @@ const setEventsCalendar = (events) => {
 
                   <Grid item sm={6} fullWidth>
                     <FormControl variant="outlined" fullWidth>
-                      <InputLabel>Select Slot</InputLabel>
+                      <InputLabel>To Slot</InputLabel>
                       <Select
                         label="toslot"
                         name="toslot"
                         value={values.toslot}
                         onChange={handleInputChange}
                       >
-                        <MenuItem value="Slot 1">Slot 1</MenuItem>
-                        <MenuItem value="Slot 2">Slot 2</MenuItem>
+                      {
+                        slotDropDown.map((slot, index) => {
+                                    return (
+                                        <MenuItem key={index} value={slot.slotString}>{slot.slotString}</MenuItem>
+                                    )
+                                })
+                              }
                       </Select>
                     </FormControl>
                   </Grid>
                   
                   <Grid item sm={6} fullWidth>
-                    {/* spacing only */}
                   </Grid>
 
                   <Grid item sm={6} fullWidth>
@@ -224,31 +332,49 @@ const setEventsCalendar = (events) => {
                       <InputLabel>Member</InputLabel>
                       <Select
                         label="Booking For"
-                        name="membername"
-                        value={values.membername}
+                        name="member"
+                        value={values.member}
                         onChange={handleInputChange}
                       >
-                        <MenuItem value="Abhinaw">Abhinaw Sarang</MenuItem>
-                        <MenuItem value="Saksham">Saksham Jhawar</MenuItem>
-                        <MenuItem value="Sagar">Sagar Khar</MenuItem>
-                        <MenuItem value="Smit">Smit Shah</MenuItem>
+                      {
+                        memberDropDown.map((member, index) => {
+                                    return (
+                                        <MenuItem key={index} value={member}>{member.firstname}</MenuItem>
+                                    )
+                                })
+                              }
                       </Select>
                     </FormControl>
                   </Grid>
 
-                  <Grid item sm={12} fullWidth>
+                  <div>
+                    <Grid container>
+                      <Typography variant="overline" display="block" align="center" style={{marginTop:""}}>
+                        Other Services:
+                      </Typography>
+
+                      <Grid item sm={12} fullWidth>
+                        <FormControlLabel
+                        control={<Checkbox onChange={handleCheckboxConcierge} name="conciergeRequired" checked={values.checkedConcierge}/>}
+                        label="Concierge Services"
+                        />
+                      </Grid>
+                    
+                      <Grid item sm={12} fullWidth>
+                        <FormControlLabel
+                        control={<Checkbox onChange={handleCheckboxCrew} name="crewRequired" checked={values.checkedCrew} />}
+                        label="Request Crew"
+                        />
+                      </Grid>
+                    </Grid>
+                  </div>
+
+                  {/* <Grid item sm={12} fullWidth>
                     <FormControlLabel
-                    control={<Checkbox onChange={handleCheckboxConcierge} name="checkedConcierge" checked={values.checkedConcierge}/>}
-                    label="Concierge Services"
+                    control={<Checkbox onChange={handleCheckboxQuota} name="checkedQuota" checked={values.checkedQuota} />}
+                    label="Do not include this booking in the user's quota"
                     />
-                  </Grid>
-                  
-                  <Grid item sm={12} fullWidth>
-                    <FormControlLabel
-                    control={<Checkbox onChange={handleCheckboxCrew} name="checkedCrew" checked={values.checkedCrew} />}
-                    label="Select to Request Crew"
-                    />
-                  </Grid>
+                  </Grid> */}
               </Grid>
               </DialogContent>
 
