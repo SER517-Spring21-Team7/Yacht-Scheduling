@@ -88,7 +88,7 @@ public class UserAccountController {
 		return ResponseEntity.ok().body(upObject);
 	}
 	
-	@PutMapping("/user/rofile/{id}")
+	@PutMapping("/user/profile/{id}")
 	public ResponseEntity<UserProfile> updateUserProfileById(@PathVariable(value = "id") Integer userId,
 			@RequestBody UserProfile upRequest)
 			throws ResourceNotFoundException {
