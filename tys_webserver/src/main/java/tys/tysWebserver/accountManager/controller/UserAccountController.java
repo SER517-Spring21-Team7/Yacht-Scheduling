@@ -38,10 +38,11 @@ public class UserAccountController {
 		return ResponseEntity.ok().body(unsObject);
 	}
 	
-	@PutMapping("/user/{id}/nsetting")
+	@PutMapping("/user/nsetting/{id}")
 	public ResponseEntity<UserNotificationSetting> updateNotificationById(@PathVariable(value = "id") Integer userId,
 			@RequestBody UserNotificationSetting unsRequest)
 			throws ResourceNotFoundException {
+		System.out.println("notifi updated");
 		UserNotificationSetting unsObject = UNSRepo.findById(userId)
 				.orElseThrow(() -> new ResourceNotFoundException("Notification setting not found for this id :: " + userId));
 		unsObject.setAddedToExpense(unsRequest.isAddedToExpense());
@@ -87,7 +88,7 @@ public class UserAccountController {
 		return ResponseEntity.ok().body(upObject);
 	}
 	
-	@PutMapping("/user/{id}/profile")
+	@PutMapping("/user/rofile/{id}")
 	public ResponseEntity<UserProfile> updateUserProfileById(@PathVariable(value = "id") Integer userId,
 			@RequestBody UserProfile upRequest)
 			throws ResourceNotFoundException {
