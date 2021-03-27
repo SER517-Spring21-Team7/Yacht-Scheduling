@@ -10,18 +10,20 @@ export const SidebarData = [
     icon: <AiIcons.AiFillHome />,
     cName: "nav-text",
   },
+  sessionStorage.getItem("role") === "Admin" &&
   {
-    title: "Add Watercraft",
-    path: "/watercrafts",
-    icon: <GiIcons.GiSailboat />,
-    cName: "nav-text",
+  title: "Add Watercraft",
+      path: "/watercrafts",
+      icon: <GiIcons.GiSailboat />,
+      cName: "nav-text",
   },
+  sessionStorage.getItem("role") === "Admin" &&
   {
-    title: "Enroll Member",
-    path: "/member",
-    icon: <AiIcons.AiOutlineUserAdd />,
-
+    title: "Reserve Watercraft",
+    path: "/reservation",
+    icon: <AiIcons.AiOutlineSchedule />,
     cName: "nav-text",
+    
   },
   {
     title: "View Member",
@@ -29,10 +31,19 @@ export const SidebarData = [
     icon: <FaIcons.FaUsers />,
     cName: "nav-text",
   },
+  sessionStorage.getItem("role") === "Admin" &&
+  {
+    title: "Enroll Member",
+    path: "/member",
+    icon: <AiIcons.AiOutlineUserAdd />,
+
+    cName: "nav-text",
+  },
+
   {
     title: "Scheduler Settings",
     path: "/scheduler",
-    icon: <GiIcons.GiSailboat />,
+    icon: <FaIcons.FaCog />,
     cName: "nav-text",
   },
   // {
@@ -45,12 +56,6 @@ export const SidebarData = [
   //   title: "Checklists",
   //   path: "/checklist",
   //   icon: <FaIcons.FaListAlt />,
-  //   cName: "nav-text",
-  // },
-  // {
-  //   title: "Messages",
-  //   path: "/messages",
-  //   icon: <FaIcons.FaEnvelopeOpenText />,
   //   cName: "nav-text",
   // },
   {

@@ -13,6 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -30,8 +31,9 @@ import HolidayCalendar from "../SchedulerSettings/HolidayCalendar";
 import { SidebarData } from "../Sidebar/SidebarData";
 import ToolbarSearch from "./ToolbarSearch";
 import GlobalContext from "./../GlobalContext";
-import Emergency from "./../EmergencyContact/Emergency"
+import Emergency from "./../EmergencyContact/Emergency";
 import DisplayAlert from "../../displayAlert/DisplayAlert";
+import WatercraftSchedulerUI from './../WatercraftScheduler/WatercraftSchedulerUI'
 
 const drawerWidth = 240;
 
@@ -116,8 +118,15 @@ export default function MiniDrawer() {
 
   const handleGlobalWatercraft = (watercraftId) => {
     setSelectedWatercraft(watercraftId);
+    sessionStorage.setItem("globalWatercraftId", watercraftId);
+    window.location.reload();
     console.log("Sidebar watercraft id::" + watercraftId);
   };
+
+  const logout = () => {
+    sessionStorage.clear();
+    window.location.href = '/';
+}
 
   return (
     <GlobalContext.Provider value={selectedWatercraft}>
@@ -132,7 +141,7 @@ export default function MiniDrawer() {
         >
           <Toolbar>
             <Grid alignItems={"center"} container>
-              <Grid item xs={0.5} sm={0.5}>
+              <Grid item xs="auto" sm="auto">
                 <IconButton
                   color="inherit"
                   aria-label="open drawer"
@@ -158,10 +167,20 @@ export default function MiniDrawer() {
                   }}
                 />
               </Grid>
-              <Grid item xs={1}>
+              <Grid item xs={4}>
                 <ToolbarSearch parentCallback={handleGlobalWatercraft} />
               </Grid>
             </Grid>
+            <IconButton
+            color="inherit"
+            aria-label="logout"
+            onClick={logout}
+            style={{
+              float:'right',
+            }}
+            >
+              <ExitToAppIcon />
+            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -203,6 +222,7 @@ export default function MiniDrawer() {
           <Divider />
           <List style={{ fontSize: "1.8rem", backgroundColor: "#e0f2f1" }}>
             {SidebarData.map((text, index) => (
+              text &&
               <ListItem button key={text.title} component={Link} to={text.path}>
                 <ListItemIcon>{text.icon}</ListItemIcon>
                 <ListItemText primary={text.title} />
@@ -214,14 +234,20 @@ export default function MiniDrawer() {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Switch>
-            <Route exact path="/" render={() => <div>Home Page</div>} />
+            <Route exact path="/" exact component={ListOfWaterCrafts}/>
             {/* <Route path="watercraft" render={() => <div> Page inbox</div>} />
             <Route path="/Starred" render={() => <div>Page starred</div>} /> */}
             <Route path="/listwatercraft" exact component={ListOfWaterCrafts} />
             <Route path="/watercrafts">
-              <AddWatercraft data={null} />
+            {
+                sessionStorage.getItem("role") === "Admin" &&
+                <AddWatercraft data={null} />
+              }
             </Route>
-            <Route path="/member" component={AddMember} />
+            {
+              sessionStorage.getItem("role") === "Admin" &&
+              <Route path="/member" component={AddMember} />
+            }
             <Route path="/viewmember" component={ListMember} />
             <Route path="/MyAccount" component={MyAccount} />
             <Route
@@ -236,6 +262,7 @@ export default function MiniDrawer() {
             />
             <Route path="/emergency" component={Emergency} />
             <Route path="/displayAlert" component={DisplayAlert} />
+            <Route path="/reservation" component={WatercraftSchedulerUI} />
           </Switch>
         </main>
       </div>

@@ -1,12 +1,9 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import { Typography, Grid, AppBar, Paper } from "@material-ui/core";
+import { Typography, Grid } from "@material-ui/core";
 import TimeSlots from "./TimeSlots";
 import { useHistory } from "react-router-dom";
 
@@ -90,7 +87,10 @@ const InitialHCalendar = [];
 export default function SchedulerSetting() {
   const classes = useStyles();
   const history = useHistory();
+  const childRef = useRef();
   const globalWatercraftId = useContext(GlobalContext);
+  var universalWatercraftId = sessionStorage.getItem('globalWatercraftId');
+
   const [expanded, setExpanded] = React.useState(false);
   const [listOfHCalendar, setListOfHCalendar] = React.useState(
     InitialHCalendar
@@ -170,19 +170,33 @@ export default function SchedulerSetting() {
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
-  // const handleSetSlotChange = (event) => {
-  //   if (event.target.checked) {
-  //     setState({
-  //       ...state,
-  //       preventSameSetSlots: true,
-  //     });
-  //   } else {
-  //     setState({
-  //       ...state,
-  //       preventSameSetSlots: false,
-  //     });
-  //   }
-  // };
+  const handleSetSlotChange = (event) => {
+    if (event.target.checked) {
+      setState({
+        ...state,
+        preventSameSetSlots: true,
+      });
+    } else {
+      setState({
+        ...state,
+        preventSameSetSlots: false,
+      });
+    }
+  };
+
+  const handleCarryBorrowChange = (event) => {
+    if (event.target.checked) {
+      setState({
+        ...state,
+        carryBorrow: true,
+      });
+    } else {
+      setState({
+        ...state,
+        carryBorrow: false,
+      });
+    }
+  };
 
   const handlePremiumCheckboxChange = (event) => {
     if (event.target.checked) {
@@ -207,7 +221,6 @@ export default function SchedulerSetting() {
       ...state,
       customSlots: timeSlots,
     });
-    console.log("Custom slots are::" + timeSlots);
   };
 
   const handleContinousReservationChange = (event) => {
@@ -249,46 +262,52 @@ export default function SchedulerSetting() {
         setListOfHCalendar(data);
       })
       .then(() => {
-        fetch(
-          "http://localhost:8080/watercraft/" +
-            globalWatercraftId +
-            "/ssetting",
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-          }
-        )
-          .then((resp) => resp.json())
-          .then((data) => {
-            console.log(data);
-            setState({
-              ...state,
-              premiumDays: data.premiumDays,
-              customSlots: data.timeSlot,
-              preventSameSetSlots: data.blockAllOneSlotBooking,
-              continuousReservationDays: data.maxContinuousBookingDays,
-              freeReservationHours: data.freeBookingAfterHours,
-              confirmEmailHours: data.confirmationBeforeHours,
-              cancelBookingBeforeStart: data.noResponseCancelAtHours,
-              weatherCountry: data.weatherCountry,
-              weatherCity: data.weatherCity,
-              weatherZipCode: data.weatherZipCode,
-              holidayCalendar: data.holidayCalName,
-              maxHolidayDays: data.maxHolidayBookingDays,
-              watercraftTimeZone: data.timeZone,
-              advanceBookingMonth: data.limitAdvBookingMonths,
-              carryBorrow: data.allowCarryBorrow,
+        if(universalWatercraftId){
+          fetch(
+            "http://localhost:8080/watercraft/" +
+              universalWatercraftId +
+              "/ssetting",
+            {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+            }
+          )
+            .then((resp) => resp.json())
+            .then((data) => {
+              console.log(data);
+              setState({
+                ...state,
+                premiumDays: data.premiumDays,
+                customSlots: data.timeSlot,
+                preventSameSetSlots: data.blockAllOneSlotBooking,
+                continuousReservationDays: data.maxContinuousBookingDays,
+                freeReservationHours: data.freeBookingAfterHours,
+                confirmEmailHours: data.confirmationBeforeHours,
+                cancelBookingBeforeStart: data.noResponseCancelAtHours,
+                weatherCountry: data.weatherCountry,
+                weatherCity: data.weatherCity,
+                weatherZipCode: data.weatherZipCode,
+                holidayCalendar: data.holidayCalName,
+                maxHolidayDays: data.maxHolidayBookingDays,
+                watercraftTimeZone: data.timeZone,
+                advanceBookingMonth: data.limitAdvBookingMonths,
+                carryBorrow: data.allowCarryBorrow,
+              });
             });
-          });
+            childRef.current.updateSlotState(data.timeSlot);
+        }
+        else{
+          alert("Please select watercraft from the search box")
+        }
       });
   }, []);
 
   const saveChanges = () => {
     return fetch(
-      "http://localhost:8080/watercraft/" + globalWatercraftId + "/ssetting",
+      "http://localhost:8080/watercraft/" + universalWatercraftId + "/ssetting",
       {
         method: "PUT",
         headers: {
@@ -407,8 +426,9 @@ export default function SchedulerSetting() {
                   Booking Slot Timings:
                 </Typography>
                 <TimeSlots
+                  ref={childRef}
                   customSlots={state.customSlots}
-                  parentCallback={handleTimeSlots}
+                  handleTimeSlots={handleTimeSlots}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -416,7 +436,7 @@ export default function SchedulerSetting() {
                   control={
                     <Checkbox
                       checked={state.preventSameSetSlots}
-                      onChange={handleChange}
+                      onChange={handleSetSlotChange}
                       name="preventSameSetSlots"
                       color="primary"
                     />
@@ -815,7 +835,7 @@ export default function SchedulerSetting() {
                   control={
                     <Checkbox
                       checked={state.carryBorrow}
-                      onChange={handleChange}
+                      onChange={handleCarryBorrowChange}
                       name="carryBorrow"
                       color="primary"
                     />

@@ -1,31 +1,44 @@
 package tys.tysWebserver.scheduler.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Embeddable
-public class TimeSlot {
-	@Column(name = "starthour")
+public class Reservation {
+	
+	@Column(name="fordate")
+	private Date forDate;
+	@Column(name="starthour")
 	private String startHour;
-	@Column(name = "endhour")
+	@Column(name="endhour")
 	private String endHour;
-	@Column(name = "rownum")
-	private int rownum;
-
+	
 	@Override
 	public String toString() {
-		return "TimeSlot [startHour=" + startHour + ", endHour=" + endHour + ", rownum=" + rownum + "]";
+		return "Reservation [forDate=" + forDate + ", startHour=" + startHour + ", endHour=" + endHour + "]";
 	}
 
-	public TimeSlot() {
+	public Reservation() {
 		super();
 	}
 
-	public TimeSlot(String startHour, String endHour, int rownum) {
+	public Reservation(Date forDate, String startHour, String endHour) {
 		super();
+		this.forDate = forDate;
 		this.startHour = startHour;
 		this.endHour = endHour;
-		this.rownum = rownum;
+	}
+
+	public Date getForDate() {
+		return forDate;
+	}
+
+	public void setForDate(Date forDate) {
+		this.forDate = forDate;
 	}
 
 	public String getStartHour() {
@@ -44,12 +57,4 @@ public class TimeSlot {
 		this.endHour = endHour;
 	}
 	
-	public int getRownum() {
-		return rownum;
-	}
-
-	public void setRownum(int rownum) {
-		this.rownum = rownum;
-	}
-
 }

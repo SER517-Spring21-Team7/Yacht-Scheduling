@@ -66,11 +66,9 @@ const config = {
 }
 
 export default function AddWatercraft(props) {
-  console.log(props.data);
   const [values, setValues] = useState(
     props.data == null ? initialValues : props.data
   );
-  console.log(values);
   const history = useHistory();
 
   const classes = useStyle();
@@ -102,7 +100,6 @@ export default function AddWatercraft(props) {
         ReactS3Client
         .uploadFile(fileToUpload)
         .then(data => {
-            console.log(data.location)
             return data.location
         })
         .then(url => {

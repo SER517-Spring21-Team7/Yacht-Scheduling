@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,7 @@ import tys.tysWebserver.memberManager.model.MemberModel;
 import tys.tysWebserver.memberManager.repository.MemberRepository;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/member")
 
 public class MemberController {
@@ -52,14 +53,12 @@ public class MemberController {
 		return savedMember;
 	}
 	
-	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/getAllMember")
 	public List<MemberModel> finalAll() {
 		List<MemberModel> data = AMrepo.findAll();
 		return data;
 	}
 	
-	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/searchMember")
 	public List<MemberModel> searchMember(@RequestParam String searchQuery) {
 //		List<MemberModel> data = AMrepo.
@@ -67,7 +66,6 @@ public class MemberController {
 		return ans;
 	}
 
-	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/getAllMemberDetails")
 	public List<MemberModel> getAllMemberDetails() {
 		List<MemberModel> data = AMrepo.findAll();
@@ -86,6 +84,12 @@ public class MemberController {
 
 		data.forEach((member) -> member.setImage(imageMap.get(member.getMemberId())));
 
+		return data;
+	}
+	
+	@GetMapping("/getMemberByWatercraft/{wid}")
+	public List<MemberModel> finalAllByWatercraft(@PathVariable(value = "wid") int watercraftId) {
+		List<MemberModel> data = AMrepo.findByWatercraftId(watercraftId);
 		return data;
 	}
 }
