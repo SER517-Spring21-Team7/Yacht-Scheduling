@@ -90,13 +90,6 @@ export default function NotificationSetting() {
 
     const url = "http://localhost:8080/usernotificationSetting/"+sessionStorage.getItem("userId");
     axios.get(url)
-    // fetch("http://localhost:8080/usernotificationSetting", {
-    //   method: "GET",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    // })
       .then((resp) => {console.log(resp);
         setState({
           ...state,
@@ -112,8 +105,8 @@ export default function NotificationSetting() {
           upcomingScheduleReminder: resp.data.upcomingScheduleReminder,
           addedToExpense: resp.data.addedToExpense,
         })
-  }, []);
-});
+  });
+}, []);
 
   const saveChanges = () => {
     return fetch("http://localhost:8080/user/3/nsetting", {
