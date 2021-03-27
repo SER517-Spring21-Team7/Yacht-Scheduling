@@ -109,18 +109,9 @@ export default function NotificationSetting() {
 }, []);
 
   const saveChanges = () => {
-    return fetch("http://localhost:8080/user/3/nsetting", {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...state,
-      }),
-    })
-      .then((response) => response.json())
-      .then((json) => {
+    const url = "http://localhost:8080/user/nsetting/" + sessionStorage.getItem("userId");
+    axios.put( url, { ...state})
+      .then((resp) => { console.log(resp.data);
         console.log("Notification setting updated.");
       })
       .catch((error) => {
