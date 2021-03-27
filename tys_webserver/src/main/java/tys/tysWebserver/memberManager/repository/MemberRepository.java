@@ -16,6 +16,6 @@ public interface MemberRepository extends JpaRepository<MemberModel, Integer> {
 	
 	List<MemberModel> findAllByMemberId(Integer id);
 
-	@Transactional
+  @Transactional
 	List<MemberModel> findByWatercraftId(int watercraftId);
 }
