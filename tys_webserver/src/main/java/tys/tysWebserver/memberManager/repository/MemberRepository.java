@@ -9,10 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import tys.tysWebserver.memberManager.model.MemberModel;
 
 @Repository
-public interface MemberRepository extends JpaRepository<MemberModel, Integer>, MemberRepositoryCustom{
+public interface MemberRepository extends JpaRepository<MemberModel, Integer> {
 		
 	@Transactional
 	List<MemberModel> findByFirstnameIgnoreCaseContaining(String name);
 	
 	List<MemberModel> findAllByMemberId(Integer id);
+
+  @Transactional
+	List<MemberModel> findByWatercraftId(int watercraftId);
 }
