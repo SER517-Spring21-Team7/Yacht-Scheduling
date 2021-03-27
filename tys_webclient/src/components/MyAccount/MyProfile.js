@@ -219,7 +219,7 @@ export default function MyProfile() {
   }, []);
 
   const saveChanges = () => {
-    return fetch("http://localhost:8080/user/3/profile", {
+    return fetch("http://localhost:8080/user/profile/"+sessionStorage.getItem("userId"), {
       method: "PUT",
       headers: {
         Accept: "application/json",
