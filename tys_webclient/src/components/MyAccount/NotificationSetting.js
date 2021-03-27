@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import axios from 'axios';
 import {
   makeStyles,
   Accordion,
@@ -86,31 +87,33 @@ export default function NotificationSetting() {
   };
 
   useEffect((state) => {
-    fetch("http://localhost:8080/user/3/nsetting", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((resp) => resp.json())
-      .then((data) =>
+
+    const url = "http://localhost:8080/usernotificationSetting/"+sessionStorage.getItem("userId");
+    axios.get(url)
+    // fetch("http://localhost:8080/usernotificationSetting", {
+    //   method: "GET",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json",
+    //   },
+    // })
+      .then((resp) => {console.log(resp);
         setState({
           ...state,
-          sendMessage: data.sendMessage,
-          watercraftInvite: data.watercraftInvite,
-          requestApproval: data.requestApproval,
-          othersReservationAdmin: data.othersReservationAdmin,
-          othersReservationMember: data.othersReservationMember,
-          scheduleSomeTime: data.scheduleSomeTime,
-          eventSuggestion: data.eventSuggestion,
-          eventChange: data.eventChange,
-          eventCancel: data.eventCancel,
-          upcomingScheduleReminder: data.upcomingScheduleReminder,
-          addedToExpense: data.addedToExpense,
+          sendMessage: resp.data.sendMessage,
+          watercraftInvite: resp.data.watercraftInvite,
+          requestApproval: resp.data.requestApproval,
+          othersReservationAdmin: resp.data.othersReservationAdmin,
+          othersReservationMember: resp.data.othersReservationMember,
+          scheduleSomeTime: resp.data.scheduleSomeTime,
+          eventSuggestion: resp.data.eventSuggestion,
+          eventChange: resp.data.eventChange,
+          eventCancel: resp.data.eventCancel,
+          upcomingScheduleReminder: resp.data.upcomingScheduleReminder,
+          addedToExpense: resp.data.addedToExpense,
         })
-      );
   }, []);
+});
 
   const saveChanges = () => {
     return fetch("http://localhost:8080/user/3/nsetting", {
