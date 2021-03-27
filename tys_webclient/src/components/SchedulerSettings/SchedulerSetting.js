@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
@@ -87,6 +87,7 @@ const InitialHCalendar = [];
 export default function SchedulerSetting() {
   const classes = useStyles();
   const history = useHistory();
+  const childRef = useRef();
   const globalWatercraftId = useContext(GlobalContext);
   var universalWatercraftId = sessionStorage.getItem('globalWatercraftId');
 
@@ -169,28 +170,33 @@ export default function SchedulerSetting() {
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
-  const handleCheckboxChange = (event) => {
+  const handleSetSlotChange = (event) => {
     if (event.target.checked) {
-      setState({ ...state, [event.target.name]: true });
+      setState({
+        ...state,
+        preventSameSetSlots: true,
+      });
     } else {
-      setState({ ...state, [event.target.name]: false });
+      setState({
+        ...state,
+        preventSameSetSlots: false,
+      });
     }
-    
   };
 
-  // const handleSetSlotChange = (event) => {
-  //   if (event.target.checked) {
-  //     setState({
-  //       ...state,
-  //       preventSameSetSlots: true,
-  //     });
-  //   } else {
-  //     setState({
-  //       ...state,
-  //       preventSameSetSlots: false,
-  //     });
-  //   }
-  // };
+  const handleCarryBorrowChange = (event) => {
+    if (event.target.checked) {
+      setState({
+        ...state,
+        carryBorrow: true,
+      });
+    } else {
+      setState({
+        ...state,
+        carryBorrow: false,
+      });
+    }
+  };
 
   const handlePremiumCheckboxChange = (event) => {
     if (event.target.checked) {
@@ -215,7 +221,6 @@ export default function SchedulerSetting() {
       ...state,
       customSlots: timeSlots,
     });
-    console.log("Custom slots are::" + timeSlots);
   };
 
   const handleContinousReservationChange = (event) => {
@@ -292,12 +297,12 @@ export default function SchedulerSetting() {
                 carryBorrow: data.allowCarryBorrow,
               });
             });
+            childRef.current.updateSlotState(data.timeSlot);
         }
         else{
           alert("Please select watercraft from the search box")
         }
-      }
-    );
+      });
   }, []);
 
   const saveChanges = () => {
@@ -421,8 +426,9 @@ export default function SchedulerSetting() {
                   Booking Slot Timings:
                 </Typography>
                 <TimeSlots
+                  ref={childRef}
                   customSlots={state.customSlots}
-                  parentCallback={handleTimeSlots}
+                  handleTimeSlots={handleTimeSlots}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -430,7 +436,7 @@ export default function SchedulerSetting() {
                   control={
                     <Checkbox
                       checked={state.preventSameSetSlots}
-                      onChange={handleChange}
+                      onChange={handleSetSlotChange}
                       name="preventSameSetSlots"
                       color="primary"
                     />
@@ -829,7 +835,7 @@ export default function SchedulerSetting() {
                   control={
                     <Checkbox
                       checked={state.carryBorrow}
-                      onChange={handleCheckboxChange}
+                      onChange={handleCarryBorrowChange}
                       name="carryBorrow"
                       color="primary"
                     />
