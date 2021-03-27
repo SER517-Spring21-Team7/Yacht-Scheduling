@@ -31,7 +31,8 @@ import HolidayCalendar from "../SchedulerSettings/HolidayCalendar";
 import { SidebarData } from "../Sidebar/SidebarData";
 import ToolbarSearch from "./ToolbarSearch";
 import GlobalContext from "./../GlobalContext";
-import Emergency from "./../EmergencyContact/Emergency"
+import Emergency from "./../EmergencyContact/Emergency";
+import DisplayAlert from "../../displayAlert/DisplayAlert";
 import WatercraftSchedulerUI from './../WatercraftScheduler/WatercraftSchedulerUI'
 
 const drawerWidth = 240;
@@ -260,6 +261,7 @@ export default function MiniDrawer() {
               component={HolidayCalendar}
             />
             <Route path="/emergency" component={Emergency} />
+            <Route path="/displayAlert" component={DisplayAlert} />
             <Route path="/reservation" component={WatercraftSchedulerUI} />
           </Switch>
         </main>

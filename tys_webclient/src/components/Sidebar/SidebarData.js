@@ -70,4 +70,10 @@ export const SidebarData = [
     icon: <FaIcons.FaBriefcaseMedical />,
     cName: "nav-text",
   },
+  {
+    title: "Add Alerts",
+    path: "/displayAlert",
+    icon: <FaIcons.FaBriefcaseMedical />,
+    cName: "nav-text",
+  },
 ];
