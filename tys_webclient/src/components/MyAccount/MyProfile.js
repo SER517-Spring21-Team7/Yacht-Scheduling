@@ -17,6 +17,7 @@ import logo from "./rs_test.jpg";
 import * as FaIcons from "react-icons/fa";
 import S3 from "react-aws-s3";
 import imageCompression from "browser-image-compression";
+import axios from "axios";
 
 const config = {
   bucketName: "tys-user-image",
@@ -188,29 +189,32 @@ export default function MyProfile() {
   };
 
   useEffect((values) => {
-    fetch("http://localhost:8080/user/3/profile", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((resp) => resp.json())
-      .then((data) =>
+    // fetch("http://localhost:8080/user/3/profile", {
+    //   method: "GET",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json",
+    //   },
+    // })
+    const url = "http://localhost:8080/userprofile/"+sessionStorage.getItem("userId");
+
+    axios.get(url)
+      .then((resp) => {console.log(resp);
         setValues({
           ...values,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          mobile: data.mobile,
-          alternateMobile: data.alternateMobile,
-          timezone: data.timezone,
-          country: data.country,
-          address_1: data.address_1,
-          address_2: data.address_2,
-          city: data.city,
-          state: data.state,
-          zipCode: data.zipCode,
-        })
+          firstName: resp.data.firstName,
+          lastName: resp.data.lastName,
+          mobile: resp.data.mobile,
+          alternateMobile: resp.data.alternateMobile,
+          timezone: resp.data.timezone,
+          country: resp.data.country,
+          address_1: resp.data.address_1,
+          address_2: resp.data.address_2,
+          city: resp.data.city,
+          state: resp.data.state,
+          zipCode: resp.data.zipCode,
+        });
+      }
       );
   }, []);
 

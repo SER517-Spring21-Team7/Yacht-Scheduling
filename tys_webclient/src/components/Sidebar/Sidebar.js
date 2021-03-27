@@ -13,6 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -121,6 +122,11 @@ export default function MiniDrawer() {
     console.log("Sidebar watercraft id::" + watercraftId);
   };
 
+  const logout = () => {
+    sessionStorage.clear();
+    window.location.href = '/';
+}
+
   return (
     <GlobalContext.Provider value={selectedWatercraft}>
       <div className={classes.root}>
@@ -160,10 +166,20 @@ export default function MiniDrawer() {
                   }}
                 />
               </Grid>
-              <Grid item xs={1}>
+              <Grid item xs={4}>
                 <ToolbarSearch parentCallback={handleGlobalWatercraft} />
               </Grid>
             </Grid>
+            <IconButton
+            color="inherit"
+            aria-label="logout"
+            onClick={logout}
+            style={{
+              float:'right',
+            }}
+            >
+              <ExitToAppIcon />
+            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -205,6 +221,7 @@ export default function MiniDrawer() {
           <Divider />
           <List style={{ fontSize: "1.8rem", backgroundColor: "#e0f2f1" }}>
             {SidebarData.map((text, index) => (
+              text &&
               <ListItem button key={text.title} component={Link} to={text.path}>
                 <ListItemIcon>{text.icon}</ListItemIcon>
                 <ListItemText primary={text.title} />
@@ -221,9 +238,15 @@ export default function MiniDrawer() {
             <Route path="/Starred" render={() => <div>Page starred</div>} /> */}
             <Route path="/listwatercraft" exact component={ListOfWaterCrafts} />
             <Route path="/watercrafts">
-              <AddWatercraft data={null} />
+            {
+                sessionStorage.getItem("role") === "Admin" &&
+                <AddWatercraft data={null} />
+              }
             </Route>
-            <Route path="/member" component={AddMember} />
+            {
+              sessionStorage.getItem("role") === "Admin" &&
+              <Route path="/member" component={AddMember} />
+            }
             <Route path="/viewmember" component={ListMember} />
             <Route path="/MyAccount" component={MyAccount} />
             <Route
