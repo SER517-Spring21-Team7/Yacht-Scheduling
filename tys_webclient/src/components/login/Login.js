@@ -94,11 +94,10 @@ function Login({ setAccess }) {
     axios.post(endpoint, user_object).then(res => {
 
       sessionStorage.setItem("authorization", res.data.token);
-      console.log(res.data);
-        sessionStorage.setItem("role", res.data.role);
-        sessionStorage.setItem("userId", res.data.id);
-        history.push('/');
-        window.location.reload();
+      sessionStorage.setItem("role", res.data.role);
+      sessionStorage.setItem("userId", res.data.id);
+      history.push('/');
+      window.location.reload();
     }, error => {
       alert("Authentication failure, retry");
     });

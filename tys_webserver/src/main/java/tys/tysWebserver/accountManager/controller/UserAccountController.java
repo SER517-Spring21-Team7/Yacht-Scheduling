@@ -83,7 +83,7 @@ public class UserAccountController {
 	@GetMapping("/userprofile/{id}")
 	public ResponseEntity<UserProfile> getUserProfileById(@PathVariable Integer id)
 			throws ResourceNotFoundException {
-		UserProfile upObject = UPRepo.findById(id)
+    UserProfile upObject = UPRepo.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Profile not found for id :: " +id));
 		return ResponseEntity.ok().body(upObject);
 	}
