@@ -39,7 +39,7 @@ export const SidebarData = [
 
     cName: "nav-text",
   },
-
+  sessionStorage.getItem("role") === "Admin" &&
   {
     title: "Scheduler Settings",
     path: "/scheduler",
@@ -70,6 +70,7 @@ export const SidebarData = [
     icon: <FaIcons.FaBriefcaseMedical />,
     cName: "nav-text",
   },
+    sessionStorage.getItem("role") === "Admin" &&
   {
     title: "Add Alerts",
     path: "/displayAlert",
