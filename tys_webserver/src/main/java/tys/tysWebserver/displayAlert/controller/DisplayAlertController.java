@@ -43,7 +43,7 @@ public class DisplayAlertController {
 	@GetMapping("/get/{id}")
 	public List<DisplayAlertModel> getAlert(@PathVariable String id) {
 		
-		if(Integer.parseInt(id) == 80) {
+		if(Integer.parseInt(id) == 60) {
 			return displayAlertRepo.findAll();
 		}
 		HashSet<Integer> watercraftIds = new HashSet<>();
