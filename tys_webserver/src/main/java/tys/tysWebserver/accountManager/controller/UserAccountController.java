@@ -30,7 +30,7 @@ public class UserAccountController {
 	private UserProfileRepo UPRepo;
 	
 	// Below methods are for notification setting related API
-	@GetMapping("/user/{id}/nsetting")
+	@GetMapping("/usernotificationSetting/{id}")
 	public ResponseEntity<UserNotificationSetting> getNotificationSettingById(@PathVariable(value = "id") Integer userId)
 			throws ResourceNotFoundException {
 		UserNotificationSetting unsObject = UNSRepo.findById(userId)
@@ -79,11 +79,11 @@ public class UserAccountController {
 	}
 
 	// Below methods are for profile related API
-	@GetMapping("/user/{id}/profile")
-	public ResponseEntity<UserProfile> getUserProfileById(@PathVariable(value = "id") Integer userId)
+	@GetMapping("/userprofile/{id}")
+	public ResponseEntity<UserProfile> getUserProfileById(@PathVariable Integer id)
 			throws ResourceNotFoundException {
-		UserProfile upObject = UPRepo.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("Profile not found for id :: " + userId));
+		UserProfile upObject = UPRepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Profile not found for id :: " +id));
 		return ResponseEntity.ok().body(upObject);
 	}
 	

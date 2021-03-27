@@ -34,7 +34,6 @@ public class WatercraftController {
 	
 	@PostMapping("/details")
 	public WatercraftModel createWatercraft(@RequestBody WatercraftModel addwatercraft) {
-		System.out.println(addwatercraft.getWatercraftName());
 		WatercraftModel savedWatercraft =  AWrepo.save(addwatercraft);
 		SSController.addSchedulerSettingById(savedWatercraft.getWatercraftId());
 		return savedWatercraft;
@@ -70,7 +69,6 @@ public class WatercraftController {
 	@CrossOrigin(origins = "http://localhost:3000")
 	@DeleteMapping("/deleteWaterCraft/{id}")
 	public ResponseEntity<String> deleteWaterCraft(@PathVariable String id) {
-		System.out.println(id);
 		AWrepo.deleteById(Integer.parseInt(id));
 		return new ResponseEntity<String>("Success", HttpStatus.OK);
 	}
@@ -78,7 +76,6 @@ public class WatercraftController {
 	@CrossOrigin(origins = "http://localhost:3000")
 	@GetMapping("/getWaterCraftById/{id}")
 	public WatercraftModel getWaterCraftById(@PathVariable String id) {
-		System.out.println(id);
 		Optional<WatercraftModel> data = AWrepo.findById(Integer.parseInt(id));
 		return data.get();
 	}
