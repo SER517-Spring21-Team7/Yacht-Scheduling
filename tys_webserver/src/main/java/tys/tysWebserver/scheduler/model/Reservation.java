@@ -13,9 +13,9 @@ public class Reservation {
 	@Column(name="fordate")
 	private Date forDate;
 	@Column(name="starthour")
-	private int startHour;
+	private String startHour;
 	@Column(name="endhour")
-	private int endHour;
+	private String endHour;
 	
 	@Override
 	public String toString() {
@@ -26,7 +26,7 @@ public class Reservation {
 		super();
 	}
 
-	public Reservation(Date forDate, int startHour, int endHour) {
+	public Reservation(Date forDate, String startHour, String endHour) {
 		super();
 		this.forDate = forDate;
 		this.startHour = startHour;
@@ -41,19 +41,19 @@ public class Reservation {
 		this.forDate = forDate;
 	}
 
-	public int getStartHour() {
+	public String getStartHour() {
 		return startHour;
 	}
 
-	public void setStartHour(int startHour) {
+	public void setStartHour(String startHour) {
 		this.startHour = startHour;
 	}
 
-	public int getEndHour() {
+	public String getEndHour() {
 		return endHour;
 	}
 
-	public void setEndHour(int endHour) {
+	public void setEndHour(String endHour) {
 		this.endHour = endHour;
 	}
 	
