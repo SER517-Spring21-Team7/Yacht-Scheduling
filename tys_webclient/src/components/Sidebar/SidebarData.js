@@ -10,12 +10,14 @@ export const SidebarData = [
     icon: <AiIcons.AiFillHome />,
     cName: "nav-text",
   },
+  sessionStorage.getItem("role") === "Admin" &&
   {
-    title: "Add Watercraft",
-    path: "/watercrafts",
-    icon: <GiIcons.GiSailboat />,
-    cName: "nav-text",
+  title: "Add Watercraft",
+      path: "/watercrafts",
+      icon: <GiIcons.GiSailboat />,
+      cName: "nav-text",
   },
+  sessionStorage.getItem("role") === "Admin" &&
   {
     title: "Enroll Member",
     path: "/member",
@@ -29,6 +31,7 @@ export const SidebarData = [
     icon: <FaIcons.FaUsers />,
     cName: "nav-text",
   },
+  sessionStorage.getItem("role") === "Admin" &&
   {
     title: "Scheduler Settings",
     path: "/scheduler",
