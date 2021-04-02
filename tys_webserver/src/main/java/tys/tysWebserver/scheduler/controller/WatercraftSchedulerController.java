@@ -39,6 +39,12 @@ public class WatercraftSchedulerController {
 			return ResponseEntity.ok().body(schedule);
 	}
 	
+	@DeleteMapping("/deleteschedule/{sid}")
+	public ResponseEntity<String> deleteReservation(@PathVariable(value="sid") String sid) {
+		WSRepo.deleteById(Integer.parseInt(sid));
+		return new ResponseEntity<String>("Success", HttpStatus.OK);
+	} 
+	
 	@PutMapping("/updateschedule/{scheduleid}")
 	public ResponseEntity<WatercraftScheduler> deleteSlot(@RequestBody WatercraftScheduler updatedSchedule, @PathVariable Integer scheduleid)
 		 throws ResourceNotFoundException {
