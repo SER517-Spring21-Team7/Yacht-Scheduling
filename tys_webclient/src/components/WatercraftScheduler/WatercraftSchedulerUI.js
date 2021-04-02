@@ -18,9 +18,17 @@ import {
   Button,
   Checkbox,
   Box,
+  makeStyles
 } from "@material-ui/core";
 import axios from "axios";
 import GlobalContext from "../GlobalContext";
+import toDate from "date-fns/toDate";
+
+const useStyle = makeStyles((theme) => ({
+  itemStyle:{
+    height:"8vh",
+  }
+}));
 
 const initialValues = {
   
@@ -44,39 +52,54 @@ const initialValues = {
 const emptyEventList = []
 const slotDropDown = []
 const memberDropDown = []
+const displayEventHTML = {
+  fromDate: '',
+  fromHour: '',
+  toDate: '',
+  toHour: '',
+  member: '',
+  scheduleId: ''
+}
 
 function WatercraftSchedulerUI() {
 
   const [open, setOpen] = useState(false);
+  const [eventDialog, setEventDialog] = useState(false);
   const [values, setValues] = useState(initialValues);
   const [eventList, setEventList] = useState(emptyEventList);
+  const [displayEvent, setDisplayEvent] = useState(displayEventHTML);
+  const [allReservations, setAllReservations] = useState([]);
   const globalWatercraftId = useContext(GlobalContext);
+  const classes = useStyle();
 
   var universalWatercraftId = sessionStorage.getItem('globalWatercraftId');
 
+  var customEvents = []
   const url = "http://localhost:8080/getschedule/" + universalWatercraftId
   var response;
   const getReservations = () => { 
     axios.get(url).then((res) => {
       response = res.data;
+      setAllReservations(response)
       for (let i = 0; i < response.length; i++) {
-        setEventsCalendar(response[i].reservation)
+        //allReservations.push(JSON.parse(JSON.stringify(response[i])))
+        setEventsCalendar(response[i].reservation, response[i].scheduleId)
       }
+      var joinedEvents = eventList.concat(customEvents);
+      setEventList(joinedEvents)
     })
   }
 
-  const setEventsCalendar = (events) => {
-    var customEvents = []
+  const setEventsCalendar = (events, scheduleId) => {
     for (let i = 0; i < events.length; i++) {
       var event = {}
       event.start = events[i].forDate
       event.end = events[i].forDate
       event.allDay = true
       event.title = String(events[i].startHour) + ' - ' + String(events[i].endHour)
+      event.id = scheduleId
       customEvents.push(event)
     }
-    var joinedEvents = eventList.concat(customEvents);
-    setEventList(joinedEvents)
   }
 
   const urlSlots = "http://localhost:8080/watercraft/" + universalWatercraftId + "/ssetting"
@@ -132,6 +155,13 @@ function WatercraftSchedulerUI() {
     setOpen(false);
   };
 
+  const handleEventOpen = () => {
+    setEventDialog(true);
+  };
+  const handleEventClose = () => {
+    setEventDialog(false);
+  };
+
   const handleStartDateChange = (e) => {
     setValues({
       ...values,
@@ -183,6 +213,33 @@ function WatercraftSchedulerUI() {
     } else {
       setValues({ ...values, [e.target.name]: false });
     }
+  }
+
+  const handleEventClick = (e) => {
+    allReservations.map((eachReservation) => {
+      if (parseInt(eachReservation.scheduleId) === parseInt(e.event.id)) {
+        console.log(eachReservation)
+        setDisplayEvent({
+          fromDate: eachReservation.reservation[0].forDate.split("T")[0],
+          fromHour: eachReservation.reservation[0].startHour,
+          toDate: eachReservation.reservation[eachReservation.reservation.length-1].forDate.split("T")[0],
+          toHour: eachReservation.reservation[eachReservation.reservation.length-1].endHour,
+          member: eachReservation.memberName,
+          scheduleId: eachReservation.scheduleId
+        })
+      }
+    })
+    
+    handleEventOpen();
+  }
+
+  const handleDeleteEvent = (e) => {
+    const deleteURL = "http://localhost:8080/deleteschedule/" + displayEvent.scheduleId
+    axios.delete(deleteURL).then(res => {
+    }, error => {
+      alert("Unable to cancel reservation at this moment. Please contact the administrator");
+    });
+    window.location.reload();
   }
 
   const confirmReservation = () => {
@@ -242,6 +299,7 @@ function WatercraftSchedulerUI() {
     }, error => {
       alert("Failed to create reservation! Please try again.");
     });
+    window.location.reload();
   }
 
     return (
@@ -253,12 +311,86 @@ function WatercraftSchedulerUI() {
             weekends={true}
             events={eventList}
             eventColor={'lightblue'}
+            eventClick={handleEventClick}
             />
+            <Dialog open={eventDialog} onClose={handleEventClose} aria-labelledby="form-dialog-title" fullWidth maxWidth="sm">
+              <DialogTitle id="form-dialog-title">Reservation Details</DialogTitle>
+              <DialogContent dividers>
+                <Grid container alignItems="center" justify="center">
+                <Grid item sm={12} align="center" className={classes.itemStyle}>
+                    <Typography>
+                      <Box
+                        fontWeight="fontWeightBold"
+                        textAlign="center"
+                        m={1}
+                      >
+                        Reservation For
+                      </Box>
+                    </Typography>
+                    {displayEvent.member}
+                  </Grid>
+                  <Grid item sm={6} align="center" className={classes.itemStyle}>
+                    <Typography>
+                      <Box
+                        fontWeight="fontWeightBold"
+                        textAlign="center"
+                        m={1}
+                      >
+                        From Date
+                      </Box>
+                    </Typography>
+                    {displayEvent.fromDate}
+                  </Grid>
+                  <Grid item sm={6} align="center" className={classes.itemStyle}>
+                    <Typography>
+                      <Box
+                        fontWeight="fontWeightBold"
+                        textAlign="center"
+                        m={1}
+                      >
+                        Starting At
+                      </Box>
+                    </Typography>
+                    {displayEvent.fromHour}
+                  </Grid>
+                  <Grid item sm={6} align="center" className={classes.itemStyle}>
+                    <Typography>
+                      <Box
+                        fontWeight="fontWeightBold"
+                        textAlign="center"
+                        m={1}
+                      >
+                        To Date
+                      </Box>
+                    </Typography>
+                    {displayEvent.toDate}
+                  </Grid>
+                  <Grid item sm={6} align="center" className={classes.itemStyle}>
+                    <Typography>
+                      <Box
+                        fontWeight="fontWeightBold"
+                        textAlign="center"
+                        m={1}
+                      >
+                        Ending At
+                      </Box>
+                    </Typography>
+                    {displayEvent.toHour}
+                  </Grid>
+                </Grid>
+              </DialogContent>
+              <DialogActions>
+                <div style={{float:"left"}}>
+                <Button variant="contained" color="secondary" onClick={handleDeleteEvent}>
+                  Cancel Reservation
+                </Button>
+                </div>
+              </DialogActions>
+            </Dialog>
             <Dialog open={open} onClose={handleDialogCloseOnCancel} aria-labelledby="form-dialog-title" fullWidth maxWidth="sm">
               <DialogTitle id="form-dialog-title">Make Reservation</DialogTitle>
-              <DialogContent>
+              <DialogContent dividers>
                 <Grid container>
-
                   <Grid item sm={6}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <Grid container justify="space-around">
@@ -399,10 +531,10 @@ function WatercraftSchedulerUI() {
               </DialogContent>
 
               <DialogActions>
-                <Button onClick={handleDialogCloseOnCancel} color="secondary">
+                <Button variant="contained" onClick={handleDialogCloseOnCancel} color="secondary">
                   Cancel
                 </Button>
-                <Button onClick={handleDialogCloseOnConfirm} color="primary">
+                <Button variant="contained" onClick={handleDialogCloseOnConfirm} color="primary">
                   Confirm
                 </Button>
               </DialogActions>
