@@ -49,7 +49,7 @@ const initialValues = {
   
 };
 
-const emptyEventList = []
+const emptyEventList = [{}]
 const slotDropDown = []
 const memberDropDown = []
 const displayEventHTML = {
@@ -75,22 +75,29 @@ function WatercraftSchedulerUI() {
   var universalWatercraftId = sessionStorage.getItem('globalWatercraftId');
 
   var customEvents = []
+  var color;
+  var memberObject;
   const url = "http://localhost:8080/getschedule/" + universalWatercraftId
-  var response;
   const getReservations = () => { 
     axios.get(url).then((res) => {
-      response = res.data;
-      setAllReservations(response)
-      for (let i = 0; i < response.length; i++) {
-        //allReservations.push(JSON.parse(JSON.stringify(response[i])))
-        setEventsCalendar(response[i].reservation, response[i].scheduleId)
+      //response = res.data;
+      setAllReservations(res.data)
+      for (let i = 0; i < res.data.length; i++) {
+        const memberColor = "http://localhost:8080/member/getMember/" + res.data[i].userId
+        axios.get(memberColor).then((result) => {
+          //memberObject = result.data;
+          color = result.data.schedulercolor
+          setEventsCalendar(res.data[i].reservation, res.data[i].scheduleId, color)
+          //if (i === res.data.length - 1) {
+            //console.log(customEvents)
+            //setEventList(customEvents)
+          //}
+        })
       }
-      var joinedEvents = eventList.concat(customEvents);
-      setEventList(joinedEvents)
     })
   }
 
-  const setEventsCalendar = (events, scheduleId) => {
+  const setEventsCalendar = (events, scheduleId, color) => {
     for (let i = 0; i < events.length; i++) {
       var event = {}
       event.start = events[i].forDate
@@ -98,7 +105,9 @@ function WatercraftSchedulerUI() {
       event.allDay = true
       event.title = String(events[i].startHour) + ' - ' + String(events[i].endHour)
       event.id = scheduleId
-      customEvents.push(event)
+      event.color = color
+      //customEvents.push(event)
+      setEventList(eventList => [...eventList, event])
     }
   }
 
@@ -218,7 +227,6 @@ function WatercraftSchedulerUI() {
   const handleEventClick = (e) => {
     allReservations.map((eachReservation) => {
       if (parseInt(eachReservation.scheduleId) === parseInt(e.event.id)) {
-        console.log(eachReservation)
         setDisplayEvent({
           fromDate: eachReservation.reservation[0].forDate.split("T")[0],
           fromHour: eachReservation.reservation[0].startHour,
@@ -310,7 +318,6 @@ function WatercraftSchedulerUI() {
             initialView="dayGridMonth"
             weekends={true}
             events={eventList}
-            eventColor={'lightblue'}
             eventClick={handleEventClick}
             />
             <Dialog open={eventDialog} onClose={handleEventClose} aria-labelledby="form-dialog-title" fullWidth maxWidth="sm">
