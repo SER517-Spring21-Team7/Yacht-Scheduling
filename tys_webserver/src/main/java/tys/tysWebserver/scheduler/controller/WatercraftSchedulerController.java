@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,13 +36,13 @@ public class WatercraftSchedulerController {
 	SchedulerSettingRepo ssr;
 	
 	@PostMapping("/addschedule")
-	public WatercraftScheduler createSchedule(@RequestBody WatercraftScheduler newSchedule) {
+	public ResponseEntity<String> createSchedule(@RequestBody WatercraftScheduler newSchedule) {
 		SchedulerSetting ssForWatercraft = ssr.findById(newSchedule.getWatercraftId()).orElseGet(null);
 		if (isBookingAllowed(newSchedule, ssForWatercraft)) {
 			WatercraftScheduler savedSchedule = WSRepo.save(newSchedule);
-			return savedSchedule;
+			return new ResponseEntity<String>("Success", HttpStatus.OK);
 		} else {
-			return null;
+			return new ResponseEntity<String>("Failed", HttpStatus.BAD_REQUEST);
 		}
 		
 	}
