@@ -82,7 +82,11 @@ public class WatercraftSchedulerController {
 	
 	@DeleteMapping("/deleteschedule/{sid}")
 	public ResponseEntity<String> deleteReservation(@PathVariable(value="sid") String sid) {
+		WatercraftScheduler wsObject = WSRepo.findById(Integer.parseInt(sid)).orElse(null);
+		MemberSlot memberSlot = msr.findById(wsObject.getUserId()).orElse(null);
 		WSRepo.deleteById(Integer.parseInt(sid));
+		// Currently we are adding all cancel slots into current month slot, this needs improvement
+		msController.updateMemberSlotOnCancel(memberSlot, wsObject.getReservation().size());
 		return new ResponseEntity<String>("Success", HttpStatus.OK);
 	} 
 	
@@ -137,7 +141,7 @@ public class WatercraftSchedulerController {
 				break;
 			}
 		}
-		msController.updateMemberSlot(availableSlots, schedule.getReservation().size(), isHolidaySlot, isCarryBorrow);
+		msController.updateMemberSlotOnBooking(availableSlots, schedule.getReservation().size(), isHolidaySlot, isCarryBorrow);
 		return true;
 	}
 

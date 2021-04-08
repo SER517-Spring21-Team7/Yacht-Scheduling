@@ -31,7 +31,7 @@ public class MemberSlotController {
 		msr.save(msObject);
 	}
 	
-	public void updateMemberSlot(MemberSlot currentSlot, int standardDeduction, boolean isHolidaySlot, boolean isCarryBorrow) {
+	public void updateMemberSlotOnBooking(MemberSlot currentSlot, int standardDeduction, boolean isHolidaySlot, boolean isCarryBorrow) {
 		// Previous month slot
 		if (isCarryBorrow) {
 			if (standardDeduction - currentSlot.getPrevMonthSlot() > 0) {
@@ -64,6 +64,12 @@ public class MemberSlotController {
 		if (isHolidaySlot) {
 			currentSlot.setHolidaySlot(currentSlot.getHolidaySlot()-1);
 		}
+		msr.save(currentSlot);
+	}
+	
+	public void updateMemberSlotOnCancel(MemberSlot currentSlot, int standardAddition) {
+		// Adding all slots to current month, needs improvement
+		currentSlot.setCurrMonthSlot(currentSlot.getCurrMonthSlot() + standardAddition);
 		msr.save(currentSlot);
 	}
 }
