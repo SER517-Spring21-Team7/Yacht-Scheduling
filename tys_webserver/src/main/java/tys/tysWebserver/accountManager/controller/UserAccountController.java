@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +16,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import tys.tysWebserver.accountManager.model.Login;
 import tys.tysWebserver.accountManager.model.UserNotificationSetting;
 import tys.tysWebserver.accountManager.model.UserProfile;
+import tys.tysWebserver.accountManager.repository.LoginRepository;
 import tys.tysWebserver.accountManager.repository.UserNotificationSettingRepo;
 import tys.tysWebserver.accountManager.repository.UserProfileRepo;
 import tys.tysWebserver.memberManager.model.MemberModel;
@@ -28,6 +32,11 @@ public class UserAccountController {
 	private UserNotificationSettingRepo UNSRepo;
 	@Autowired
 	private UserProfileRepo UPRepo;
+	
+	@Autowired
+	private LoginRepository loginRepo; 
+	
+	PasswordEncoder pas = new BCryptPasswordEncoder();
 	
 	// Below methods are for notification setting related API
 	@GetMapping("/usernotificationSetting/{id}")
@@ -58,6 +67,15 @@ public class UserAccountController {
 		unsObject.setUpcomingScheduleReminder(unsRequest.getUpcomingScheduleReminder());
 		final UserNotificationSetting updatedSetting = UNSRepo.save(unsObject);
 		return ResponseEntity.ok(updatedSetting);
+	}
+	
+	@PostMapping("/user/passUpdate")
+	public ResponseEntity<String> updatePasswordForMember(@RequestBody Login userDetails) {
+		Login user = loginRepo.findById(userDetails.getId())
+				.orElseThrow(() -> new ResourceNotFoundException("Login details not found for this id :: " + userDetails.getId()));
+		
+		user.setPassword(pas.encode(userDetails.getPassword()));
+		
 	}
 	
 	public UserNotificationSetting createDefaultUserNotification(int userId) {
