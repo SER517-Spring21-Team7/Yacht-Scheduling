@@ -80,18 +80,12 @@ function WatercraftSchedulerUI() {
   const url = "http://localhost:8080/getschedule/" + universalWatercraftId
   const getReservations = () => { 
     axios.get(url).then((res) => {
-      //response = res.data;
       setAllReservations(res.data)
       for (let i = 0; i < res.data.length; i++) {
         const memberColor = "http://localhost:8080/member/getMember/" + res.data[i].userId
         axios.get(memberColor).then((result) => {
-          //memberObject = result.data;
           color = result.data.schedulercolor
           setEventsCalendar(res.data[i].reservation, res.data[i].scheduleId, color)
-          //if (i === res.data.length - 1) {
-            //console.log(customEvents)
-            //setEventList(customEvents)
-          //}
         })
       }
     })
@@ -106,7 +100,6 @@ function WatercraftSchedulerUI() {
       event.title = String(events[i].startHour) + ' - ' + String(events[i].endHour)
       event.id = scheduleId
       event.color = color
-      //customEvents.push(event)
       setEventList(eventList => [...eventList, event])
     }
   }
@@ -131,14 +124,25 @@ function WatercraftSchedulerUI() {
   }
 
   const urlMembers = "http://localhost:8080/member/getMemberByWatercraft/" + universalWatercraftId
+  const urlLoggedInMember = "http://localhost:8080/member/getMember/" + sessionStorage.getItem("userId")
   var responseMembers;
   const getMembers = (events) => {
-    axios.get(urlMembers).then((res) => {
-      responseMembers = res.data;
-      for(let i=0; i < responseMembers.length; i++){
-        memberDropDown.push(responseMembers[i])
-      }
-    })
+    if(sessionStorage.getItem("role") === "Admin"){
+      axios.get(urlMembers).then((res) => {
+        responseMembers = res.data;
+        for(let i=0; i < responseMembers.length; i++){
+          console.log(responseMembers[i])
+          memberDropDown.push(responseMembers[i])
+        }
+      })
+    }
+    else{
+      axios.get(urlLoggedInMember).then((res) => {
+        responseMembers = res.data;
+        memberDropDown.push(responseMembers)
+      })
+      
+    }
   }
 
   useEffect(() => { 
@@ -518,7 +522,6 @@ function WatercraftSchedulerUI() {
                         label="Request Crew"
                         />
                       </Grid>
-
                       <Grid item sm={12} fullWidth>
                         <FormControlLabel
                         control={<Checkbox onChange={handleCheckboxQuota} name="notFromUserQuota" checked={values.notFromUserQuota} />}
