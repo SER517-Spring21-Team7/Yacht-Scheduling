@@ -36,6 +36,9 @@ public class MemberController {
 	@Autowired
 	LoginController loginController;
 	
+	@Autowired
+	MemberSlotController msController;
+	
 	@PostMapping("/details")
 	public MemberModel createMember(@RequestBody MemberModel addmember) {
 		System.out.println(addmember);
@@ -50,6 +53,8 @@ public class MemberController {
 		userAccController.createDefaultUserNotification(savedMember.getMemberId());
 		// Create login for user
 		loginController.createCredentials(savedMember.getMemberId() ,addmember.getEmail(), addmember.getPassword(), addmember.getAccess());
+		// Create slot for user
+		msController.createMemberSlot(savedMember.getMemberId(), addmember.getWatercraftId(), Integer.parseInt(addmember.getStandardshare()));
 		return savedMember;
 	}
 	
