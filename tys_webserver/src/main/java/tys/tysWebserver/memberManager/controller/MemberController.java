@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,6 +66,14 @@ public class MemberController {
 //		List<MemberModel> data = AMrepo.
 		List<MemberModel> ans = AMrepo.findByFirstnameIgnoreCaseContaining(searchQuery);
 		return ans;
+	}
+	
+	@GetMapping("/getMember/{id}")
+	public ResponseEntity<MemberModel> getMemberById(@PathVariable(value = "id") Integer memberId)
+		throws ResourceNotFoundException {
+		MemberModel memberObject = AMrepo.findById(memberId)
+				.orElseThrow(() -> new ResourceNotFoundException("Member not found for this id :: " + memberId));
+		return ResponseEntity.ok().body(memberObject);
 	}
 
 	@GetMapping("/getAllMemberDetails")
