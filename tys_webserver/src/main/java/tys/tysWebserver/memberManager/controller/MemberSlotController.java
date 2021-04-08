@@ -30,4 +30,40 @@ public class MemberSlotController {
 		msObject.setHolidaySlot(holidaySlotCount);
 		msr.save(msObject);
 	}
+	
+	public void updateMemberSlot(MemberSlot currentSlot, int standardDeduction, boolean isHolidaySlot, boolean isCarryBorrow) {
+		// Previous month slot
+		if (isCarryBorrow) {
+			if (standardDeduction - currentSlot.getPrevMonthSlot() > 0) {
+				standardDeduction -= currentSlot.getPrevMonthSlot();
+				currentSlot.setPrevMonthSlot(0);
+			} else {
+				currentSlot.setPrevMonthSlot(currentSlot.getPrevMonthSlot() - standardDeduction);
+				standardDeduction = 0;
+			}	
+		}
+		// Current month slot
+		if (standardDeduction - currentSlot.getCurrMonthSlot() > 0) {
+			standardDeduction -= currentSlot.getCurrMonthSlot();
+			currentSlot.setCurrMonthSlot(0);
+		} else {
+			currentSlot.setCurrMonthSlot(currentSlot.getCurrMonthSlot() - standardDeduction);
+			standardDeduction = 0;
+		}
+		// Next month slot
+		if (isCarryBorrow) {
+			if (standardDeduction - currentSlot.getNextMonthSlot() > 0) {
+				standardDeduction -= currentSlot.getNextMonthSlot();
+				currentSlot.setNextMonthSlot(0);
+			} else {
+				currentSlot.setNextMonthSlot(currentSlot.getNextMonthSlot() - standardDeduction);
+				standardDeduction = 0;
+			}	
+		}
+		// Holiday slot
+		if (isHolidaySlot) {
+			currentSlot.setHolidaySlot(currentSlot.getHolidaySlot()-1);
+		}
+		msr.save(currentSlot);
+	}
 }

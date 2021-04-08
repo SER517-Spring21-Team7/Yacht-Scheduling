@@ -1,16 +1,13 @@
 package tys.tysWebserver.scheduler.controller;
 
-import java.time.Duration;
-import java.time.Period;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +17,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import tys.tysWebserver.memberManager.controller.MemberSlotController;
+import tys.tysWebserver.memberManager.model.MemberSlot;
+import tys.tysWebserver.memberManager.repository.MemberSlotRepository;
+import tys.tysWebserver.scheduler.model.Holiday;
+import tys.tysWebserver.scheduler.model.HolidayCalendar;
+import tys.tysWebserver.scheduler.model.Reservation;
 import tys.tysWebserver.scheduler.model.SchedulerSetting;
 import tys.tysWebserver.scheduler.model.WatercraftScheduler;
+import tys.tysWebserver.scheduler.repository.HolidayCalendarRepo;
 import tys.tysWebserver.scheduler.repository.SchedulerSettingRepo;
 import tys.tysWebserver.scheduler.repository.WatercraftSchedulerRepository;
 
@@ -35,11 +39,33 @@ public class WatercraftSchedulerController {
 	@Autowired
 	SchedulerSettingRepo ssr;
 	
+	@Autowired
+	MemberSlotRepository msr;
+	
+	@Autowired
+	HolidayCalendarRepo hcr;
+	
+	@Autowired
+	MemberSlotController msController;
+	
 	@PostMapping("/addschedule")
 	public ResponseEntity<String> createSchedule(@RequestBody WatercraftScheduler newSchedule) {
 		SchedulerSetting ssForWatercraft = ssr.findById(newSchedule.getWatercraftId()).orElseGet(null);
-		if (isBookingAllowed(newSchedule, ssForWatercraft)) {
-			WatercraftScheduler savedSchedule = WSRepo.save(newSchedule);
+		MemberSlot memberSlot = msr.findById(newSchedule.getUserId()).orElse(null);
+		List<HolidayCalendar> allHoliadyCal = hcr.findAll();
+		List<Holiday> allHoliday = new ArrayList<>();
+		for (HolidayCalendar each : allHoliadyCal) {
+			if (each.getName().equalsIgnoreCase(ssForWatercraft.getHolidayCalName())) {
+				allHoliday.addAll(each.getListOfHoliday());
+			}
+		}
+		List<Date> holidayDates = new ArrayList<>();
+		for (Holiday each: allHoliday) {
+			holidayDates.add(each.getHolidayDate());
+		}
+		if (isBookingAllowed(newSchedule, ssForWatercraft) &&
+				checkAndUpdateSlots(newSchedule, memberSlot, holidayDates, ssForWatercraft.isAllowCarryBorrow())) {
+			WSRepo.save(newSchedule);
 			return new ResponseEntity<String>("Success", HttpStatus.OK);
 		} else {
 			return new ResponseEntity<String>("Failed", HttpStatus.BAD_REQUEST);
@@ -88,6 +114,31 @@ public class WatercraftSchedulerController {
 		}
 		return true;
 		
+	}
+	
+	private boolean checkAndUpdateSlots(WatercraftScheduler schedule, MemberSlot availableSlots,
+			List<Date> holidayDates, boolean isCarryBorrow) {
+		int totalSlots;
+		if (isCarryBorrow) {
+			totalSlots = availableSlots.getPrevMonthSlot() + availableSlots.getCurrMonthSlot() + availableSlots.getNextMonthSlot();	
+		} else {
+			totalSlots = availableSlots.getCurrMonthSlot();
+		}
+		if(schedule.getReservation().size() > totalSlots) {
+			return false;
+		}
+		boolean isHolidaySlot = false;
+		for (Reservation each: schedule.getReservation()) {
+			if (holidayDates.contains(each.getForDate())) {
+				if (availableSlots.getHolidaySlot() <= 0) {
+					isHolidaySlot = true;
+					return false;
+				}
+				break;
+			}
+		}
+		msController.updateMemberSlot(availableSlots, schedule.getReservation().size(), isHolidaySlot, isCarryBorrow);
+		return true;
 	}
 
 }
