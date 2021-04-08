@@ -53,6 +53,17 @@ export default function ManagePassword() {
     });
   };
 
+  const saveChanges = () => {
+    const url = "http://localhost:8080/user/passUpdate/" + sessionStorage.getItem("userId");
+    axios.put( url, { ...values})
+      .then((resp) => { console.log(resp.data);
+        console.log("Password updated.");
+      })
+      .catch((error) => {
+        console.error("Password update failed.");
+      });
+  };
+
   return (
     <div>
       <form className={classes.root}>
