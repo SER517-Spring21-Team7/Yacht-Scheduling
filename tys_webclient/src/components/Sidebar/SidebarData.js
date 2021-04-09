@@ -17,7 +17,7 @@ export const SidebarData = [
       icon: <GiIcons.GiSailboat />,
       cName: "nav-text",
   },
-  sessionStorage.getItem("role") === "Admin" &&
+  // sessionStorage.getItem("role") === "Admin" &&
   {
     title: "Reserve Watercraft",
     path: "/reservation",
