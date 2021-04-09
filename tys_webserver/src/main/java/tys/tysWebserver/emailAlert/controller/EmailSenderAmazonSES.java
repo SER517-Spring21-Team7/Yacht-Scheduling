@@ -9,6 +9,10 @@ import javax.mail.internet.MimeMessage;
 
 import org.springframework.stereotype.Service;
 
+import tys.tysWebserver.memberManager.model.MemberModel;
+import tys.tysWebserver.scheduler.model.WatercraftScheduler;
+import tys.tysWebserver.watercraftManager.model.WatercraftModel;
+
 @Service
 public class EmailSenderAmazonSES {
 
@@ -31,6 +35,23 @@ public class EmailSenderAmazonSES {
     // The port you will connect to on the Amazon SES SMTP endpoint. 
     static final int PORT = 587;
 
+    public String createEmailForBooking(MemberModel model, WatercraftScheduler newSchedule, WatercraftModel watercraftModel) {
+    	String bodyOfEmail = "Hi "+model.getFirstname()+"\n A reservation has been created for Yacht "
+				+ watercraftModel.getWatercraftName() + " on " + newSchedule.getReservation().get(0).getForDate().toString()
+				+ " from " + newSchedule.getReservation().get(0).getStartHour() + " to "
+				+ newSchedule.getReservation().get(0).getEndHour();
+    	return bodyOfEmail;
+    }
+    
+    public String createEmailAdmin(MemberModel model, WatercraftScheduler newSchedule, WatercraftModel watercraftModel) {
+    	
+    	String adminEmail = "Crew service requested for booking id " + newSchedule.getScheduleId() + " on "
+    			+ newSchedule.getReservation().get(0).getForDate().toString()
+				+ " from " + newSchedule.getReservation().get(0).getStartHour() + " to "
+				+ newSchedule.getReservation().get(0).getEndHour();
+
+    	return adminEmail;
+    }
     public void createEmail(String from, String fromName, String to, String subject, String body) throws Exception {
     	// Replace sender@example.com with your "From" address.
         // This address must be verified.

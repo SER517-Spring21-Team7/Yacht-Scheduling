@@ -3,6 +3,7 @@ package tys.tysWebserver.scheduler.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -82,15 +83,23 @@ public class WatercraftSchedulerController {
 			
 			MemberModel model = memberController.getMemberById(newSchedule.getUserId()).getBody();
 			WatercraftModel watercraftModel = watercraftController.getWaterCraftById(newSchedule.getWatercraftId()+"");
-			String bodyOfEmail = "Hi "+model.getFirstname()+"\n A reservation has been created for Yacht "
-					+ watercraftModel.getWatercraftName() + " on " + newSchedule.getBookingDate().toString()
-					+ " from " + newSchedule.getReservation().get(0).getStartHour() + " to "
-					+ newSchedule.getReservation().get(0).getEndHour();
-			
 			WSRepo.save(newSchedule);
+			
 			try {
-				emailSenderAmazonSES.createEmail("sshah73@asu.edu", "Yatch Solution Admin", model.getEmail(), 
-						"Reservation created", bodyOfEmail);
+				
+				String bodyOfEmail = emailSenderAmazonSES.createEmailForBooking(model, newSchedule, watercraftModel);
+				
+				if(newSchedule.isCrewRequired() || newSchedule.isConciergeRequired()) {
+					emailSenderAmazonSES.createEmail("sshah73@asu.edu", "Yatch Solution Admin", model.getEmail(), 
+							"Reservation created", bodyOfEmail);
+					TimeUnit.SECONDS.sleep(2);
+					String adminEmail = emailSenderAmazonSES.createEmailAdmin(model, newSchedule, watercraftModel);
+					emailSenderAmazonSES.createEmail("sshah73@asu.edu", "Yatch Solution Admin", "shahsmit49@gmail.com", 
+							"Crew Services required", adminEmail);
+				} else {
+					emailSenderAmazonSES.createEmail("sshah73@asu.edu", "Yatch Solution Admin", model.getEmail(), 
+							"Reservation created", bodyOfEmail);
+				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
