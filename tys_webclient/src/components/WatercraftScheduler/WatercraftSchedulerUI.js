@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import FullCalendar, { getSlotClassNames } from '@fullcalendar/react'
+import FullCalendar, { getSlotClassNames, parseClassNames } from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction";
 import {Dialog, DialogActions, DialogContent, DialogTitle, Typography} from '@material-ui/core';
@@ -22,11 +22,17 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import GlobalContext from "../GlobalContext";
+import Divider from "@material-ui/core/Divider";
 import toDate from "date-fns/toDate";
 
 const useStyle = makeStyles((theme) => ({
   itemStyle:{
     height:"8vh",
+  },
+  calendarStyle:{
+    "fc-sun":{
+      backgroundColor: "#b1edfc"
+    }
   }
 }));
 
@@ -60,6 +66,12 @@ const displayEventHTML = {
   member: '',
   scheduleId: ''
 }
+const monthlySlots = {
+  holidaySlot: '',
+  prevMonthSlot: '',
+  currMonthSlot: '',
+  nextMonthSlot: '',
+}
 
 function WatercraftSchedulerUI() {
 
@@ -69,8 +81,9 @@ function WatercraftSchedulerUI() {
   const [eventList, setEventList] = useState(emptyEventList);
   const [displayEvent, setDisplayEvent] = useState(displayEventHTML);
   const [allReservations, setAllReservations] = useState([]);
-  const globalWatercraftId = useContext(GlobalContext);
+  const [displaySlot, setDisplaySlot] = useState(monthlySlots)
   const classes = useStyle();
+  const globalWatercraftId = useContext(GlobalContext);
 
   var universalWatercraftId = sessionStorage.getItem('globalWatercraftId');
 
@@ -80,6 +93,7 @@ function WatercraftSchedulerUI() {
   const url = "http://localhost:8080/getschedule/" + universalWatercraftId
   const getReservations = () => { 
     axios.get(url).then((res) => {
+      console.log(res.data)
       setAllReservations(res.data)
       for (let i = 0; i < res.data.length; i++) {
         const memberColor = "http://localhost:8080/member/getMember/" + res.data[i].userId
@@ -131,7 +145,6 @@ function WatercraftSchedulerUI() {
       axios.get(urlMembers).then((res) => {
         responseMembers = res.data;
         for(let i=0; i < responseMembers.length; i++){
-          console.log(responseMembers[i])
           memberDropDown.push(responseMembers[i])
         }
       })
@@ -145,10 +158,19 @@ function WatercraftSchedulerUI() {
     }
   }
 
+
+  const monthSlots = "http://localhost:8080/getslots/" + "118"
+  const displayMonthlySlot = (events) => {
+    axios.get(monthSlots).then((res) => {
+      setDisplaySlot(res.data)
+    })
+  }
+
   useEffect(() => { 
     getReservations();
     getSlot();
     getMembers();
+    displayMonthlySlot();
   },[])
 
 
@@ -316,7 +338,25 @@ function WatercraftSchedulerUI() {
 
     return (
         <div>
+          <div>
+            <Grid container alignItems="center" justify="center">
+              <Grid item sm={3} align="center">
+              <h3>Holiday Slots Remaining:</h3>{displaySlot.holidaySlot}
+              </Grid>
+              <Grid item sm={3} align="center">
+              <h3>Previous Month's Slots:</h3>{displaySlot.prevMonthSlot}
+              </Grid>
+              <Grid item sm={3} align="center">
+              <h3>Current Month's Slots:</h3>{displaySlot.currMonthSlot}
+              </Grid>
+              <Grid item sm={3} align="center">
+              <h3>Next Month's Slots:</h3>{displaySlot.nextMonthSlot}
+              </Grid>
+            </Grid>
+          </div>
+          <Divider style={{marginBottom:"3vh", marginTop:"3vh"}}/>
             <FullCalendar
+            className={classes.calendarStyle}
             plugins={[dayGridPlugin, interactionPlugin]}
             dateClick={handleDateClick}
             initialView="dayGridMonth"
