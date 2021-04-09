@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import tys.tysWebserver.emailAlert.controller.EmailSenderAmazonSES;
+import tys.tysWebserver.memberManager.controller.MemberController;
 import tys.tysWebserver.memberManager.controller.MemberSlotController;
+import tys.tysWebserver.memberManager.model.MemberModel;
 import tys.tysWebserver.memberManager.model.MemberSlot;
 import tys.tysWebserver.memberManager.repository.MemberSlotRepository;
 import tys.tysWebserver.scheduler.model.Holiday;
@@ -28,6 +31,8 @@ import tys.tysWebserver.scheduler.model.WatercraftScheduler;
 import tys.tysWebserver.scheduler.repository.HolidayCalendarRepo;
 import tys.tysWebserver.scheduler.repository.SchedulerSettingRepo;
 import tys.tysWebserver.scheduler.repository.WatercraftSchedulerRepository;
+import tys.tysWebserver.watercraftManager.controller.WatercraftController;
+import tys.tysWebserver.watercraftManager.model.WatercraftModel;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -48,6 +53,15 @@ public class WatercraftSchedulerController {
 	@Autowired
 	MemberSlotController msController;
 	
+	@Autowired
+	MemberController memberController;
+	
+	@Autowired
+	WatercraftController watercraftController;
+	
+	@Autowired
+	EmailSenderAmazonSES emailSenderAmazonSES;
+	
 	@PostMapping("/addschedule")
 	public ResponseEntity<String> createSchedule(@RequestBody WatercraftScheduler newSchedule) {
 		SchedulerSetting ssForWatercraft = ssr.findById(newSchedule.getWatercraftId()).orElseGet(null);
@@ -65,7 +79,22 @@ public class WatercraftSchedulerController {
 		}
 		if (isBookingAllowed(newSchedule, ssForWatercraft) &&
 				checkAndUpdateSlots(newSchedule, memberSlot, holidayDates, ssForWatercraft.isAllowCarryBorrow())) {
+			
+			MemberModel model = memberController.getMemberById(newSchedule.getUserId()).getBody();
+			WatercraftModel watercraftModel = watercraftController.getWaterCraftById(newSchedule.getWatercraftId()+"");
+			String bodyOfEmail = "Hi "+model.getFirstname()+"\n A reservation has been created for Yacht "
+					+ watercraftModel.getWatercraftName() + " on " + newSchedule.getBookingDate().toString()
+					+ " from " + newSchedule.getReservation().get(0).getStartHour() + " to "
+					+ newSchedule.getReservation().get(0).getEndHour();
+			
 			WSRepo.save(newSchedule);
+			try {
+				emailSenderAmazonSES.createEmail("sshah73@asu.edu", "Yatch Solution Admin", model.getEmail(), 
+						"Reservation created", bodyOfEmail);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return new ResponseEntity<String>("Success", HttpStatus.OK);
 		} else {
 			return new ResponseEntity<String>("Failed", HttpStatus.BAD_REQUEST);
