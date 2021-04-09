@@ -65,9 +65,11 @@ public class WatercraftSchedulerController {
 		}
 		if (isBookingAllowed(newSchedule, ssForWatercraft) &&
 				checkAndUpdateSlots(newSchedule, memberSlot, holidayDates, ssForWatercraft.isAllowCarryBorrow())) {
+			System.out.println("CORRECTLY SAVING RESERVAGION");
 			WSRepo.save(newSchedule);
 			return new ResponseEntity<String>("Success", HttpStatus.OK);
 		} else {
+			System.out.println("PROBLEM SAVING RESERVAGION");
 			return new ResponseEntity<String>("Failed", HttpStatus.BAD_REQUEST);
 		}
 		
