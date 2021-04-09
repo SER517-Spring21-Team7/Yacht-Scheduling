@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import tys.tysWebserver.accountManager.model.Login;
+import tys.tysWebserver.accountManager.model.PasswordUpdate;
 import tys.tysWebserver.accountManager.model.UserNotificationSetting;
 import tys.tysWebserver.accountManager.model.UserProfile;
 import tys.tysWebserver.accountManager.repository.LoginRepository;
@@ -69,12 +71,15 @@ public class UserAccountController {
 		return ResponseEntity.ok(updatedSetting);
 	}
 	
-	@PostMapping("/user/passUpdate")
-	public ResponseEntity<String> updatePasswordForMember(@RequestBody Login userDetails) {
-		Login user = loginRepo.findById(userDetails.getId())
-				.orElseThrow(() -> new ResourceNotFoundException("Login details not found for this id :: " + userDetails.getId()));
+	@PostMapping("/user/passUpdate/{id}")
+	public ResponseEntity<String> updatePasswordForMember(@PathVariable Integer id, @RequestBody PasswordUpdate userDetails) {
+		Login user = loginRepo.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Login details not found for this id :: " + id));
 		
-		user.setPassword(pas.encode(userDetails.getPassword()));
+		System.out.println(userDetails.getCurrentPassword()+"----"+ userDetails.getNewPassword());
+		user.setPassword(pas.encode(userDetails.getNewPassword()));
+		
+		return new ResponseEntity<>("Update successful", HttpStatus.OK);
 		
 	}
 	
