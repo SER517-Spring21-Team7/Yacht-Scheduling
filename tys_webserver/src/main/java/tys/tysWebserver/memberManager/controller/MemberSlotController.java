@@ -24,9 +24,9 @@ public class MemberSlotController {
 	SchedulerSettingController ssController;
 	
 	@GetMapping("/getslots/{mid}")
-	public ResponseEntity<MemberSlot> getSlotsByUser(@PathVariable(value="mid") Integer mid)
+	public ResponseEntity<MemberSlot> getSlotsByUser(@PathVariable(value="mid") String mid)
 		throws ResourceNotFoundException {
-		MemberSlot memberSlot = msr.findByMemberId(mid).get(0);
+		MemberSlot memberSlot = msr.findByMemberId(Integer.parseInt(mid)).get(0);
 			return ResponseEntity.ok().body(memberSlot);
 	}
 

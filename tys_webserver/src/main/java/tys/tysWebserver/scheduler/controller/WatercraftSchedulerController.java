@@ -80,7 +80,7 @@ public class WatercraftSchedulerController {
 		}
 		if (isBookingAllowed(newSchedule, ssForWatercraft) &&
 				checkAndUpdateSlots(newSchedule, memberSlot, holidayDates, ssForWatercraft.isAllowCarryBorrow())) {
-			
+
 			MemberModel model = memberController.getMemberById(newSchedule.getUserId()).getBody();
 			WatercraftModel watercraftModel = watercraftController.getWaterCraftById(newSchedule.getWatercraftId()+"");
 			WSRepo.save(newSchedule);
@@ -106,6 +106,7 @@ public class WatercraftSchedulerController {
 			}
 			return new ResponseEntity<String>("Success", HttpStatus.OK);
 		} else {
+			System.out.println("PROBLEM SAVING RESERVAGION");
 			return new ResponseEntity<String>("Failed", HttpStatus.BAD_REQUEST);
 		}
 		

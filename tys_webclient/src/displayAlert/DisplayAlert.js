@@ -1,6 +1,6 @@
-import { useState,useEffect } from "react";
-import axios from 'axios';
-import React from 'react'
+import { useState, useEffect } from "react";
+import axios from "axios";
+import React from "react";
 import {
   Grid,
   Button,
@@ -9,13 +9,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  makeStyles
+  makeStyles,
 } from "@material-ui/core";
 
 const initialValues = {
-    description: "",
-    watercraft: ""
-}
+  description: "",
+  watercraft: "",
+};
 const useStyle = makeStyles((theme) => ({
   root: {
     width: "80%",
@@ -37,97 +37,100 @@ const useStyle = makeStyles((theme) => ({
   },
 }));
 const DisplayAlert = () => {
+  const classes = useStyle();
+  const [values, setValues] = useState(initialValues);
+  const [watercrafts, setWatercrafts] = useState([]);
+  const url = "http://localhost:8080/watercraft/getAllWaterCraft";
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value,
+    });
+  };
 
-    const classes = useStyle();
-    const [values, setValues] = useState(initialValues);
-    const [watercrafts, setWatercrafts] = useState([]);
-    const url = "http://localhost:8080/watercraft/getAllWaterCraft"
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setValues({
-            ...values,
-            [name]: value,
-        });
+  const getWaterCraft = async () => {
+    const response = await axios.get(url);
+    const watercrafts = response.data;
+    console.log(watercrafts);
+    setWatercrafts(watercrafts);
+  };
+  useEffect(() => {
+    getWaterCraft();
+  }, []);
+
+  const buttonClicked = (event) => {
+    console.log(values);
+    var saveJson = {
+      text: values.description,
+      watercraftId:
+        values.watercraft === null ? null : values.watercraft.watercraftId,
     };
+    console.log(saveJson);
+    axios
+      .post("http://localhost:8080/displayAlert/add", saveJson)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    setValues({ description: "", watercraft: "" });
+  };
 
-    const getWaterCraft = async () => { 
+  return (
+    <div>
+      <form className={classes.root}>
+        <Grid container className={classes.containerStyle}>
+          <Grid item xs={12}>
+            <FormControl variant="outlined">
+              <InputLabel>Select Watercraft</InputLabel>
+              <Select
+                label="Watercraft"
+                name="watercraft"
+                value={values.watercraft}
+                onChange={handleInputChange}
+              >
+                <MenuItem>
+                  <em>None</em>
+                </MenuItem>
+                {watercrafts.map((craft, index) => {
+                  return (
+                    <MenuItem key={index} value={craft}>
+                      {craft.watercraftName}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              multiline
+              variant="outlined"
+              label="Add Alert Description"
+              rows={6}
+              columns={300}
+              name="description"
+              value={values.description}
+              onChange={handleInputChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              size="large"
+              variant="contained"
+              color="secondary"
+              style={{ width: "20%", marginTop: "2.5%", paddingLeft: "0px" }}
+              onClick={buttonClicked}
+            >
+              Add Alert
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+    </div>
+  );
+};
 
-        const response = await axios.get(url)
-        const watercrafts = response.data;
-        console.log(watercrafts);
-        setWatercrafts(watercrafts);
-    }
-    useEffect(() => { 
-        getWaterCraft();
-    }, [])
-
-    const buttonClicked = (event) => { 
-        console.log(values);
-        var saveJson = {
-            "text": values.description,
-            "watercraftId":values.watercraft === null ? null : values.watercraft.watercraftId
-        }
-        console.log(saveJson);
-        axios.post("http://localhost:8080/displayAlert/add", saveJson)
-        .then(function (response) {
-            console.log(response);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-    }
-    
-    return (
-        <div>
-            <form className={classes.root}>
-                <Grid container className={classes.containerStyle}>
-                    <Grid item xs={12} >
-                        <FormControl variant="outlined">
-                            <InputLabel>Select Watercraft</InputLabel>
-                            <Select
-                                label="Watercraft"
-                                name="watercraft"
-                                value={values.watercraft}
-                                onChange={handleInputChange}>
-                                <MenuItem>
-                                    <em>None</em>
-                                </MenuItem>
-                                {
-                                    watercrafts.map((craft, index) => {
-                                        return (
-                                            <MenuItem key={index} value={craft}>{craft.watercraftName}</MenuItem>
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={12} >
-                        <TextField
-                            multiline
-                            variant="outlined"
-                            label="Add Alert Description"
-                            rows={6}
-                            columns={300}
-                            name="description"
-                            value={values.description}
-                            onChange={handleInputChange}
-                        />
-                    </Grid>
-                    <Grid item xs={12} >
-                        <Button 
-                            size="large" 
-                            variant="contained" 
-                            color="secondary"
-                            style={{width:'20%', marginTop:'2.5%', paddingLeft: '0px'}}
-                            onClick={buttonClicked}>
-                            Add Alert
-                        </Button>
-                    </Grid>
-                </Grid>
-            </form>
-        </div>
-    )
-}
-
-export default DisplayAlert
+export default DisplayAlert;
