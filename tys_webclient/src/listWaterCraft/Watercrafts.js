@@ -6,33 +6,55 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
+import { Avatar, Grid } from "@material-ui/core/";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router-dom";
+import * as FaIcons from "react-icons/fa";
+import * as AiIcons from "react-icons/ai";
+import * as GiIcons from "react-icons/gi";
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: 345,
+    //display: "flex",
+    //minWidth: "150%",
   },
-  rootFirst: {
-    maxWidth: 345,
-    display: "flex",
+  buttonStyle: {
+    //minWidth: "150%",
   },
   contentAlignment: {
-    alignItems: "left",
+    alignItems: "center",
   },
   details: {
     display: "flex",
     flexDirection: "column",
+    minWidth: "50%",
+    height: 150,
+    backgroundColor: "whitesmoke",
+  },
+  imageStyle: {
+    display: "flex",
+    flexDirection: "column",
+    minWidth: "50%",
+    //height: 150,
   },
   media: {
-    height: 100,
-    width: 100,
+    height: 150,
+    width: 150,
+  },
+  avatarStyle: {
+    marginRight: "5px",
   },
 });
 
 const Watercrafts = (props) => {
-  const {watercraftId, watercraftName, image, parentState, parentState1} = props;
+  const {
+    watercraftId,
+    watercraftName,
+    image,
+    parentState,
+    parentState1,
+  } = props;
   const classes = useStyles();
   const history = useHistory();
   const deleteWaterCraft = async (id) => {
@@ -52,46 +74,88 @@ const Watercrafts = (props) => {
   };
   return (
     <>
-      <Card className={classes.rootFirst}>
-        <div className={classes.details}>
-          <CardActionArea>
-            <CardMedia
-              className={classes.media}
-              image={image}
-              title="Boat"
-            />
-          </CardActionArea>
-        </div>
-        <div className={classes.details}>
-          <CardActionArea>
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                {watercraftName}
-              </Typography>
-              <Typography variant="h6" color="textSecondary" component="p">
-                List of users component
-              </Typography>
-              <Typography variant="h6" color="textSecondary" component="p">
-                All scheduling Controls
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </div>
-      </Card>
       <Card className={classes.root}>
+        <CardActions className={classes.imageStyle}>
+          <CardContent>
+            <CardMedia className={classes.media} image={image} />
+            <Typography gutterBottom variant="h5">
+              {watercraftName}
+            </Typography>
+          </CardContent>
+        </CardActions>
+
+        <CardActionArea className={classes.details}>
+          <CardContent>
+            <div>
+              <Grid container>
+                <Grid item xs="auto" className={classes.avatarStyle}>
+                  <Avatar style={{ backgroundColor: "#795548" }}></Avatar>
+                </Grid>
+                <Grid item xs="auto" className={classes.avatarStyle}>
+                  <Avatar style={{ backgroundColor: "#607d8b" }}></Avatar>
+                </Grid>
+                <Grid item xs="auto" className={classes.avatarStyle}>
+                  <Avatar style={{ backgroundColor: "#33691e" }}></Avatar>
+                </Grid>
+                <Grid item xs="auto" className={classes.avatarStyle}>
+                  <Avatar style={{ backgroundColor: "#009688" }}></Avatar>
+                </Grid>
+              </Grid>
+            </div>
+            <br />
+            <div>
+              <Grid container>
+                <Grid item xs="auto" className={classes.avatarStyle}>
+                  <Avatar
+                    variant="square"
+                    style={{ backgroundColor: "#424242" }}
+                  >
+                    <AiIcons.AiOutlineSchedule />
+                  </Avatar>
+                </Grid>
+                <Grid item xs="auto" className={classes.avatarStyle}>
+                  <Avatar
+                    variant="square"
+                    style={{ backgroundColor: "#424242" }}
+                  >
+                    <FaIcons.FaUsers />
+                  </Avatar>
+                </Grid>
+                <Grid item xs="auto" className={classes.avatarStyle}>
+                  <Avatar
+                    variant="square"
+                    style={{ backgroundColor: "#424242" }}
+                  >
+                    <FaIcons.FaCog />
+                  </Avatar>
+                </Grid>
+                <Grid item xs="auto" className={classes.avatarStyle}>
+                  <Avatar
+                    variant="square"
+                    style={{ backgroundColor: "#424242" }}
+                  >
+                    <FaIcons.FaClipboardList />
+                  </Avatar>
+                </Grid>
+              </Grid>
+            </div>
+          </CardContent>
+        </CardActionArea>
+        {/* </Card>
+      <Card className={classes.buttonStyle}> */}
         <CardActions>
           <Button
             size="small"
             color="primary"
-            variant="contained"
+            // variant="contained"
             onClick={() => handleRedirect(watercraftId)}
           >
             Edit
           </Button>
           <Button
             size="small"
-            color="primary"
-            variant="contained"
+            color="secondary"
+            // variant="contained"
             onClick={() => deleteWaterCraft(watercraftId)}
           >
             Delete

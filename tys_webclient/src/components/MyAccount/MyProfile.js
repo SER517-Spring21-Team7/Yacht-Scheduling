@@ -13,7 +13,6 @@ import {
 } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
 import Avatar from "@material-ui/core/Avatar";
-import logo from "./rs_test.jpg";
 import * as FaIcons from "react-icons/fa";
 import S3 from "react-aws-s3";
 import imageCompression from "browser-image-compression";
@@ -85,13 +84,13 @@ const useStyle = makeStyles((theme) => ({
       width: "80%",
       margin: theme.spacing(1.5),
     },
-    '& .MuiButtonBase-root':{
-      marginLeft: '38%',
+    "& .MuiButtonBase-root": {
+      marginLeft: "38%",
     },
     flexGrow: 1,
   },
   buttonStyle: {
-    marginLeft: '38%'
+    marginLeft: "38%",
   },
   container: {
     backgroundColor: "#f5f5f5",
@@ -119,14 +118,13 @@ const useStyle = makeStyles((theme) => ({
     marginLeft: theme.spacing(3),
     color: "#90caf9",
   },
-  profilePicture:{
+  profilePicture: {
     display: "flex",
     "& > *": {
       margin: theme.spacing(1),
     },
-    alignItems: 'center',
-    
-  }
+    alignItems: "center",
+  },
 }));
 
 const initialValues = {
@@ -141,7 +139,7 @@ const initialValues = {
   city: "",
   state: "",
   zipCode: "",
-  image:"",
+  image: "",
 };
 
 export default function MyProfile() {
@@ -196,39 +194,42 @@ export default function MyProfile() {
     //     "Content-Type": "application/json",
     //   },
     // })
-    const url = "http://localhost:8080/userprofile/"+sessionStorage.getItem("userId");
+    const url =
+      "http://localhost:8080/userprofile/" + sessionStorage.getItem("userId");
 
-    axios.get(url)
-      .then((resp) => {console.log(resp);
-        setValues({
-          ...values,
-          firstName: resp.data.firstName,
-          lastName: resp.data.lastName,
-          mobile: resp.data.mobile,
-          alternateMobile: resp.data.alternateMobile,
-          timezone: resp.data.timezone,
-          country: resp.data.country,
-          address_1: resp.data.address_1,
-          address_2: resp.data.address_2,
-          city: resp.data.city,
-          state: resp.data.state,
-          zipCode: resp.data.zipCode,
-        });
-      }
-      );
+    axios.get(url).then((resp) => {
+      console.log(resp);
+      setValues({
+        ...values,
+        firstName: resp.data.firstName,
+        lastName: resp.data.lastName,
+        mobile: resp.data.mobile,
+        alternateMobile: resp.data.alternateMobile,
+        timezone: resp.data.timezone,
+        country: resp.data.country,
+        address_1: resp.data.address_1,
+        address_2: resp.data.address_2,
+        city: resp.data.city,
+        state: resp.data.state,
+        zipCode: resp.data.zipCode,
+      });
+    });
   }, []);
 
   const saveChanges = () => {
-    return fetch("http://localhost:8080/user/profile/"+sessionStorage.getItem("userId"), {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...values,
-      }),
-    })
+    return fetch(
+      "http://localhost:8080/user/profile/" + sessionStorage.getItem("userId"),
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...values,
+        }),
+      }
+    )
       .then((response) => response.json())
       .then((json) => {
         console.log("User profile updated.");
@@ -241,12 +242,17 @@ export default function MyProfile() {
   return (
     <>
       <div className={classes.profilePicture}>
-        <div style={{textAlign:"center"}}>
-          <Avatar alt="Test" className={classes.large} src={logo}/>
+        <div style={{ textAlign: "center" }}>
+          <Avatar alt="Test" className={classes.large} src={""} />
           <label for="fileUpload" className={classes.customFileUpload}>
-            <FaIcons.FaUpload/>
+            <FaIcons.FaUpload />
           </label>
-          <input id="fileUpload" type="file" style={{display:"none"}} onChange={handleImageInput}/>
+          <input
+            id="fileUpload"
+            type="file"
+            style={{ display: "none" }}
+            onChange={handleImageInput}
+          />
         </div>
         <Typography variant="h4" gutterBottom className={classes.typo}>
           Welcome, User!
@@ -312,13 +318,13 @@ export default function MyProfile() {
                 onChange={handleInputChange}
               >
                 <MenuItem value="">None</MenuItem>
-                    {timezoneArr.map((tz) => {
-                      return (
-                        <MenuItem key={tz} value={tz}>
-                          {tz}
-                        </MenuItem>
-                      );
-                    })}
+                {timezoneArr.map((tz) => {
+                  return (
+                    <MenuItem key={tz} value={tz}>
+                      {tz}
+                    </MenuItem>
+                  );
+                })}
               </Select>
             </FormControl>
           </Grid>
@@ -393,7 +399,7 @@ export default function MyProfile() {
         </Grid>
       </form>
       <div className={classes.buttonStyle}>
-      <Button
+        <Button
           variant="contained"
           color="primary"
           size="medium"

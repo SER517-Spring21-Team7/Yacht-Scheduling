@@ -312,7 +312,7 @@ export default function AddMember() {
                     type="number"
                     id="premiumshare"
                     name="premiumshare"
-                    label="Premium Share (%)"
+                    label="Premium Share Slots"
                     value={values.premiumshare}
                     onChange={handleInputChange}
                     fullWidth
@@ -325,7 +325,7 @@ export default function AddMember() {
                     type="number"
                     id="standardshare"
                     name="standardshare"
-                    label="Standard Share (%)"
+                    label="Standard Share Slots"
                     value={values.standardshare}
                     onChange={handleInputChange}
                     fullWidth
