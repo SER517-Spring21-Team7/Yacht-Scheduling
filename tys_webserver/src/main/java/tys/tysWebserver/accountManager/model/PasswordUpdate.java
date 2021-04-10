@@ -3,8 +3,8 @@ package tys.tysWebserver.accountManager.model;
 public class PasswordUpdate {
 
 	String currentPassword;
-	
 	String newPassword;
+	Boolean showPassword;
 
 	public String getCurrentPassword() {
 		return currentPassword;
@@ -20,6 +20,14 @@ public class PasswordUpdate {
 
 	public void setNewPassword(String newPassword) {
 		this.newPassword = newPassword;
+	}
+
+	public Boolean getShowPassword() {
+		return showPassword;
+	}
+
+	public void setShowPassword(Boolean showPassword) {
+		this.showPassword = showPassword;
 	}
 	
 	

@@ -77,7 +77,19 @@ public class UserAccountController {
 				.orElseThrow(() -> new ResourceNotFoundException("Login details not found for this id :: " + id));
 		
 		System.out.println(userDetails.getCurrentPassword()+"----"+ userDetails.getNewPassword());
-		user.setPassword(pas.encode(userDetails.getNewPassword()));
+		System.out.println(pas.matches(userDetails.getCurrentPassword(), user.getPassword()));
+		
+		if(!pas.matches(userDetails.getCurrentPassword(), user.getPassword())) {
+			return new ResponseEntity<>("Message : Current Password is not Correct!", HttpStatus.BAD_REQUEST);
+		}
+		else {
+			if(userDetails.getCurrentPassword().equals(userDetails.getNewPassword()))
+				return new ResponseEntity<>("Current Password and New Password are same!", HttpStatus.BAD_REQUEST);
+			user.setPassword(pas.encode(userDetails.getNewPassword()));
+			loginRepo.save(user);
+		}
+		
+		
 		
 		return new ResponseEntity<>("Update successful", HttpStatus.OK);
 		
