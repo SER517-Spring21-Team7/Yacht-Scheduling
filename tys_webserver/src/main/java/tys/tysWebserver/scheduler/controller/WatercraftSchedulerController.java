@@ -64,7 +64,7 @@ public class WatercraftSchedulerController {
 	EmailSenderAmazonSES emailSenderAmazonSES;
 	
 	@PostMapping("/addschedule")
-	public ResponseEntity<String> createSchedule(@RequestBody WatercraftScheduler newSchedule) {
+	public ResponseEntity<String> createSchedule(@RequestBody WatercraftScheduler newSchedule) throws Exception {
 		SchedulerSetting ssForWatercraft = ssr.findById(newSchedule.getWatercraftId()).orElseGet(null);
 		MemberSlot memberSlot = msr.findById(newSchedule.getUserId()).orElse(null);
 		List<HolidayCalendar> allHoliadyCal = hcr.findAll();
@@ -102,7 +102,7 @@ public class WatercraftSchedulerController {
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw e;
 			}
 			return new ResponseEntity<String>("Success", HttpStatus.OK);
 		} else {
