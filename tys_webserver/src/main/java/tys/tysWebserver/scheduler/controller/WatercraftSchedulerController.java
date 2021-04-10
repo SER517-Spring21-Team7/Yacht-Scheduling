@@ -3,6 +3,7 @@ package tys.tysWebserver.scheduler.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -17,7 +18,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import tys.tysWebserver.emailAlert.controller.EmailSenderAmazonSES;
+import tys.tysWebserver.memberManager.controller.MemberController;
 import tys.tysWebserver.memberManager.controller.MemberSlotController;
+import tys.tysWebserver.memberManager.model.MemberModel;
 import tys.tysWebserver.memberManager.model.MemberSlot;
 import tys.tysWebserver.memberManager.repository.MemberSlotRepository;
 import tys.tysWebserver.scheduler.model.Holiday;
@@ -28,6 +32,8 @@ import tys.tysWebserver.scheduler.model.WatercraftScheduler;
 import tys.tysWebserver.scheduler.repository.HolidayCalendarRepo;
 import tys.tysWebserver.scheduler.repository.SchedulerSettingRepo;
 import tys.tysWebserver.scheduler.repository.WatercraftSchedulerRepository;
+import tys.tysWebserver.watercraftManager.controller.WatercraftController;
+import tys.tysWebserver.watercraftManager.model.WatercraftModel;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -48,8 +54,17 @@ public class WatercraftSchedulerController {
 	@Autowired
 	MemberSlotController msController;
 	
+	@Autowired
+	MemberController memberController;
+	
+	@Autowired
+	WatercraftController watercraftController;
+	
+	@Autowired
+	EmailSenderAmazonSES emailSenderAmazonSES;
+	
 	@PostMapping("/addschedule")
-	public ResponseEntity<String> createSchedule(@RequestBody WatercraftScheduler newSchedule) {
+	public ResponseEntity<String> createSchedule(@RequestBody WatercraftScheduler newSchedule) throws Exception {
 		SchedulerSetting ssForWatercraft = ssr.findById(newSchedule.getWatercraftId()).orElseGet(null);
 		MemberSlot memberSlot = msr.findById(newSchedule.getUserId()).orElse(null);
 		List<HolidayCalendar> allHoliadyCal = hcr.findAll();
@@ -65,8 +80,30 @@ public class WatercraftSchedulerController {
 		}
 		if (isBookingAllowed(newSchedule, ssForWatercraft) &&
 				checkAndUpdateSlots(newSchedule, memberSlot, holidayDates, ssForWatercraft.isAllowCarryBorrow())) {
-			System.out.println("CORRECTLY SAVING RESERVAGION");
+
+			MemberModel model = memberController.getMemberById(newSchedule.getUserId()).getBody();
+			WatercraftModel watercraftModel = watercraftController.getWaterCraftById(newSchedule.getWatercraftId()+"");
 			WSRepo.save(newSchedule);
+			
+			try {
+				
+				String bodyOfEmail = emailSenderAmazonSES.createEmailForBooking(model, newSchedule, watercraftModel);
+				
+				if(newSchedule.isCrewRequired() || newSchedule.isConciergeRequired()) {
+					emailSenderAmazonSES.createEmail("sshah73@asu.edu", "Yatch Solution Admin", model.getEmail(), 
+							"Reservation created", bodyOfEmail);
+					TimeUnit.SECONDS.sleep(2);
+					String adminEmail = emailSenderAmazonSES.createEmailAdmin(model, newSchedule, watercraftModel);
+					emailSenderAmazonSES.createEmail("sshah73@asu.edu", "Yatch Solution Admin", "shahsmit49@gmail.com", 
+							"Crew Services required", adminEmail);
+				} else {
+					emailSenderAmazonSES.createEmail("sshah73@asu.edu", "Yatch Solution Admin", model.getEmail(), 
+							"Reservation created", bodyOfEmail);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				throw e;
+			}
 			return new ResponseEntity<String>("Success", HttpStatus.OK);
 		} else {
 			System.out.println("PROBLEM SAVING RESERVAGION");
