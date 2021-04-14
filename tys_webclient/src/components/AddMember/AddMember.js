@@ -57,23 +57,29 @@ const initialValues = {
 const watercraftObjectListInitial = [];
 const useStyle = makeStyles((theme) => ({
   root: {
-    width: "80%",
-    marginTop: theme.spacing(5),
-    marginLeft: theme.spacing(15),
+
     "& .MuiFormControl-root": {
-      width: "70%",
-      margin: theme.spacing(1.5),
+      marginLeft: theme.spacing(15),
+      width: "60%",
+      margin: theme.spacing(1),
     },
+
     "& .MuiButtonBase-root": {
       marginLeft: "38%",
     },
   },
+
   containerStyle: {
-    backgroundColor: "#f5f5f5",
-    width: "100%",
-    marginTop: theme.spacing(1),
-    marginLeft: theme.spacing(0),
+    padding: theme.spacing(1),
+    marginTop: "1%",
+    border: "4px solid #4db6ac",
+    borderRadius: '5px'
   },
+
+  textLine:{
+    height:"8vh"
+  },
+  
 }));
 
 export default function AddMember() {
@@ -203,22 +209,33 @@ export default function AddMember() {
         <>
         <form className={classes.root}>
         
-            <Typography style={{margin:'5%'}}>
-                <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
-                    <h2>Search Existing Member or Enter Details</h2>
+            <Typography>
+                <Box fontSize={20} textAlign="center">
+                    Search Existing Member or Enter Details
                 </Box>
             </Typography>
-                {/* <div><SearchMember/></div> */}
-                <SearchField
-                placeholder="Search Member"
-                onEnter={onEnterExample}
-                searchText=""
-                classNames="test-class"
-                />
-                <ExampleList
-                    list={onEnterExampleList} updateForm={ fillDetails}
-                />
+
             <Grid container className={classes.containerStyle}>
+                <Grid item xs={12} sm={12} align="center">
+                  <SearchField
+                    placeholder="Search Member"
+                    onEnter={onEnterExample}
+                    searchText=""
+                    classNames="test-class"
+                    />
+                    <ExampleList
+                        list={onEnterExampleList} updateForm={ fillDetails}
+                    />
+                </Grid>
+                <Grid item xs={5} sm={5} className={classes.textLine} style={{paddingTop:"2vh"}}>
+                  <hr style={{borderColor:"#4db6ac"}}/>
+                </Grid>
+                <Grid item xs={2} sm={2} align="center" className={classes.textLine}>
+                  <h2>or</h2>
+                </Grid>
+                <Grid item xs={5} sm={5} className={classes.textLine} style={{paddingTop:"2vh"}}>
+                  <hr style={{borderColor:"#4db6ac"}}/>
+                </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
                     variant="outlined"
@@ -233,25 +250,25 @@ export default function AddMember() {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                <FormControl variant="outlined">
-                        <InputLabel>Watercraft</InputLabel>
-                        <Select
-                            label="Watercraft"
-                            name="watercraft"
-                            value={values.watercraft}
-                            onChange={handleInputChange}>
-                            <MenuItem>
-                                <em>None</em>
-                            </MenuItem>
-                            {
-                                tempStateValues.drop.map((craft, index) => {
-                                    return (
-                                        <MenuItem key={index} value={craft}>{craft}</MenuItem>
-                                    )
-                                })
-                            } 
-                        </Select>
-                    </FormControl>
+                  <FormControl variant="outlined">
+                    <InputLabel>Watercraft</InputLabel>
+                    <Select
+                        label="Watercraft"
+                        name="watercraft"
+                        value={values.watercraft}
+                        onChange={handleInputChange}>
+                        <MenuItem>
+                            <em>None</em>
+                        </MenuItem>
+                        {
+                            tempStateValues.drop.map((craft, index) => {
+                                return (
+                                    <MenuItem key={index} value={craft}>{craft}</MenuItem>
+                                )
+                            })
+                        } 
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -346,7 +363,7 @@ export default function AddMember() {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <Grid container justify="space-around">
+                        <Grid container>
                             <KeyboardDatePicker
                             format="MM/dd/yyyy"
                             margin="normal"
@@ -364,7 +381,7 @@ export default function AddMember() {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <Grid container justify="space-around">
+                        <Grid container>
                             <KeyboardDatePicker
                             format="MM/dd/yyyy"
                             margin="normal"
@@ -381,16 +398,14 @@ export default function AddMember() {
                     </MuiPickersUtilsProvider>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <div style={{display:'flex'}}>
-                        <label style={{padding:'5%', display:'inline'}}>Color</label>
                         <ColorPicker
+                            variant="outlined"
                             name="color"
                             defaultValue="Select Scheduler Color"
                             style={{backgroundColor:values.schedulercolor, borderRadius:'5px'}}
                             onChange={handleColorChange}
                             value={values.schedulercolor}
                         />
-                    </div>
                 </Grid>
                 <Grid item xs={12} sm={2}>
                 </Grid>
@@ -402,12 +417,12 @@ export default function AddMember() {
                         </RadioGroup>
                     </FormControl>
                 </Grid>
-            </Grid>  
+            </Grid> 
             <Button 
                 size="large" 
                 variant="contained" 
-                color="secondary"
-                style={{width:'20%', marginTop:'2.5%', paddingLeft: '0px'}}
+                color="primary"
+                style={{width:'20%', marginTop:'1%', paddingLeft: '0px'}}
                 onClick={buttonClicked}>
                 Add Member
             </Button>

@@ -22,7 +22,6 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import GlobalContext from "../GlobalContext";
-import Divider from "@material-ui/core/Divider";
 import toDate from "date-fns/toDate";
 
 const useStyle = makeStyles((theme) => ({
@@ -354,7 +353,7 @@ function WatercraftSchedulerUI() {
               </Grid>
             </Grid>
           </div>
-          <Divider style={{marginBottom:"3vh", marginTop:"3vh"}}/>
+          <hr style={{marginBottom:"3vh", marginTop:"3vh", borderColor:"#4db6ac"}}/>
             <FullCalendar
             className={classes.calendarStyle}
             plugins={[dayGridPlugin, interactionPlugin]}
