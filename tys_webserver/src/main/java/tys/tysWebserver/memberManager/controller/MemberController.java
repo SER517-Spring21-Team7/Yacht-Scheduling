@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +37,9 @@ public class MemberController {
 	@Autowired
 	LoginController loginController;
 	
+	@Autowired
+	PasswordEncoder pasEncoder;
+	
 	@PostMapping("/details")
 	public MemberModel createMember(@RequestBody MemberModel addmember) {
 		System.out.println(addmember);
@@ -49,7 +53,7 @@ public class MemberController {
 		// Create default notification for user
 		userAccController.createDefaultUserNotification(savedMember.getMemberId());
 		// Create login for user
-		loginController.createCredentials(savedMember.getMemberId() ,addmember.getEmail(), addmember.getPassword(), addmember.getAccess());
+		loginController.createCredentials(savedMember.getMemberId() ,addmember.getEmail(), pasEncoder.encode(addmember.getPassword()), addmember.getAccess());
 		return savedMember;
 	}
 	

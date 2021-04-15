@@ -38,7 +38,8 @@ public class UserAccountController {
 	@Autowired
 	private LoginRepository loginRepo; 
 	
-	PasswordEncoder pas = new BCryptPasswordEncoder();
+	@Autowired
+	PasswordEncoder pasEncoder;
 	
 	// Below methods are for notification setting related API
 	@GetMapping("/usernotificationSetting/{id}")
@@ -80,7 +81,7 @@ public class UserAccountController {
 		System.out.println(pas.matches(userDetails.getCurrentPassword(), user.getPassword()));
 		
 		if(!pas.matches(userDetails.getCurrentPassword(), user.getPassword())) {
-			return new ResponseEntity<>("Message : Current Password is not Correct!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Current Password is not Correct!", HttpStatus.BAD_REQUEST);
 		}
 		else {
 			if(userDetails.getCurrentPassword().equals(userDetails.getNewPassword()))
