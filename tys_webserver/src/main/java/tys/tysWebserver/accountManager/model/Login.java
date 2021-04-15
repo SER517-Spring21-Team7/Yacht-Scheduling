@@ -44,12 +44,13 @@ public class Login implements UserDetails {
 		super();
 	}
 
-	public Login(int id, String email, String password, String role ) {
+	public Login(int id, String email, String password, String role) {
 		super();
 		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.role = role;
+		this.username = email;
 	}
 	
 	public int getId() {
