@@ -28,13 +28,11 @@ const ListOfWaterCrafts = () => {
   const [watercrafts, setWatercrafts] = useState([]);
 
   const [alerts, setAlerts] = useState([]);
-  const url = "http://localhost:8080/watercraft/getAllWaterCraft";
   var urlForAlert = "http://localhost:8080/displayAlert/get/";
   const urlAll = "http://localhost:8080/watercraft/getAllWaterCraft";
   const urlMember =
     "http://localhost:8080/watercraft/getWaterCraftByMemberId/" +
     sessionStorage.getItem("userId");
-
   const getWaterCraft = async () => {
     var url = null;
     if (sessionStorage.getItem("role") === "Admin") {
