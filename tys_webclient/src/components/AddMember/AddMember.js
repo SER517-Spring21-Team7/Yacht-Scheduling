@@ -64,9 +64,6 @@ const useStyle = makeStyles((theme) => ({
       margin: theme.spacing(1),
     },
 
-    "& .MuiButtonBase-root": {
-      marginLeft: "38%",
-    },
   },
 
   containerStyle: {
@@ -422,7 +419,7 @@ export default function AddMember() {
                 size="large" 
                 variant="contained" 
                 color="primary"
-                style={{width:'20%', marginTop:'1%', paddingLeft: '0px'}}
+                style={{width:'20%', marginTop:'1%', marginLeft: '38%', paddingLeft: '0px'}}
                 onClick={buttonClicked}>
                 Add Member
             </Button>

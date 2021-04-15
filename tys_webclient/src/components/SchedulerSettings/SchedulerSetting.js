@@ -8,7 +8,6 @@ import TimeSlots from "./TimeSlots";
 import { useHistory } from "react-router-dom";
 
 import {
-  Container,
   Checkbox,
   makeStyles,
   TextField,
@@ -27,32 +26,30 @@ import GlobalContext from "../GlobalContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: "#90caf9",
-    width: "80%",
-    marginTop: theme.spacing(0),
-    marginLeft: theme.spacing(0),
-    padding: "10px",
 
     "& .MuiFormControl-root": {
-      width: "80%",
-      margin: theme.spacing(0.75),
+      width: "60%",
+      margin: theme.spacing(1),
     },
-    flexGrow: 1,
+
   },
   container: {
-    backgroundColor: "#f5f5f5",
-    width: "100%",
-    marginTop: theme.spacing(0),
-    marginLeft: theme.spacing(0),
+    padding: theme.spacing(1),
+    marginTop: "1%",
+    border: "4px solid #4db6ac",
+    borderRadius: '5px'
   },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
+
+  innerContainer:{
+    marginLeft:"15%"
   },
+
   buttonStyle: {
     marginLeft: "38%",
   },
+
   aSummery: {
+
     backgroundColor: "rgba(0, 0, 0, .03)",
     borderBottom: "1px solid rgba(0, 0, 0, .125)",
     marginBottom: -1,
@@ -61,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
       minHeight: 56,
     },
   },
+
   heading: {
     fontSize: theme.typography.pxToRem(20),
     flexBasis: "33.33%",
@@ -68,18 +66,18 @@ const useStyles = makeStyles((theme) => ({
     color: "#00227b",
     fontWeight: "bold",
   },
+
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
     color: "#00227b",
+    paddingLeft: "5%"
   },
-  button: {
-    margin: theme.spacing(1),
-  },
-  secTypo: {
-    marginLeft: "5%",
-    marginTop: "5%",
-    padding: "10px",
-  },
+  
+  // secTypo: {
+  //   marginLeft: "5%",
+  //   marginTop: "5%",
+  //   padding: "10px",
+  // },
 }));
 
 const InitialHCalendar = [];
@@ -344,18 +342,15 @@ export default function SchedulerSetting() {
 
   return (
     <div>
-      <Container>
         <Typography>
           <Box
-            fontWeight="fontWeightBold"
             fontSize={20}
             textAlign="center"
-            m={1}
+            marginBottom="1%"
           >
             Scheduler Settings
           </Box>
         </Typography>
-      </Container>
       <Accordion
         expanded={expanded === "panel0"}
         onChange={handleChangeExpansion("panel0")}
@@ -374,19 +369,15 @@ export default function SchedulerSetting() {
         <AccordionDetails>
           <form>
             <Grid container className={classes.container}>
-              <Grid item md={6} xs={12}>
+              <Grid item xs={12} sm={12} align="center">
                 <Typography
                   className=".MuiTypography-overline"
-                  color="textPrimary"
                   gutterBottom
                 >
-                  Select Premium Day(s):
+                  <b>Select Premium Day(s):</b>
                 </Typography>
-                <div>
-                  <div
-                    class="row"
-                    style={{ display: "flex", flexDirection: "row" }}
-                  >
+              </Grid>
+              <Grid item xs={12} sm={12} align="center">
                     {[
                       "Sunday",
                       "Monday",
@@ -412,18 +403,15 @@ export default function SchedulerSetting() {
                         />
                       );
                     })}
-                  </div>
-                </div>
               </Grid>
 
-              <Grid item xs={12}>
-                <br />
+              <Grid item xs={12} sm={12} align="center">
+                <br/>
                 <Typography
                   className=".MuiTypography-overline"
-                  color="textPrimary"
                   gutterBottom
                 >
-                  Booking Slot Timings:
+                  <b>Booking Slot Timings:</b>
                 </Typography>
                 <TimeSlots
                   ref={childRef}
@@ -431,7 +419,7 @@ export default function SchedulerSetting() {
                   handleTimeSlots={handleTimeSlots}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={12} className={classes.innerContainer}>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -445,12 +433,11 @@ export default function SchedulerSetting() {
                   one set of slots."
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={12} className={classes.innerContainer}>
                 <br />
                 <div>
                   <label class="custom-control-label" for="conReservationDays">
-                    {" "}
-                    Limit Back to Back reservations to{" "}
+                    Limit Back to Back reservations to &nbsp;
                   </label>
                   <TextField
                     variant="outlined"
@@ -472,26 +459,25 @@ export default function SchedulerSetting() {
                     onChange={handleContinousReservationChange}
                   />
                   <label class="custom-control-label" for="conReservationDays">
-                    {" "}
-                    days in a row.
+                    &nbsp; days in a row.
                   </label>
                 </div>
               </Grid>
-              <Grid item md={6} xs={12}>
+              <Grid item xs={12} sm={12} className={classes.innerContainer}>
                 <br />
                 <div>
-                  <Typography
+                  {/* <Typography
                     className=".MuiTypography-overline"
                     color="textSecondary"
                     gutterBottom
                   >
                     Free Booking Period:
-                  </Typography>
+                  </Typography> */}
                   <label
                     class="custom-control-label"
                     for="freeReservationTillHours"
                   >
-                    Reservations made within
+                    Reservations made within &nbsp;
                   </label>
                   <FormControl
                     variant="outlined"
@@ -503,7 +489,6 @@ export default function SchedulerSetting() {
                       value={state.freeReservationHours}
                       size="small"
                       onChange={handleChange}
-                      label="Age"
                     >
                       <MenuItem value={0}>
                         <em>None</em>
@@ -521,25 +506,25 @@ export default function SchedulerSetting() {
                     class="custom-control-label"
                     for="freeReservationTillHours"
                   >
-                    do not count against usage.
+                    &nbsp; do not count against usage.
                   </label>
                 </div>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={12} className={classes.innerContainer}>
                 <br />
                 <div>
-                  <Typography
+                  {/* <Typography
                     className=".MuiTypography-overline"
                     color="textSecondary"
                     gutterBottom
                   >
                     Confirmation Window:
-                  </Typography>
+                  </Typography> */}
                   <label
                     class="custom-control-label"
                     for="confiramationEmailHoursBefore"
                   >
-                    Send out confirmation email
+                    Send out confirmation email &nbsp;
                   </label>
                   <FormControl
                     variant="outlined"
@@ -575,25 +560,25 @@ export default function SchedulerSetting() {
                     class="custom-control-label"
                     for="confiramationEmailHoursBefore"
                   >
-                    before reservation
+                    &nbsp; before reservation
                   </label>
                 </div>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={12} className={classes.innerContainer}>
                 <br />
                 <div>
-                  <Typography
+                  {/* <Typography
                     className=".MuiTypography-overline"
                     color="textSecondary"
                     gutterBottom
                   >
                     Cancellation Period:
-                  </Typography>
+                  </Typography> */}
                   <label
                     class="custom-control-label"
                     for="freeReservationTillHours"
                   >
-                    If user does not confirm reservation,
+                    If user does not confirm reservation, &nbsp;
                   </label>
                   <FormControl
                     variant="outlined"
@@ -605,7 +590,6 @@ export default function SchedulerSetting() {
                       value={state.cancelBookingBeforeStart}
                       size="small"
                       onChange={handleChange}
-                      label="Hours"
                     >
                       <MenuItem value={0}>
                         <em>Do not cancel it.</em>
@@ -622,8 +606,7 @@ export default function SchedulerSetting() {
                   <label
                     class="custom-control-label"
                     for="freeReservationTillHours"
-                  >
-                    before it starts.
+                  > &nbsp; before it starts.
                   </label>
                 </div>
               </Grid>
@@ -644,22 +627,23 @@ export default function SchedulerSetting() {
         >
           <Typography className={classes.heading}>Advance Settings</Typography>
           <Typography className={classes.secondaryHeading}>
-            Change advance settings for watercraft here
+            Change advanced settings for watercraft here
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <form className={classes.root}>
             <Grid container className={classes.container}>
-              <Grid item md={3}>
+              <Grid item xs={12} sm={3} align="center">
                 <Typography
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
+                  style={{paddingTop:"3vh"}}
                 >
                   Show weather for:
                 </Typography>
               </Grid>
-              <Grid item md={6} xs={12}>
+              <Grid item xs={12} sm={6} align="center">
                 <FormControl variant="outlined" required>
                   <InputLabel>Country</InputLabel>
                   <Select
@@ -676,9 +660,9 @@ export default function SchedulerSetting() {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item md={3}></Grid>
-              <Grid item md={1}></Grid>
-              <Grid item md={4} xs={12}>
+              <Grid item xs={12} sm={3}></Grid>
+              <Grid item xs={12} sm={1}></Grid>
+              <Grid item xs={12} sm={4} align="center">
                 <TextField
                   variant="outlined"
                   label="City"
@@ -687,16 +671,17 @@ export default function SchedulerSetting() {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item md={1}>
+              <Grid item xs={12} sm={1} align="center">
                 <Typography
                   color="textSecondary"
                   className={classes.secTypo}
                   gutterBottom
+                  style={{paddingTop:"3vh"}}
                 >
                   Or
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} sm={4} align="center">
                 <TextField
                   variant="outlined"
                   label="Zip/Postal Code"
@@ -705,16 +690,17 @@ export default function SchedulerSetting() {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item md={3}>
+              <Grid item xs={12} sm={3} align="center">
                 <Typography
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
+                  style={{paddingTop:"3vh"}}
                 >
                   Select Holiday Calendar:
                 </Typography>
               </Grid>
-              <Grid item md={6} xs={12}>
+              <Grid item sm={6} xs={12} align="center">
                 <FormControl variant="outlined" required>
                   <InputLabel>Holiday Calendar</InputLabel>
                   <Select
@@ -737,7 +723,8 @@ export default function SchedulerSetting() {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid>
+
+              <Grid item>
                 <ButtonGroup
                   color="primary"
                   aria-label="outlined primary button group"
@@ -747,16 +734,19 @@ export default function SchedulerSetting() {
                   <Button onClick={() => handleCreateRedirect()}>Create</Button>
                 </ButtonGroup>
               </Grid>
-              <Grid item md={3}>
+
+              <Grid item sm={3} xs={12} align="center">
                 <Typography
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
+                  style={{paddingTop:"3vh"}}
                 >
                   Max Holiday Reservation:
                 </Typography>
               </Grid>
-              <Grid item md={6} xs={12}>
+
+              <Grid item sm={6} xs={12} align="center">
                 <TextField
                   variant="outlined"
                   label="Days Per Year"
@@ -764,18 +754,20 @@ export default function SchedulerSetting() {
                   value={state.maxHolidayDays}
                   onChange={handleChange}
                 />
+
               </Grid>
-              <Grid item md={3}></Grid>
-              <Grid item md={3}>
+              <Grid item sm={3} xs={12}></Grid>
+              <Grid item sm={3} xs={12} align="center">
                 <Typography
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
+                  style={{paddingTop:"3vh"}}
                 >
                   Select Watercraft Time Zone:
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} sm={6} align="center">
                 <FormControl variant="outlined" required>
                   <InputLabel>Watercraft Time Zone</InputLabel>
                   <Select
@@ -795,17 +787,18 @@ export default function SchedulerSetting() {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item md={3}></Grid>
-              <Grid item md={3}>
+              <Grid item sm={3} xs={12}></Grid>
+              <Grid item sm={3} xs={12} align="center">
                 <Typography
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
+                  style={{paddingTop:"3vh"}}
                 >
                   Allow advance reservation upto:
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} sm={6} align="center">
                 <FormControl variant="outlined" required>
                   <InputLabel>Month(s)</InputLabel>
                   <Select
@@ -830,7 +823,7 @@ export default function SchedulerSetting() {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={12} align="center">
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -853,9 +846,9 @@ export default function SchedulerSetting() {
           variant="contained"
           color="primary"
           size="medium"
-          className={classes.button}
           startIcon={<SaveIcon />}
           onClick={saveChanges}
+          style={{marginTop:'1%'}}
         >
           Save settings
         </Button>
