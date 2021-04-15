@@ -7,6 +7,7 @@ import {
   Typography,
   Button,
 } from "@material-ui/core";
+import axios from "axios";
 import SaveIcon from "@material-ui/icons/Save";
 
 const useStyle = makeStyles((theme) => ({
@@ -51,6 +52,17 @@ export default function ManagePassword() {
       ...values,
       [name]: value,
     });
+  };
+
+  const saveChanges = () => {
+    const url = "http://localhost:8080/user/passUpdate/" + sessionStorage.getItem("userId");
+    axios.put( url, { ...values})
+      .then((resp) => { console.log(resp.data);
+        console.log("Password updated.");
+      })
+      .catch((error) => {
+        console.error("Password update failed.");
+      });
   };
 
   return (

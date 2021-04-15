@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +41,8 @@ public class MemberController {
 	
 	@Autowired
 	PasswordEncoder pasEncoder;
+ 
+  MemberSlotController msController;
 	
 	@PostMapping("/details")
 	public MemberModel createMember(@RequestBody MemberModel addmember) {
@@ -54,6 +58,8 @@ public class MemberController {
 		userAccController.createDefaultUserNotification(savedMember.getMemberId());
 		// Create login for user
 		loginController.createCredentials(savedMember.getMemberId() ,addmember.getEmail(), pasEncoder.encode(addmember.getPassword()), addmember.getAccess());
+		// Create slot for user
+		msController.createMemberSlot(savedMember.getMemberId(), addmember.getWatercraftId(), Integer.parseInt(addmember.getStandardshare()));
 		return savedMember;
 	}
 	
@@ -68,6 +74,14 @@ public class MemberController {
 //		List<MemberModel> data = AMrepo.
 		List<MemberModel> ans = AMrepo.findByFirstnameIgnoreCaseContaining(searchQuery);
 		return ans;
+	}
+	
+	@GetMapping("/getMember/{id}")
+	public ResponseEntity<MemberModel> getMemberById(@PathVariable(value = "id") Integer memberId)
+		throws ResourceNotFoundException {
+		MemberModel memberObject = AMrepo.findById(memberId)
+				.orElseThrow(() -> new ResourceNotFoundException("Member not found for this id :: " + memberId));
+		return ResponseEntity.ok().body(memberObject);
 	}
 
 	@GetMapping("/getAllMemberDetails")

@@ -296,8 +296,8 @@ export default function SchedulerSetting() {
                 advanceBookingMonth: data.limitAdvBookingMonths,
                 carryBorrow: data.allowCarryBorrow,
               });
+              childRef.current.updateSlotState(data.timeSlot);
             });
-            childRef.current.updateSlotState(data.timeSlot);
         }
         else{
           alert("Please select watercraft from the search box")

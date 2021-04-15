@@ -59,6 +59,7 @@ public class WatercraftController {
 		data.setMakeYear(addwatercraft.getMakeYear());
 		data.setModel(addwatercraft.getModel());
 		data.setWatercraftName(addwatercraft.getWatercraftName());
+		data.setImage(addwatercraft.getImage());
 		
 		return AWrepo.save(data);
 		

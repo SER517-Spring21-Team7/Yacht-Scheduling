@@ -17,7 +17,7 @@ export const SidebarData = [
       icon: <GiIcons.GiSailboat />,
       cName: "nav-text",
   },
-  sessionStorage.getItem("role") === "Admin" &&
+  // sessionStorage.getItem("role") === "Admin" &&
   {
     title: "Reserve Watercraft",
     path: "/reservation",
@@ -39,7 +39,7 @@ export const SidebarData = [
 
     cName: "nav-text",
   },
-
+  sessionStorage.getItem("role") === "Admin" &&
   {
     title: "Scheduler Settings",
     path: "/scheduler",
@@ -68,6 +68,13 @@ export const SidebarData = [
     title: "Emergency Contact",
     path: "/emergency",
     icon: <FaIcons.FaBriefcaseMedical />,
+    cName: "nav-text",
+  },
+    sessionStorage.getItem("role") === "Admin" &&
+  {
+    title: "Add Alerts",
+    path: "/displayAlert",
+    icon: <FaIcons.FaBroadcastTower />,
     cName: "nav-text",
   },
 ];

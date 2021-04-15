@@ -18,4 +18,7 @@ public interface MemberRepository extends JpaRepository<MemberModel, Integer> {
 
   @Transactional
 	List<MemberModel> findByWatercraftId(int watercraftId);
+
+	@Transactional
+	List<MemberModel> findAllByMemberId(int id);
 }

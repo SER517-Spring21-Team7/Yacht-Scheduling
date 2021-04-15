@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -18,6 +18,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { NavLink, Link } from "react-router-dom";
+import axios from "axios";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import tysLogo from "../../tysLogo.png";
 import ListOfWaterCrafts from "../../listWaterCraft/ListOfWaterCrafts";
@@ -31,7 +32,8 @@ import HolidayCalendar from "../SchedulerSettings/HolidayCalendar";
 import { SidebarData } from "../Sidebar/SidebarData";
 import ToolbarSearch from "./ToolbarSearch";
 import GlobalContext from "./../GlobalContext";
-import Emergency from "./../EmergencyContact/Emergency"
+import Emergency from "./../EmergencyContact/Emergency";
+import DisplayAlert from "../../displayAlert/DisplayAlert";
 import WatercraftSchedulerUI from './../WatercraftScheduler/WatercraftSchedulerUI'
 
 const drawerWidth = 240;
@@ -101,11 +103,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+var loggedMember = '';
+
 export default function MiniDrawer() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const [selectedWatercraft, setSelectedWatercraft] = React.useState(0);
+  const [getMember, setMember] = React.useState(loggedMember);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -125,7 +130,20 @@ export default function MiniDrawer() {
   const logout = () => {
     sessionStorage.clear();
     window.location.href = '/';
-}
+  }
+
+  const loggedInMember = () => {
+    const url = "http://localhost:8080/userprofile/"+sessionStorage.getItem("userId");
+    axios.get(url).then(res => {
+      setMember(res.data.firstName)
+    }, error => {
+      alert("Failed to create reservation! Please try again.");
+    });
+  }
+
+  useEffect(() => { 
+    loggedInMember();
+  },[])
 
   return (
     <GlobalContext.Provider value={selectedWatercraft}>
@@ -166,20 +184,30 @@ export default function MiniDrawer() {
                   }}
                 />
               </Grid>
+
               <Grid item xs={4}>
                 <ToolbarSearch parentCallback={handleGlobalWatercraft} />
               </Grid>
+
+              <Grid item xs="auto">
+                <h3>Welcome, {getMember}!</h3>
+              </Grid>
             </Grid>
-            <IconButton
-            color="inherit"
-            aria-label="logout"
-            onClick={logout}
-            style={{
-              float:'right',
-            }}
-            >
-              <ExitToAppIcon />
-            </IconButton>
+              <Grid item xs="auto" align="center">
+                <IconButton
+                  color="inherit"
+                  aria-label="logout"
+                  onClick={logout}
+                  style={{
+                    width: "20px",
+                    height: "20px"
+                  }}
+                  >
+                <ExitToAppIcon />
+              </IconButton>
+              <p>Logout</p>
+              </Grid>
+            
           </Toolbar>
         </AppBar>
         <Drawer
@@ -260,6 +288,7 @@ export default function MiniDrawer() {
               component={HolidayCalendar}
             />
             <Route path="/emergency" component={Emergency} />
+            <Route path="/displayAlert" component={DisplayAlert} />
             <Route path="/reservation" component={WatercraftSchedulerUI} />
           </Switch>
         </main>
