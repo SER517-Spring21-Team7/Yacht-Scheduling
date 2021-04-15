@@ -13,6 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import tysLogo from "../../tysLogo.png";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import loginBackground from '../../loginBackground.jpg'
 
 
 function Copyright() {
@@ -33,8 +34,7 @@ const useStyles = makeStyles((theme) => ({
     height: "100vh",
   },
   image: {
-    backgroundImage:
-      "url(https://images.unsplash.com/photo-1609962481444-01c4823ea75d?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=975&q=80)",
+    backgroundImage: `url(${loginBackground})`,
     backgroundRepeat: "no-repeat",
     backgroundColor:
       theme.palette.type === "light"
@@ -107,15 +107,14 @@ function Login({ setAccess }) {
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <Grid item xs={12} sm={8} md={5} align="center" component={Paper} elevation={6} square>
         <img
           src={tysLogo}
           alt="Logo"
           style={{
             resizeMode: "cover",
             height: "15%",
-            width: "65%",
-            margin: "5%",
+            marginTop: '5%'
           }}
         />
         <div className={classes.paper}>
@@ -147,10 +146,7 @@ function Login({ setAccess }) {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+
             <Button
               type="submit"
               fullWidth
@@ -161,12 +157,12 @@ function Login({ setAccess }) {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
+              <Grid item xs={12} align="right">
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
-              <Grid item>
+              <Grid item xs={12} align="right">
                 <Link href="https://theyachtsolution.com/" variant="body2">
                   {"Know more about The Yacht Solutions!"}
                 </Link>

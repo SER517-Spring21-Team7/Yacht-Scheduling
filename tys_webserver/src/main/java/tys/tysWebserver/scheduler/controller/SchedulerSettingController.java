@@ -81,5 +81,10 @@ public class SchedulerSettingController {
 		final SchedulerSetting savedSetting = ssr.save(ssObject);
 		return ResponseEntity.ok(savedSetting);
 	}
+	
+	public int findMaxHolidayBookingDaysByWatercraftId(Integer id) {
+		SchedulerSetting ssObject = ssr.findById(id).orElse(null);
+		return ssObject.getMaxHolidayBookingDays();
+	}
 
 }

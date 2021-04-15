@@ -16,7 +16,6 @@
 #search ul {
   display: inline-flex;
   padding: 10px;
-  border-bottom: 1px solid #ddd;
 }
 
 #search .list-example {
