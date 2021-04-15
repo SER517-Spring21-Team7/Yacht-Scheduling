@@ -30,7 +30,15 @@ class SearchWatercraft extends React.Component {
     };
   }
   componentDidMount() {
-    const url = "http://localhost:8080/watercraft/getAllWaterCraft"
+    var url = null;
+    const urlAll = "http://localhost:8080/watercraft/getAllWaterCraft";
+    const urlMember = "http://localhost:8080/watercraft/getWaterCraftByMemberId/" + sessionStorage.getItem("userId");
+    if(sessionStorage.getItem('role') === 'Admin') {
+        url = urlAll;
+    }
+    else {
+        url = urlMember;
+    }
     const watercraftList = []
     const response = axios.get(url)
     .then((watercraftResponse)=> {

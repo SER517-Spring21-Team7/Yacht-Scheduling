@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from 'axios';
 import {
   Grid,
   TextField,
@@ -54,13 +55,14 @@ export default function ManagePassword() {
   };
 
   const saveChanges = () => {
-    const url = "http://localhost:8080/user/passUpdate/" + sessionStorage.getItem("userId");
-    axios.put( url, { ...values})
+    const url = "http://localhost:8080/user/passUpdate/"+sessionStorage.getItem("userId");
+    axios.post( url, { ...values})
       .then((resp) => { console.log(resp.data);
         console.log("Password updated.");
       })
       .catch((error) => {
-        console.error("Password update failed.");
+        alert("Invalid Credentials provided");
+        console.log(error);
       });
   };
 
@@ -120,7 +122,7 @@ export default function ManagePassword() {
           size="medium"
           className={classes.button}
           startIcon={<SaveIcon />}
-        >
+          onClick={saveChanges}>
           Save changes
         </Button>
       </div>
