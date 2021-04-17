@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
@@ -39,7 +40,9 @@ public class MemberController {
 	LoginController loginController;
 	
 	@Autowired
-	MemberSlotController msController;
+	PasswordEncoder pasEncoder;
+ 
+  MemberSlotController msController;
 	
 	@PostMapping("/details")
 	public MemberModel createMember(@RequestBody MemberModel addmember) {
@@ -54,7 +57,7 @@ public class MemberController {
 		// Create default notification for user
 		userAccController.createDefaultUserNotification(savedMember.getMemberId());
 		// Create login for user
-		loginController.createCredentials(savedMember.getMemberId() ,addmember.getEmail(), addmember.getPassword(), addmember.getAccess());
+		loginController.createCredentials(savedMember.getMemberId() ,addmember.getEmail(), pasEncoder.encode(addmember.getPassword()), addmember.getAccess());
 		// Create slot for user
 		msController.createMemberSlot(savedMember.getMemberId(), addmember.getWatercraftId(), Integer.parseInt(addmember.getStandardshare()));
 		return savedMember;
