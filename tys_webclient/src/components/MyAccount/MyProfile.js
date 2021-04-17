@@ -12,7 +12,6 @@ import {
   Button,
 } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
-import Avatar from "@material-ui/core/Avatar";
 import * as FaIcons from "react-icons/fa";
 import S3 from "react-aws-s3";
 import imageCompression from "browser-image-compression";
@@ -75,28 +74,24 @@ const timezoneArr = [
 
 const useStyle = makeStyles((theme) => ({
   root: {
-    backgroundColor: "#90caf9",
-    width: "80%",
-    marginTop: theme.spacing(0),
-    marginLeft: theme.spacing(15),
 
     "& .MuiFormControl-root": {
-      width: "80%",
-      margin: theme.spacing(1.5),
+      marginLeft: theme.spacing(10),
+      width: "60%",
+      margin: theme.spacing(1),
     },
     "& .MuiButtonBase-root": {
       marginLeft: "38%",
     },
-    flexGrow: 1,
   },
   buttonStyle: {
     marginLeft: "38%",
   },
   container: {
-    backgroundColor: "#f5f5f5",
-    width: "100%",
-    marginTop: theme.spacing(1),
-    marginLeft: theme.spacing(0),
+    padding: theme.spacing(1),
+    marginTop: "1%",
+    border: "4px solid #4db6ac",
+    borderRadius: '5px'
   },
   button: {
     margin: theme.spacing(2),
@@ -110,8 +105,8 @@ const useStyle = makeStyles((theme) => ({
   large: {
     // marginTop: theme.spacing(2),
     // marginLeft: theme.spacing(3),
-    width: theme.spacing(10),
-    height: theme.spacing(10),
+    width: theme.spacing(8),
+    height: theme.spacing(8),
   },
   typo: {
     marginTop: theme.spacing(4),
@@ -209,6 +204,7 @@ export default function MyProfile() {
         country: resp.data.country,
         address_1: resp.data.address_1,
         address_2: resp.data.address_2,
+        image: resp.data.image,
         city: resp.data.city,
         state: resp.data.state,
         zipCode: resp.data.zipCode,
@@ -241,31 +237,14 @@ export default function MyProfile() {
 
   return (
     <>
-      <div className={classes.profilePicture}>
-        <div style={{ textAlign: "center" }}>
-          <Avatar alt="Test" className={classes.large} src={""} />
-          <label for="fileUpload" className={classes.customFileUpload}>
-            <FaIcons.FaUpload />
-          </label>
-          <input
-            id="fileUpload"
-            type="file"
-            style={{ display: "none" }}
-            onChange={handleImageInput}
-          />
-        </div>
-        <Typography variant="h4" gutterBottom className={classes.typo}>
-          Welcome, User!
-        </Typography>
-      </div>
       <form className={classes.root}>
         <Typography>
-          <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
-            Personal Information - View and Update
+          <Box fontSize={20} textAlign="center">
+            View and Update Personal Information
           </Box>
         </Typography>
         <Grid container className={classes.container}>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               variant="outlined"
@@ -275,7 +254,7 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               variant="outlined"
@@ -285,7 +264,7 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               variant="outlined"
@@ -297,7 +276,7 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               variant="outlined"
               label="Alternate Mobile"
@@ -308,7 +287,7 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <FormControl variant="outlined" required>
               <InputLabel>Timezone</InputLabel>
               <Select
@@ -328,7 +307,7 @@ export default function MyProfile() {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <FormControl variant="outlined" required>
               <InputLabel>Country</InputLabel>
               <Select
@@ -347,7 +326,7 @@ export default function MyProfile() {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               variant="outlined"
@@ -357,7 +336,7 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               variant="outlined"
               label="Address (Line 2)"
@@ -366,7 +345,15 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
+          <TextField
+            variant="outlined"
+            id="fileUpload"
+            type="file"
+            onChange={handleImageInput}
+          />
+          </Grid>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               variant="outlined"
@@ -376,7 +363,7 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               variant="outlined"
@@ -386,7 +373,7 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               variant="outlined"
@@ -407,7 +394,7 @@ export default function MyProfile() {
           startIcon={<SaveIcon />}
           onClick={saveChanges}
         >
-          Save changes
+          Save Changes
         </Button>
       </div>
     </>

@@ -22,6 +22,7 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import GlobalContext from "../GlobalContext";
+import Divider from "@material-ui/core/Divider";
 import toDate from "date-fns/toDate";
 
 const useStyle = makeStyles((theme) => ({
@@ -63,7 +64,8 @@ const displayEventHTML = {
   toDate: '',
   toHour: '',
   member: '',
-  scheduleId: ''
+  scheduleId: '',
+  userId: ''
 }
 const monthlySlots = {
   holidaySlot: '',
@@ -92,7 +94,6 @@ function WatercraftSchedulerUI() {
   const url = "http://localhost:8080/getschedule/" + universalWatercraftId
   const getReservations = () => { 
     axios.get(url).then((res) => {
-      console.log(res.data)
       setAllReservations(res.data)
       for (let i = 0; i < res.data.length; i++) {
         const memberColor = "http://localhost:8080/member/getMember/" + res.data[i].userId
@@ -158,7 +159,7 @@ function WatercraftSchedulerUI() {
   }
 
 
-  const monthSlots = "http://localhost:8080/getslots/" + "118"
+  const monthSlots = "http://localhost:8080/getslots/" + sessionStorage.getItem('userId')
   const displayMonthlySlot = (events) => {
     axios.get(monthSlots).then((res) => {
       setDisplaySlot(res.data)
@@ -251,6 +252,7 @@ function WatercraftSchedulerUI() {
 
   const handleEventClick = (e) => {
     allReservations.map((eachReservation) => {
+      console.log(eachReservation)
       if (parseInt(eachReservation.scheduleId) === parseInt(e.event.id)) {
         setDisplayEvent({
           fromDate: eachReservation.reservation[0].forDate.split("T")[0],
@@ -258,7 +260,8 @@ function WatercraftSchedulerUI() {
           toDate: eachReservation.reservation[eachReservation.reservation.length-1].forDate.split("T")[0],
           toHour: eachReservation.reservation[eachReservation.reservation.length-1].endHour,
           member: eachReservation.memberName,
-          scheduleId: eachReservation.scheduleId
+          scheduleId: eachReservation.scheduleId,
+          userId: eachReservation.userId
         })
       }
     })
@@ -329,31 +332,35 @@ function WatercraftSchedulerUI() {
 
     const endpoint = "http://localhost:8080/addschedule";
     axios.post(endpoint, reservationObject).then(res => {
+      //window.location.reload();
     }, error => {
       alert("Failed to create reservation! Please try again.");
     });
-    window.location.reload();
   }
 
     return (
         <div>
-          <div>
-            <Grid container alignItems="center" justify="center">
-              <Grid item sm={3} align="center">
-              <h3>Holiday Slots Remaining:</h3>{displaySlot.holidaySlot}
-              </Grid>
-              <Grid item sm={3} align="center">
-              <h3>Previous Month's Slots:</h3>{displaySlot.prevMonthSlot}
-              </Grid>
-              <Grid item sm={3} align="center">
-              <h3>Current Month's Slots:</h3>{displaySlot.currMonthSlot}
-              </Grid>
-              <Grid item sm={3} align="center">
-              <h3>Next Month's Slots:</h3>{displaySlot.nextMonthSlot}
-              </Grid>
-            </Grid>
-          </div>
-          <hr style={{marginBottom:"3vh", marginTop:"3vh", borderColor:"#4db6ac"}}/>
+          {sessionStorage.getItem('role') !== 'Admin' && (
+            <>
+              <div>
+                <Grid container alignItems="center" justify="center">
+                  <Grid item sm={3} align="center">
+                  <h3>Holiday Slots Remaining:</h3>{displaySlot.holidaySlot}
+                  </Grid>
+                  <Grid item sm={3} align="center">
+                  <h3>Previous Month's Slots:</h3>{displaySlot.prevMonthSlot}
+                  </Grid>
+                  <Grid item sm={3} align="center">
+                  <h3>Current Month's Slots:</h3>{displaySlot.currMonthSlot}
+                  </Grid>
+                  <Grid item sm={3} align="center">
+                  <h3>Next Month's Slots:</h3>{displaySlot.nextMonthSlot}
+                  </Grid>
+                </Grid>
+              </div>
+              <hr style={{marginBottom:"3vh", marginTop:"3vh", borderColor:"#4db6ac"}}/>
+          </>
+          )}
             <FullCalendar
             className={classes.calendarStyle}
             plugins={[dayGridPlugin, interactionPlugin]}
@@ -429,6 +436,7 @@ function WatercraftSchedulerUI() {
                   </Grid>
                 </Grid>
               </DialogContent>
+              {(sessionStorage.getItem('role') == "Admin" || displayEvent.userId == sessionStorage.getItem('userId')) && (
               <DialogActions>
                 <div style={{float:"left"}}>
                 <Button variant="contained" color="secondary" onClick={handleDeleteEvent}>
@@ -436,7 +444,9 @@ function WatercraftSchedulerUI() {
                 </Button>
                 </div>
               </DialogActions>
+              )}
             </Dialog>
+
             <Dialog open={open} onClose={handleDialogCloseOnCancel} aria-labelledby="form-dialog-title" fullWidth maxWidth="sm">
               <DialogTitle id="form-dialog-title">Make Reservation</DialogTitle>
               <DialogContent dividers>
@@ -561,21 +571,25 @@ function WatercraftSchedulerUI() {
                         label="Request Crew"
                         />
                       </Grid>
-                      <Grid item sm={12} fullWidth>
-                        <FormControlLabel
-                        control={<Checkbox onChange={handleCheckboxQuota} name="notFromUserQuota" checked={values.notFromUserQuota} />}
-                        label="Do not include this booking in the user's quota"
-                        />
-                      </Grid>
-                      <Grid item sm={12} fullWidth>
-                        <FormControlLabel
-                        control={<Checkbox onChange={handleCheckboxMaintenence} name="forMaintenence" checked={values.forMaintenence} />}
-                        label="Reserve for Maintenence"
-                        />
-                      </Grid>
+                      {sessionStorage.getItem('role') == "Admin" &&
+                      (
+                        <>
+                          <Grid item sm={12} fullWidth>
+                            <FormControlLabel
+                            control={<Checkbox onChange={handleCheckboxQuota} name="notFromUserQuota" checked={values.notFromUserQuota} />}
+                            label="Do not include this booking in the user's quota"
+                            />
+                          </Grid>
+                          <Grid item sm={12} fullWidth>
+                            <FormControlLabel
+                            control={<Checkbox onChange={handleCheckboxMaintenence} name="forMaintenence" checked={values.forMaintenence} />}
+                            label="Reserve for Maintenence"
+                            />
+                          </Grid>
+                          </>
+                      )}
                     </Grid>
                   </div>
-
               </Grid>
               </DialogContent>
 

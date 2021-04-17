@@ -12,10 +12,7 @@ import SaveIcon from "@material-ui/icons/Save";
 
 const useStyle = makeStyles((theme) => ({
   root: {
-    backgroundColor: "#90caf9",
-    width: "80%",
-    marginTop: theme.spacing(0),
-    marginLeft: theme.spacing(15),
+  
     "& .MuiFormControl-root": {
       width: "80%",
       margin: theme.spacing(1.5),
@@ -26,10 +23,10 @@ const useStyle = makeStyles((theme) => ({
     marginLeft: '38%'
   },
   container: {
-    backgroundColor: "#f5f5f5",
-    width: "100%",
-    marginTop: theme.spacing(1),
-    marginLeft: theme.spacing(0),
+    padding: theme.spacing(1),
+    marginTop: "1%",
+    border: "4px solid #4db6ac",
+    borderRadius: '5px'
   },
   button: {
     margin: theme.spacing(2),
@@ -69,7 +66,7 @@ export default function ManagePassword() {
     <div>
       <form className={classes.root}>
         <Typography>
-          <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
+          <Box fontSize={20} textAlign="center">
             Be secure - Update your password
           </Box>
         </Typography>

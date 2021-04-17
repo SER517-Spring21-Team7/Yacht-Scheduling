@@ -238,7 +238,7 @@ export default function AddMember() {
                     variant="outlined"
                     required
                     id="email"
-                    type="text"
+                    type="email"
                     name="email"
                     label="Email"
                     value={values.email}
@@ -295,6 +295,7 @@ export default function AddMember() {
                     <TextField
                     variant="outlined"
                     required
+                    type="password"
                     id="password"
                     name="password"
                     label="Password"
@@ -307,6 +308,7 @@ export default function AddMember() {
                     <TextField
                     variant="outlined"
                     required
+                    type="password"
                     id="password2"
                     name="password2"
                     label="Re-enter Password"
