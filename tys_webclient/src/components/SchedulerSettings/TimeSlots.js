@@ -21,17 +21,19 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    width: "50%",
-    marginTop: theme.spacing(1),
-    marginLeft: theme.spacing(0),
-  },
+
   table: {
     width: "100%",
   },
   papercontainer: {
+
+    "& .MuiFormControl-root": {
+    width: "60%",
+    margin: theme.spacing(1),
+    },
+
     marginTop: theme.spacing(2),
-    width: "50%",
+    width: "70%",
   },
   tableHeader: {
     backgroundColor: "#81d4fa",
@@ -107,7 +109,7 @@ const TimeSlots = forwardRef((props, ref) => {
   return (
     <div>
       <TableContainer className={classes.papercontainer} component={Paper}>
-        <Table size="small" className={classes.table} aria-label="simple table">
+        <Table size="medium" className={classes.table} aria-label="simple table">
           <TableHead className={classes.tableHeader}>
             <TableRow>
               <TableCell
@@ -134,77 +136,69 @@ const TimeSlots = forwardRef((props, ref) => {
             {slots.map((slot) => {
               return (
                 <TableRow key={slot.rownum}>
-                  <TableCell>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid>
-                        <FormControl variant="outlined" required>
-                          <InputLabel>Start Hour</InputLabel>
-                          <Select
-                            label="Start Hour"
-                            name="startHour"
-                            value={slot.startHour}
-                            onChange={(value) =>
-                              handleStartTimeChange(slot.rownum, value)
-                            }
-                          >
-                            <MenuItem value="">
-                              <em>None</em>
+                  <TableCell align="center">
+                    <FormControl variant="outlined" required>
+                      <InputLabel>Start Hour</InputLabel>
+                      <Select
+                        label="Start Hour"
+                        name="startHour"
+                        value={slot.startHour}
+                        onChange={(value) =>
+                          handleStartTimeChange(slot.rownum, value)
+                        }
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        {hoursArr.map((hour) => {
+                          return (
+                            <MenuItem key={hour} value={hour + " AM"}>
+                              {hour} AM
                             </MenuItem>
-                            {hoursArr.map((hour) => {
-                              return (
-                                <MenuItem key={hour} value={hour + " AM"}>
-                                  {hour} AM
-                                </MenuItem>
-                              );
-                            })}
-                            {hoursArr.map((hour) => {
-                              return (
-                                <MenuItem key={hour} value={hour + " PM"}>
-                                  {hour} PM
-                                </MenuItem>
-                              );
-                            })}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                    </MuiPickersUtilsProvider>
-                  </TableCell>
-                  <TableCell>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid>
-                        <FormControl variant="outlined" required>
-                          <InputLabel>End Hour</InputLabel>
-                          <Select
-                            label="End Hour"
-                            name="endHour"
-                            value={slot.endHour}
-                            onChange={(value) =>
-                              handleEndTimeChange(slot.rownum, value)
-                            }
-                          >
-                            <MenuItem value="">
-                              <em>None</em>
+                          );
+                        })}
+                        {hoursArr.map((hour) => {
+                          return (
+                            <MenuItem key={hour} value={hour + " PM"}>
+                              {hour} PM
                             </MenuItem>
-                            {hoursArr.map((hour) => {
-                              return (
-                                <MenuItem key={hour} value={hour + " AM"}>
-                                  {hour} AM
-                                </MenuItem>
-                              );
-                            })}
-                            {hoursArr.map((hour) => {
-                              return (
-                                <MenuItem key={hour} value={hour + " PM"}>
-                                  {hour} PM
-                                </MenuItem>
-                              );
-                            })}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                    </MuiPickersUtilsProvider>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
                   </TableCell>
-                  <TableCell>
+                  <TableCell align="center">
+                    <FormControl variant="outlined" required>
+                      <InputLabel>End Hour</InputLabel>
+                      <Select
+                        label="End Hour"
+                        name="endHour"
+                        value={slot.endHour}
+                        onChange={(value) =>
+                          handleEndTimeChange(slot.rownum, value)
+                        }
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        {hoursArr.map((hour) => {
+                          return (
+                            <MenuItem key={hour} value={hour + " AM"}>
+                              {hour} AM
+                            </MenuItem>
+                          );
+                        })}
+                        {hoursArr.map((hour) => {
+                          return (
+                            <MenuItem key={hour} value={hour + " PM"}>
+                              {hour} PM
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
+                  </TableCell>
+                  <TableCell align="center">
                     <Button
                       color="secondary"
                       size="large"
@@ -219,9 +213,10 @@ const TimeSlots = forwardRef((props, ref) => {
         </Table>
       </TableContainer>
       <Button
+        color="primary"
         onClick={addNewSlot}
         variant="contained"
-        style={{ margin: "5px" }}
+        style={{ marginTop: "2%"}}
       >
         Add Item
       </Button>

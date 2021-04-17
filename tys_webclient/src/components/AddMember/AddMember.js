@@ -64,9 +64,6 @@ const useStyle = makeStyles((theme) => ({
       margin: theme.spacing(1),
     },
 
-    "& .MuiButtonBase-root": {
-      marginLeft: "38%",
-    },
   },
 
   containerStyle: {
@@ -241,7 +238,7 @@ export default function AddMember() {
                     variant="outlined"
                     required
                     id="email"
-                    type="text"
+                    type="email"
                     name="email"
                     label="Email"
                     value={values.email}
@@ -298,6 +295,7 @@ export default function AddMember() {
                     <TextField
                     variant="outlined"
                     required
+                    type="password"
                     id="password"
                     name="password"
                     label="Password"
@@ -310,6 +308,7 @@ export default function AddMember() {
                     <TextField
                     variant="outlined"
                     required
+                    type="password"
                     id="password2"
                     name="password2"
                     label="Re-enter Password"
@@ -422,7 +421,7 @@ export default function AddMember() {
                 size="large" 
                 variant="contained" 
                 color="primary"
-                style={{width:'20%', marginTop:'1%', paddingLeft: '0px'}}
+                style={{width:'20%', marginTop:'1%', marginLeft: '38%', paddingLeft: '0px'}}
                 onClick={buttonClicked}>
                 Add Member
             </Button>

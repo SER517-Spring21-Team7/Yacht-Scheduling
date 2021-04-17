@@ -21,10 +21,6 @@ import SaveIcon from "@material-ui/icons/Save";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: "#90caf9",
-    width: "80%",
-    marginTop: theme.spacing(0),
-    marginLeft: theme.spacing(15),
     
   },
   buttonStyle: {
@@ -123,7 +119,7 @@ export default function NotificationSetting() {
     <div>
       <div className={classes.root}>
         <Typography>
-          <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
+          <Box fontSize={20} textAlign="center" style={{marginBottom:'1%'}}>
             Send me an email when someone:
           </Box>
         </Typography>

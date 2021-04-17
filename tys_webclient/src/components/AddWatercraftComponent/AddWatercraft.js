@@ -27,7 +27,7 @@ const useStyle = makeStyles((theme) => ({
       margin: theme.spacing(1),
     },
     "& .MuiButtonBase-root": {
-      marginLeft: "38%",
+      left:"40%"
     },
   },
   
@@ -364,7 +364,7 @@ export default function AddWatercraft(props) {
             size="large"
             variant="contained"
             color="primary"
-            style={{ width: "20%", marginTop: "1%", paddingLeft: "0px" }}
+            style={{ width: "20%", marginTop: "1%" }}
             onClick={buttonClicked}
           >
             Add Details
@@ -375,7 +375,7 @@ export default function AddWatercraft(props) {
             size="large"
             variant="contained"
             color="primary"
-            style={{ width: "20%", marginTop: "1%", paddingLeft: "0px" }}
+            style={{ width: "20%", marginTop: "1%" }}
             onClick={() => {
               updateWatercraftById();
             }}

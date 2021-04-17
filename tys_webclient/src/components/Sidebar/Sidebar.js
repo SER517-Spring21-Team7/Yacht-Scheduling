@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
+import Avatar from "@material-ui/core/Avatar";
 import { Grid } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import { List, Box } from "@material-ui/core/";
@@ -41,6 +42,10 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+  },
+
+  userWelcome:{
+    display:'inlineflex'
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -101,16 +106,19 @@ const useStyles = makeStyles((theme) => ({
   search: {
     padding: theme.spacing(0, 2),
   },
+
 }));
 
-var loggedMember = '';
+var loggedMember = ''
+var loggedMemberImage = ''
 
 export default function MiniDrawer() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const [selectedWatercraft, setSelectedWatercraft] = React.useState(0);
-  const [getMember, setMember] = React.useState(loggedMember);
+  const [getMemberName, setMember] = React.useState(loggedMember);
+  const [getMemberImage, setMemberImage] = React.useState(loggedMemberImage);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -136,8 +144,9 @@ export default function MiniDrawer() {
     const url = "http://localhost:8080/userprofile/"+sessionStorage.getItem("userId");
     axios.get(url).then(res => {
       setMember(res.data.firstName)
+      setMemberImage(res.data.image)
     }, error => {
-      alert("Failed to create reservation! Please try again.");
+      alert("Unable to fetch member details. Please try again later!");
     });
   }
 
@@ -190,7 +199,11 @@ export default function MiniDrawer() {
               </Grid>
 
               <Grid item xs="auto">
-                <h3>Welcome, {getMember}!</h3>
+                <Avatar alt="Test" src={getMemberImage}/>
+              </Grid>
+
+              <Grid item xs={3}>
+                <h3 style={{marginLeft:'2%'}}>Welcome, {getMemberName}!</h3>
               </Grid>
             </Grid>
               <Grid item xs="auto" align="center">
@@ -203,11 +216,10 @@ export default function MiniDrawer() {
                     height: "20px"
                   }}
                   >
-                <ExitToAppIcon />
-              </IconButton>
-              <p>Logout</p>
+                  <ExitToAppIcon />
+                </IconButton>
+                <p>Logout</p>
               </Grid>
-            
           </Toolbar>
         </AppBar>
         <Drawer
