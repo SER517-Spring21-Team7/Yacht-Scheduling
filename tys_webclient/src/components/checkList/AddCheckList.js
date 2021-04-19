@@ -20,9 +20,32 @@ import FormLabel from '@material-ui/core/FormLabel';
 const initialValues = {
     checkListName: "",
     stage: "Check On",
-    publish:false
+    publish: false,
 };
+
+const useStyle = makeStyles((theme) => ({
+    root: {
+        "& .MuiFormControl-root": {
+            width: "90%",
+            margin: theme.spacing(1),
+        },
+        "& .MuiFormGroup-root": {
+            flexDirection: "row",
+        },
+    },
+    textField: {
+        width: "25ch",
+    },
+    containerStyle: {
+        padding: theme.spacing(1),
+        marginTop: "1%",
+        border: "4px solid #4db6ac",
+        borderRadius: '5px'
+    },
+}));
+
 const AddCheckList = () => {
+
     const [values, setValues] = useState(initialValues);
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -31,34 +54,65 @@ const AddCheckList = () => {
         [name]: value,
         });
     };
+    const handleChange = (event) => {
+        setValues({ ...values, [event.target.name]: event.target.checked });
+    };
+
+    const classes = useStyle();
+
+    const buttonClicked = (event) => {
+        console.log(values);
+        axios.post("http://localhost:8080/checkList/add", values).then(function (response) {
+            console.log(response);
+        });
+        alert("check list added");
+        setValues(initialValues);
+    };
+    
     return (
         <div>
-            <FormControl component="fieldset">
+            <form className={classes.root}>
+            <Grid container  className={classes.containerStyle}>
+                
+                    <Grid item xs={4}>
+                        <TextField
+                            multiline
+                            variant="outlined"
+                            label="Enter Checklist Name"
+                            name="checkListName"
+                            value={values.checkListName}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
 
-                <FormLabel component="legend">Add new Checklist</FormLabel>
-                <TextField
-                    multiline
-                    variant="outlined"
-                    label="Enter Checklist Name"
-                    rows={1}
-                    columns={50}
-                    name="checkListName"
-                    value={values.checkListName}
-                    onChange={handleInputChange}
-                />
+                    <Grid item xs={8}>
+                        <FormControlLabel
+                            control={<Checkbox checked={values.publish} onChange={handleChange} name="publish" color="Secondary"/>}
+                            label="Publish"
+                        />
+                    </Grid>
 
-                <FormLabel component="legend">Type of Checklist</FormLabel>
-                <RadioGroup aria-label="gender" name="stage" value={values.stage} onChange={handleInputChange}>
-                    <FormControlLabel value="Check On" control={<Radio />} label="Check On" />
-                    <FormControlLabel value="Check Off" control={<Radio />} label="Check Off" />
-                    <FormControlLabel value="General" control={<Radio />} label="General" />
-                </RadioGroup>
+                    <Grid item xs={4}>
+                        <FormLabel component="legend" style={{ margin: '8px', color: "black" }}>Type of Checklist :- </FormLabel>
+                    </Grid>
 
-                <FormControlLabel
-                    control={<Checkbox checked={values.publish} onChange={handleInputChange} name="publish" color="primary"/>}
-                    label="Primary"
-                />
-            </FormControl>
+                    <Grid item xs={8}>
+                        <RadioGroup aria-label="gender" name="stage" value={values.stage} onChange={handleInputChange}>
+                            <FormControlLabel value="Check On" control={<Radio />} label="Check On" />
+                            <FormControlLabel value="Check Off" control={<Radio />} label="Check Off" />
+                            <FormControlLabel value="General" control={<Radio />} label="General" />
+                        </RadioGroup>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <Button variant="contained" color="primary"
+                            style={{ width: "20%", marginTop: "1%", left:"35%" }} onClick={buttonClicked}>
+                            Add Checklist
+                        </Button>
+                    </Grid>
+            </Grid>
+            
+            </form>
         </div>
     )
 }

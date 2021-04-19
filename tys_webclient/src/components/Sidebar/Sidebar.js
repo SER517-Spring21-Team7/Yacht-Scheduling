@@ -37,6 +37,7 @@ import Emergency from "./../EmergencyContact/Emergency";
 import DisplayAlert from "../../displayAlert/DisplayAlert";
 import AddCheckList from "../checkList/AddCheckList";
 import WatercraftSchedulerUI from './../WatercraftScheduler/WatercraftSchedulerUI'
+import CheckListHomePage from "../checkList/CheckListHomePage";
 
 const drawerWidth = 240;
 
@@ -303,7 +304,7 @@ export default function MiniDrawer() {
             <Route path="/emergency" component={Emergency} />
             <Route path="/displayAlert" component={DisplayAlert} />
             <Route path="/reservation" component={WatercraftSchedulerUI} />
-            <Route path="/checklist" component={AddCheckList} />
+            <Route path="/checklist" component={CheckListHomePage} />
           </Switch>
         </main>
       </div>
