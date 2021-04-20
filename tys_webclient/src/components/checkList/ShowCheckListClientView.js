@@ -1,4 +1,4 @@
-import { makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import { Button, makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import { useStyles } from '@material-ui/pickers/views/Calendar/SlideTransition';
 import axios from 'axios';
 import React from 'react';
@@ -15,7 +15,8 @@ const useStyle = makeStyles((theme) => ({
         borderRadius: '5px'
     },
 }));
-const ShowCheckList = (props) => {
+
+const ShowCheckListClientView = () => {
 
     const classes = useStyles();
     const [checkLists, setcheckLists] = useState([]);
@@ -26,11 +27,12 @@ const ShowCheckList = (props) => {
             alert("Please select watercraft");
             return;
         }
-        var url = "http://localhost:8080/checkList/get/";
+        var url = "http://localhost:8080/checkList/getpub/";
         url += watercraftId;
+        console.log(url);
         const response = await axios.get(url);
         const checkList = response.data;
-        props.parentCallBack(checkList);
+        setcheckLists(checkList);
     };
 
     useEffect(() => {
@@ -38,6 +40,12 @@ const ShowCheckList = (props) => {
         
     }, []);
 
+    const buttonClicked = (event) => {
+        console.log(event);
+        // console.log(event.target);
+        // console.log(event.target.id);
+    };
+    
     return (
         <div style={{ border: "4px solid #4db6ac", marginTop: "1%", borderRadius: '5px'}}>
         <TableContainer component={Paper} >
@@ -47,18 +55,23 @@ const ShowCheckList = (props) => {
                 <TableCell>ID</TableCell>
                 <TableCell align="right">Check List Details</TableCell>
                 <TableCell align="right">Stage</TableCell>
-                <TableCell align="right">Publish&nbsp;</TableCell>
+                <TableCell align="right">Mark As Done&nbsp;</TableCell>
             </TableRow>
             </TableHead>
             <TableBody>
-            {props.data.listOfCheckList.map((checkList) => (
+            {checkLists.map((checkList) => (
                 <TableRow key={checkList.id}>
                 <TableCell component="th" scope="row">
                     {checkList.id}
                 </TableCell>
                 <TableCell align="right">{checkList.checkListName}</TableCell>
                 <TableCell align="right">{checkList.stage}</TableCell>
-                <TableCell align="right">{checkList.publish+""}</TableCell>
+                <TableCell align="right">
+                    <Button id={checkList.id} variant="contained" color="primary" 
+                        style={{ width: "30%", marginTop: "1%" }}  onClick={() => buttonClicked(checkList.id)}>
+                        Done
+                    </Button>
+                </TableCell>
                 </TableRow>
             ))}
             </TableBody>
@@ -68,4 +81,4 @@ const ShowCheckList = (props) => {
     )
 }
 
-export default ShowCheckList
+export default ShowCheckListClientView

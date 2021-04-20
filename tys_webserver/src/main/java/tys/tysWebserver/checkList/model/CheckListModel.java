@@ -24,6 +24,9 @@ public class CheckListModel {
 	
 	@Column(name = "stage")
 	private String stage;
+	
+	@Column(name = "watercraftId")
+	private int watercraftId;
 
 	public int getId() {
 		return id;
@@ -57,9 +60,17 @@ public class CheckListModel {
 		this.stage = stage;
 	}
 
+	public int getWatercraftId() {
+		return watercraftId;
+	}
+
+	public void setWatercraftId(int watercraftId) {
+		this.watercraftId = watercraftId;
+	}
+
 	@Override
 	public String toString() {
 		return "CheckListModel [id=" + id + ", checkListName=" + checkListName + ", publish=" + publish + ", stage="
-				+ stage + "]";
+				+ stage + ", watercraftId=" + watercraftId + "]";
 	}
 }

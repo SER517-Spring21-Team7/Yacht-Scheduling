@@ -21,6 +21,7 @@ const initialValues = {
     checkListName: "",
     stage: "Check On",
     publish: false,
+    watercraftId: null
 };
 
 const useStyle = makeStyles((theme) => ({
@@ -44,7 +45,8 @@ const useStyle = makeStyles((theme) => ({
     },
 }));
 
-const AddCheckList = () => {
+const AddCheckList = (props) => {
+
 
     const [values, setValues] = useState(initialValues);
     const handleInputChange = (e) => {
@@ -58,12 +60,26 @@ const AddCheckList = () => {
         setValues({ ...values, [event.target.name]: event.target.checked });
     };
 
+    useEffect(() => {
+        setValues({
+            ...values,
+            watercraftId: sessionStorage.getItem('globalWatercraftId')
+        });
+    }, []);
+    
     const classes = useStyle();
 
     const buttonClicked = (event) => {
+        if (values.watercraftId === null) {
+            alert("Please Select Watercraft");
+            return;
+        }
         console.log(values);
         axios.post("http://localhost:8080/checkList/add", values).then(function (response) {
             console.log(response);
+            var arr = [];
+            arr.push(response.data);
+            props.parentCallBack(arr);
         });
         alert("check list added");
         setValues(initialValues);
@@ -78,7 +94,7 @@ const AddCheckList = () => {
                         <TextField
                             multiline
                             variant="outlined"
-                            label="Enter Checklist Name"
+                            label="Enter Checklist Details"
                             name="checkListName"
                             value={values.checkListName}
                             onChange={handleInputChange}

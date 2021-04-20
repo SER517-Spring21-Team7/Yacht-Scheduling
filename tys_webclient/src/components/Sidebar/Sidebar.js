@@ -38,6 +38,7 @@ import DisplayAlert from "../../displayAlert/DisplayAlert";
 import AddCheckList from "../checkList/AddCheckList";
 import WatercraftSchedulerUI from './../WatercraftScheduler/WatercraftSchedulerUI'
 import CheckListHomePage from "../checkList/CheckListHomePage";
+import ShowCheckListClientView from "../checkList/ShowCheckListClientView";
 
 const drawerWidth = 240;
 
@@ -305,6 +306,7 @@ export default function MiniDrawer() {
             <Route path="/displayAlert" component={DisplayAlert} />
             <Route path="/reservation" component={WatercraftSchedulerUI} />
             <Route path="/checklist" component={CheckListHomePage} />
+            <Route path="/checklistView" component={ShowCheckListClientView} />
           </Switch>
         </main>
       </div>
