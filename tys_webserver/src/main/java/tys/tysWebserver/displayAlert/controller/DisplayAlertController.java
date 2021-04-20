@@ -52,18 +52,8 @@ public class DisplayAlertController {
 			watercraftIds.add(member.getWatercraftId());
 		}
 		
-		List<DisplayAlertModel> listOfAlert = new ArrayList<>();
-		List<DisplayAlertModel> allAlerts = displayAlertRepo.findAll();
+		List<DisplayAlertModel> listOfAlert = displayAlertRepo.getDisplayAlertsForMember(watercraftIds);
 		
-		for(DisplayAlertModel displayAlertModel : allAlerts) {
-			if(displayAlertModel.getWatercraftId() == null) {
-				listOfAlert.add(displayAlertModel);
-			} else {
-				if(watercraftIds.contains(displayAlertModel.getWatercraftId())) {
-					listOfAlert.add(displayAlertModel);
-				}
-			}
-		}
 		return listOfAlert;
 	}
 	

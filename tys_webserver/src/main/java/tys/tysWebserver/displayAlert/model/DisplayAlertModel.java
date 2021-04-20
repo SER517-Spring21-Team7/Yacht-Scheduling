@@ -19,8 +19,7 @@ public class DisplayAlertModel {
 	@Column(name = "id")
 	private int id;
 	
-	@Lob
-	@Column(name = "text")
+	@Column(columnDefinition="TEXT", name = "text")
 	private String text;
 	
 	@Column(name = "watercraftId")
