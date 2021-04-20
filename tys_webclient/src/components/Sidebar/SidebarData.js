@@ -77,4 +77,11 @@ export const SidebarData = [
     icon: <FaIcons.FaBroadcastTower />,
     cName: "nav-text",
   },
+  sessionStorage.getItem("role") === "Admin" &&
+  {
+    title: "Manage Alerts",
+    path: "/manageAlert",
+    icon: <FaIcons.FaBroadcastTower />,
+    cName: "nav-text",
+  },
 ];

@@ -35,6 +35,7 @@ import ToolbarSearch from "./ToolbarSearch";
 import GlobalContext from "./../GlobalContext";
 import Emergency from "./../EmergencyContact/Emergency";
 import DisplayAlert from "../../displayAlert/DisplayAlert";
+import ManageAlert from "../../displayAlert/ManageAlert";
 import WatercraftSchedulerUI from './../WatercraftScheduler/WatercraftSchedulerUI'
 
 const drawerWidth = 240;
@@ -301,6 +302,7 @@ export default function MiniDrawer() {
             />
             <Route path="/emergency" component={Emergency} />
             <Route path="/displayAlert" component={DisplayAlert} />
+            <Route path="/manageAlert" component={ManageAlert} />
             <Route path="/reservation" component={WatercraftSchedulerUI} />
           </Switch>
         </main>
