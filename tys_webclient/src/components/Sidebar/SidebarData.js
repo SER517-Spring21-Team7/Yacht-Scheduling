@@ -10,17 +10,20 @@ export const SidebarData = [
     icon: <AiIcons.AiFillHome />,
     cName: "nav-text",
   },
+  sessionStorage.getItem("role") === "Admin" &&
   {
-    title: "Watercraft",
-    path: "/watercrafts",
-    icon: <GiIcons.GiSailboat />,
-    cName: "nav-text",
+  title: "Add Watercraft",
+      path: "/watercrafts",
+      icon: <GiIcons.GiSailboat />,
+      cName: "nav-text",
   },
+  // sessionStorage.getItem("role") === "Admin" &&
   {
-    title: "Add Member",
-    path: "/member",
-    icon: <FaIcons.FaUsers />,
+    title: "Reserve Watercraft",
+    path: "/reservation",
+    icon: <AiIcons.AiOutlineSchedule />,
     cName: "nav-text",
+    
   },
   {
     title: "View Member",
@@ -28,34 +31,57 @@ export const SidebarData = [
     icon: <FaIcons.FaUsers />,
     cName: "nav-text",
   },
+  sessionStorage.getItem("role") === "Admin" &&
+  {
+    title: "Enroll Member",
+    path: "/member",
+    icon: <AiIcons.AiOutlineUserAdd />,
+
+    cName: "nav-text",
+  },
+  sessionStorage.getItem("role") === "Admin" &&
   {
     title: "Scheduler Settings",
     path: "/scheduler",
-    icon: <GiIcons.GiSailboat />,
+    icon: <FaIcons.FaCog />,
     cName: "nav-text",
   },
-  {
-    title: "Service Request",
-    path: "/service",
-    icon: <FaIcons.FaTools />,
-    cName: "nav-text",
-  },
-  {
-    title: "Checklists",
-    path: "/checklist",
-    icon: <FaIcons.FaListAlt />,
-    cName: "nav-text",
-  },
-  {
-    title: "Messages",
-    path: "/messages",
-    icon: <FaIcons.FaEnvelopeOpenText />,
-    cName: "nav-text",
-  },
+  // {
+  //   title: "Service Request",
+  //   path: "/service",
+  //   icon: <FaIcons.FaTools />,
+  //   cName: "nav-text",
+  // },
+  // {
+  //   title: "Checklists",
+  //   path: "/checklist",
+  //   icon: <FaIcons.FaListAlt />,
+  //   cName: "nav-text",
+  // },
   {
     title: "My Account",
     path: "/MyAccount",
     icon: <FaIcons.FaRegUserCircle />,
+    cName: "nav-text",
+  },
+  {
+    title: "Emergency Contact",
+    path: "/emergency",
+    icon: <FaIcons.FaBriefcaseMedical />,
+    cName: "nav-text",
+  },
+    sessionStorage.getItem("role") === "Admin" &&
+  {
+    title: "Add Alerts",
+    path: "/displayAlert",
+    icon: <FaIcons.FaBroadcastTower />,
+    cName: "nav-text",
+  },
+  sessionStorage.getItem("role") === "Admin" &&
+  {
+    title: "Manage Alerts",
+    path: "/manageAlert",
+    icon: <FaIcons.FaBroadcastTower />,
     cName: "nav-text",
   },
 ];

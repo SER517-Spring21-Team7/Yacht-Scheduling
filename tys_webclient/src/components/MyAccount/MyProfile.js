@@ -12,34 +12,113 @@ import {
   Button,
 } from "@material-ui/core";
 import SaveIcon from "@material-ui/icons/Save";
+import * as FaIcons from "react-icons/fa";
+import S3 from "react-aws-s3";
+import imageCompression from "browser-image-compression";
+import axios from "axios";
+
+const config = {
+  bucketName: "tys-user-image",
+  region: "us-west-2",
+  accessKeyId: "AKIAVM6FVNOGNDLX6DEY",
+  secretAccessKey: "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",
+};
+
+const timezoneArr = [
+  "Australia/ACT",
+  "Australia/Adelaide",
+  "Australia/Brisbane",
+  "Australia/Broken_Hill",
+  "Australia/Canberra",
+  "Australia/Currie",
+  "Australia/Darwin",
+  "Australia/Eucla",
+  "Australia/Hobart",
+  "Australia/LHI",
+  "Australia/Lindeman",
+  "Australia/Lord_Howe",
+  "Australia/Melbourne",
+  "Australia/NSW",
+  "Australia/North",
+  "Australia/Perth",
+  "Australia/Queensland",
+  "Australia/South",
+  "Australia/Sydney",
+  "Australia/Tasmania",
+  "Australia/Victoria",
+  "Australia/West",
+  "Australia/Yancowinna",
+  "Canada/Atlantic",
+  "Canada/Central",
+  "Canada/Eastern",
+  "Canada/Mountain",
+  "Canada/Newfoundland",
+  "Canada/Pacific",
+  "Canada/Saskatchewan",
+  "Canada/Yukon",
+  "Etc/UTC",
+  "Europe/London",
+  "US/Alaska",
+  "US/Aleutian",
+  "US/Arizona",
+  "US/Central",
+  "US/East-Indiana",
+  "US/Eastern",
+  "US/Hawaii",
+  "US/Indiana-Starke",
+  "US/Michigan",
+  "US/Mountain",
+  "US/Pacific",
+  "US/Pacific-New",
+];
 
 const useStyle = makeStyles((theme) => ({
   root: {
-    backgroundColor: "#90caf9",
-    width: "80%",
-    marginTop: theme.spacing(0),
-    marginLeft: theme.spacing(15),
 
     "& .MuiFormControl-root": {
-      width: "80%",
-      margin: theme.spacing(1.5),
+      marginLeft: theme.spacing(10),
+      width: "60%",
+      margin: theme.spacing(1),
     },
-    '& .MuiButtonBase-root':{
-      marginLeft: '38%',
+    "& .MuiButtonBase-root": {
+      marginLeft: "38%",
     },
-    flexGrow: 1,
   },
   buttonStyle: {
-    marginLeft: '38%'
+    marginLeft: "38%",
   },
   container: {
-    backgroundColor: "#f5f5f5",
-    width: "100%",
-    marginTop: theme.spacing(1),
-    marginLeft: theme.spacing(0),
+    padding: theme.spacing(1),
+    marginTop: "1%",
+    border: "4px solid #4db6ac",
+    borderRadius: '5px'
   },
   button: {
     margin: theme.spacing(2),
+  },
+  customFileUpload: {
+    display: "inlineBlock",
+    cursor: "pointer",
+    padding: "1px 30px",
+    border: "1px solid #ccc",
+  },
+  large: {
+    // marginTop: theme.spacing(2),
+    // marginLeft: theme.spacing(3),
+    width: theme.spacing(8),
+    height: theme.spacing(8),
+  },
+  typo: {
+    marginTop: theme.spacing(4),
+    marginLeft: theme.spacing(3),
+    color: "#90caf9",
+  },
+  profilePicture: {
+    display: "flex",
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+    alignItems: "center",
   },
 }));
 
@@ -55,6 +134,7 @@ const initialValues = {
   city: "",
   state: "",
   zipCode: "",
+  image: "",
 };
 
 export default function MyProfile() {
@@ -69,44 +149,83 @@ export default function MyProfile() {
     });
   };
 
+  const handleImageInput = (e) => {
+    let imageFile = e.target.files[0];
+    let options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    };
+
+    imageCompression(imageFile, options)
+      .then(function (compressedFile) {
+        let file = new File([compressedFile], "file1.png", {
+          type: "image/jpg",
+        });
+        return file;
+      })
+      .then((fileToUpload) => {
+        const ReactS3Client = new S3(config);
+        ReactS3Client.uploadFile(fileToUpload)
+          .then((data) => {
+            console.log(data.location);
+            return data.location;
+          })
+          .then((url) => {
+            setValues({
+              ...values,
+              image: url,
+            });
+          })
+          .catch((err) => console.error(err));
+      });
+  };
+
   useEffect((values) => {
-    fetch("http://localhost:8080/user/3/profile", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((resp) => resp.json())
-      .then((data) =>
-        setValues({
-          ...values,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          mobile: data.mobile,
-          alternateMobile: data.alternateMobile,
-          timezone: data.timezone,
-          country: data.country,
-          address_1: data.address_1,
-          address_2: data.address_2,
-          city: data.city,
-          state: data.state,
-          zipCode: data.zipCode,
-        })
-      );
+    // fetch("http://localhost:8080/user/3/profile", {
+    //   method: "GET",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json",
+    //   },
+    // })
+    const url =
+      "http://localhost:8080/userprofile/" + sessionStorage.getItem("userId");
+
+    axios.get(url).then((resp) => {
+      console.log(resp);
+      setValues({
+        ...values,
+        firstName: resp.data.firstName,
+        lastName: resp.data.lastName,
+        mobile: resp.data.mobile,
+        alternateMobile: resp.data.alternateMobile,
+        timezone: resp.data.timezone,
+        country: resp.data.country,
+        address_1: resp.data.address_1,
+        address_2: resp.data.address_2,
+        image: resp.data.image,
+        city: resp.data.city,
+        state: resp.data.state,
+        zipCode: resp.data.zipCode,
+      });
+    });
   }, []);
 
   const saveChanges = () => {
-    return fetch("http://localhost:8080/user/3/profile", {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...values,
-      }),
-    })
+    return fetch(
+      "http://localhost:8080/user/profile/" + sessionStorage.getItem("userId"),
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...values,
+        }),
+      }
+    )
       .then((response) => response.json())
       .then((json) => {
         console.log("User profile updated.");
@@ -120,12 +239,12 @@ export default function MyProfile() {
     <>
       <form className={classes.root}>
         <Typography>
-          <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
-            Personal Information - View and Update
+          <Box fontSize={20} textAlign="center">
+            View and Update Personal Information
           </Box>
         </Typography>
         <Grid container className={classes.container}>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               variant="outlined"
@@ -135,7 +254,7 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               variant="outlined"
@@ -145,7 +264,7 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               variant="outlined"
@@ -157,7 +276,7 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               variant="outlined"
               label="Alternate Mobile"
@@ -168,7 +287,7 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <FormControl variant="outlined" required>
               <InputLabel>Timezone</InputLabel>
               <Select
@@ -177,14 +296,18 @@ export default function MyProfile() {
                 value={values.timezone}
                 onChange={handleInputChange}
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={"Diesel"}>Diesel</MenuItem>
+                <MenuItem value="">None</MenuItem>
+                {timezoneArr.map((tz) => {
+                  return (
+                    <MenuItem key={tz} value={tz}>
+                      {tz}
+                    </MenuItem>
+                  );
+                })}
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <FormControl variant="outlined" required>
               <InputLabel>Country</InputLabel>
               <Select
@@ -196,11 +319,14 @@ export default function MyProfile() {
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
-                <MenuItem value={"Diesel"}>Diesel</MenuItem>
+                <MenuItem value={"Australia"}>Australia</MenuItem>
+                <MenuItem value={"Canada"}>Canada</MenuItem>
+                <MenuItem value={"United Kingdom"}>United Kingdom</MenuItem>
+                <MenuItem value={"United States"}>United States</MenuItem>
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               variant="outlined"
@@ -210,7 +336,7 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               variant="outlined"
               label="Address (Line 2)"
@@ -219,7 +345,15 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
+          <TextField
+            variant="outlined"
+            id="fileUpload"
+            type="file"
+            onChange={handleImageInput}
+          />
+          </Grid>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               variant="outlined"
@@ -229,7 +363,7 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               variant="outlined"
@@ -239,7 +373,7 @@ export default function MyProfile() {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               required
               variant="outlined"
@@ -252,7 +386,7 @@ export default function MyProfile() {
         </Grid>
       </form>
       <div className={classes.buttonStyle}>
-      <Button
+        <Button
           variant="contained"
           color="primary"
           size="medium"
@@ -260,7 +394,7 @@ export default function MyProfile() {
           startIcon={<SaveIcon />}
           onClick={saveChanges}
         >
-          Save changes
+          Save Changes
         </Button>
       </div>
     </>

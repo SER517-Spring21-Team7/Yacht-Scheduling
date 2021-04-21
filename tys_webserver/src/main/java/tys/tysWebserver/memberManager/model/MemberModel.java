@@ -1,6 +1,5 @@
 package tys.tysWebserver.memberManager.model;
 
-import java.sql.Blob;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -8,10 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
-
-import org.hibernate.type.BlobType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "memberdetails")
@@ -23,13 +20,16 @@ public class MemberModel {
 	private int memberId;
 	@Column(name = "email")
 	private String email;
+	@Column(name = "watercraftid")
+	private int watercraftId;
 	@Column(name = "firstname")
 	private String firstname;
 	@Column(name = "lastname")
 	private String lastname;
-	@Column(name = "password")
+	// Below two fields should not be stored in this table.
+	@Transient
 	private String password;
-	@Column(name = "password2")
+	@Transient
 	private String password2;
 	@Column(name = "startdate")
 	private Date startdate;
@@ -45,28 +45,33 @@ public class MemberModel {
 	private String schedulercolor;
 	@Column(name = "access")
 	private String access;
-	@Lob
-	@Column (name = "userimage")
+	@Column(name = "image")
 	private String image;
 
 	@Override
 	public String toString() {
-		return "memberdetails [memberid=" + memberId + ", email=" + email + ", firstname=" + firstname + ", lastname="
+		return "memberdetails [memberid=" + memberId + ", email=" + email + ", watercraftid=" + watercraftId + ", firstname=" + firstname + ", lastname="
 				+ lastname + ", password=" + password + ", password2=" + password2 + ", startdate=" + startdate
 				+ ", enddate=" + enddate + ", premiumshare=" + premiumshare + ", standardshare=" + standardshare
-				+ ",freebookings=" + freebookings + ",schedulercolor=" + schedulercolor + ",access= " + access + ",image="+image+ "]";
+				+ ",freebookings=" + freebookings + ",schedulercolor=" + schedulercolor + ",access= " + access + "]";
+	}
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
 	}
 	public MemberModel() {
 		super();
 	}
-	
-	
-	public MemberModel(int memberId, String email, String firstname, String lastname, String password, String password2,
+
+	public MemberModel(int memberId, String email, int watercraftId, String firstname, String lastname, String password, String password2,
 			Date startdate, Date enddate, String premiumshare, String standardshare, String freebookings,
-			String schedulercolor, String access, String image) {
+			String schedulercolor, String access) {
 		super();
 		this.memberId = memberId;
 		this.email = email;
+		this.watercraftId = watercraftId;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.password = password;
@@ -78,14 +83,8 @@ public class MemberModel {
 		this.freebookings = freebookings;
 		this.schedulercolor = schedulercolor;
 		this.access = access;
-		this.image = image;
 	}
-	public String getImage() {
-		return image;
-	}
-	public void setImage(String image) {
-		this.image = image;
-	}
+
 	public int getMemberId() {
 		return memberId;
 	}
@@ -97,6 +96,12 @@ public class MemberModel {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public int getWatercraftId() {
+		return watercraftId;
+	}
+	public void setWatercraftId(int watercraftId) {
+		this.watercraftId = watercraftId;
 	}
 	public String getFirstname() {
 		return firstname;
@@ -164,6 +169,4 @@ public class MemberModel {
 	public void setAccess(String access) {
 		this.access = access;
 	}
-	
-	
 }

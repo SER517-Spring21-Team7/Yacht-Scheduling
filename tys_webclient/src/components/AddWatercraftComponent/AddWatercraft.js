@@ -14,31 +14,31 @@ import {
   Box,
 } from "@material-ui/core";
 import clsx from "clsx";
+import S3 from 'react-aws-s3'
+import imageCompression from 'browser-image-compression'
+
 
 const useStyle = makeStyles((theme) => ({
   root: {
-    width: "80%",
-    marginTop: theme.spacing(5),
-    marginLeft: theme.spacing(15),
+    
     "& .MuiFormControl-root": {
-      width: "70%",
-      margin: theme.spacing(1.5),
+      marginLeft: theme.spacing(15),
+      width: "60%",
+      margin: theme.spacing(1),
     },
     "& .MuiButtonBase-root": {
-      marginLeft: "38%",
+      left:"40%"
     },
   },
-  margin: {
-    margin: theme.spacing(1),
-  },
+  
   textField: {
     width: "25ch",
   },
   containerStyle: {
-    backgroundColor: "#f5f5f5",
-    width: "100%",
-    marginTop: theme.spacing(1),
-    marginLeft: theme.spacing(0),
+    padding: theme.spacing(1),
+    marginTop: "1%",
+    border: "4px solid #4db6ac",
+    borderRadius: '5px'
   },
 }));
 
@@ -49,18 +49,24 @@ const initialValues = {
   boatClass: "",
   builder: "",
   hullType: "",
+  image: "",
   length: "",
   category: "",
   model: "",
   fuelType: "",
 };
 
+const config = {
+  bucketName: 'tys-user-image',
+  region: 'us-west-2',
+  accessKeyId: 'AKIAVM6FVNOGNDLX6DEY',
+  secretAccessKey: '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',
+}
+
 export default function AddWatercraft(props) {
-  console.log(props.data);
   const [values, setValues] = useState(
     props.data == null ? initialValues : props.data
   );
-  console.log(values);
   const history = useHistory();
 
   const classes = useStyle();
@@ -72,6 +78,38 @@ export default function AddWatercraft(props) {
       [name]: value,
     });
   };
+
+  const handleImageInput = (e) => {
+
+    let imageFile = e.target.files[0];
+    let options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true
+    }
+
+    imageCompression(imageFile, options)
+    .then(function (compressedFile){
+        let file = new File([compressedFile], "file1.png", {type: "image/jpg"});
+        return file
+    })
+    .then(fileToUpload =>{
+        const ReactS3Client = new S3(config);
+        ReactS3Client
+        .uploadFile(fileToUpload)
+        .then(data => {
+            return data.location
+        })
+        .then(url => {
+            setValues({
+                ...values,
+                image: url
+            })
+        })
+        .catch(err => console.error(err))
+    })
+}
+
   const buttonClicked = (event) => {
     return fetch("http://localhost:8080/watercraft/details", {
       method: "POST",
@@ -87,6 +125,7 @@ export default function AddWatercraft(props) {
       .then((json) => {
         alert("Watercraft successfully added!");
         setValues(initialValues);
+        handleRedirectToHomePage();
       })
       .catch((error) => {
         alert("It seems we have some issue! Please retry.");
@@ -119,7 +158,6 @@ export default function AddWatercraft(props) {
   const thisYear = new Date().getFullYear();
   for (let i = minOffset; i <= maxOffset; i++) {
     const year = thisYear - i;
-    // yearOptions.push(<option value={year} key={i}>{year}</option>);
     yearOptions.push(year);
   }
 
@@ -127,12 +165,15 @@ export default function AddWatercraft(props) {
     <div>
       <form className={classes.root}>
         <Typography>
-          <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
+          <Box
+            fontSize={20}
+            textAlign="center"
+          >
             Add Watercraft Details
           </Box>
         </Typography>
         <Grid container className={classes.containerStyle}>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               variant="outlined"
               label="Boat Name"
@@ -141,24 +182,30 @@ export default function AddWatercraft(props) {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
-            {/* Blank grid */}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              type="file"
+              accept="image/*"
+              variant="outlined"
+              onChange={handleImageInput}
+            >
+            </TextField>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               multiline
               variant="outlined"
-              rows={6}
+              rows={3}
               label="Add Description"
               name="description"
               value={values.description}
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
-            {/* Blank grid */}
+          <Grid item xs={12} sm={6}>
+            {/* Spacing only */}
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <FormControl variant="outlined">
               <InputLabel>Class</InputLabel>
               <Select
@@ -176,7 +223,7 @@ export default function AddWatercraft(props) {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <FormControl variant="outlined">
               <InputLabel>Hull Type</InputLabel>
               <Select
@@ -206,7 +253,7 @@ export default function AddWatercraft(props) {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <FormControl variant="outlined">
               <InputLabel>Fuel Type</InputLabel>
               <Select
@@ -226,7 +273,7 @@ export default function AddWatercraft(props) {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <FormControl variant="outlined">
               <InputLabel>Category</InputLabel>
               <Select
@@ -256,7 +303,7 @@ export default function AddWatercraft(props) {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               variant="outlined"
               label="Model"
@@ -265,7 +312,7 @@ export default function AddWatercraft(props) {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <TextField
               variant="outlined"
               label="Builder"
@@ -274,7 +321,7 @@ export default function AddWatercraft(props) {
               onChange={handleInputChange}
             />
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={12} sm={6}>
             <TextField
               label="Length"
               id="outlined-start-adornment"
@@ -288,10 +335,9 @@ export default function AddWatercraft(props) {
                 ),
               }}
               variant="outlined"
-              style={{ marginLeft: "30%" }}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={12} sm={6}>
             <FormControl variant="outlined">
               <InputLabel>Make Year</InputLabel>
               <Select
@@ -317,8 +363,8 @@ export default function AddWatercraft(props) {
           <Button
             size="large"
             variant="contained"
-            color="secondary"
-            style={{ width: "20%", marginTop: "2.5%", paddingLeft: "0px" }}
+            color="primary"
+            style={{ width: "20%", marginTop: "1%" }}
             onClick={buttonClicked}
           >
             Add Details
@@ -328,8 +374,8 @@ export default function AddWatercraft(props) {
           <Button
             size="large"
             variant="contained"
-            color="secondary"
-            style={{ width: "20%", marginTop: "2.5%", paddingLeft: "0px" }}
+            color="primary"
+            style={{ width: "20%", marginTop: "1%" }}
             onClick={() => {
               updateWatercraftById();
             }}

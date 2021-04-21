@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import axios from 'axios';
 import {
   makeStyles,
   Accordion,
@@ -20,10 +21,6 @@ import SaveIcon from "@material-ui/icons/Save";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: "#90caf9",
-    width: "80%",
-    marginTop: theme.spacing(0),
-    marginLeft: theme.spacing(15),
     
   },
   buttonStyle: {
@@ -86,45 +83,31 @@ export default function NotificationSetting() {
   };
 
   useEffect((state) => {
-    fetch("http://localhost:8080/user/3/nsetting", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((resp) => resp.json())
-      .then((data) =>
+
+    const url = "http://localhost:8080/usernotificationSetting/"+sessionStorage.getItem("userId");
+    axios.get(url)
+      .then((resp) => {console.log(resp);
         setState({
           ...state,
-          sendMessage: data.sendMessage,
-          watercraftInvite: data.watercraftInvite,
-          requestApproval: data.requestApproval,
-          othersReservationAdmin: data.othersReservationAdmin,
-          othersReservationMember: data.othersReservationMember,
-          scheduleSomeTime: data.scheduleSomeTime,
-          eventSuggestion: data.eventSuggestion,
-          eventChange: data.eventChange,
-          eventCancel: data.eventCancel,
-          upcomingScheduleReminder: data.upcomingScheduleReminder,
-          addedToExpense: data.addedToExpense,
+          sendMessage: resp.data.sendMessage,
+          watercraftInvite: resp.data.watercraftInvite,
+          requestApproval: resp.data.requestApproval,
+          othersReservationAdmin: resp.data.othersReservationAdmin,
+          othersReservationMember: resp.data.othersReservationMember,
+          scheduleSomeTime: resp.data.scheduleSomeTime,
+          eventSuggestion: resp.data.eventSuggestion,
+          eventChange: resp.data.eventChange,
+          eventCancel: resp.data.eventCancel,
+          upcomingScheduleReminder: resp.data.upcomingScheduleReminder,
+          addedToExpense: resp.data.addedToExpense,
         })
-      );
-  }, []);
+  });
+}, []);
 
   const saveChanges = () => {
-    return fetch("http://localhost:8080/user/3/nsetting", {
-      method: "PUT",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...state,
-      }),
-    })
-      .then((response) => response.json())
-      .then((json) => {
+    const url = "http://localhost:8080/user/nsetting/" + sessionStorage.getItem("userId");
+    axios.put( url, { ...state})
+      .then((resp) => { console.log(resp.data);
         console.log("Notification setting updated.");
       })
       .catch((error) => {
@@ -136,7 +119,7 @@ export default function NotificationSetting() {
     <div>
       <div className={classes.root}>
         <Typography>
-          <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
+          <Box fontSize={20} textAlign="center" style={{marginBottom:'1%'}}>
             Send me an email when someone:
           </Box>
         </Typography>

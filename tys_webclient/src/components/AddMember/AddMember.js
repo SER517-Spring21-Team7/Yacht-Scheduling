@@ -1,10 +1,26 @@
-import React, {useState, useEffect} from 'react'
-import 'date-fns';
-import { Typography, Grid, makeStyles, Box, TextField, FormControlLabel, FormControl, InputLabel, Select, MenuItem, RadioGroup, Radio, Button } from '@material-ui/core'
-import { MuiPickersUtilsProvider, KeyboardDatePicker} from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+import React, { useState, useEffect } from "react";
+import "date-fns";
+import {
+  Typography,
+  Grid,
+  makeStyles,
+  Box,
+  TextField,
+  FormControlLabel,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  RadioGroup,
+  Radio,
+  Button,
+} from "@material-ui/core";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 import ColorPicker from "material-ui-color-picker";
-import SearchMember from './SearchMember'
 import SearchField from "react-search-field";
 import TypeChecker from 'typeco';
 import ExampleList from './ExampleList';
@@ -24,117 +40,120 @@ const exampleList = [
 ];
 
 const initialValues = {
-    email: '',
-    watercraft:'',
-    firstname: '',
-    lastname: '',
-    password: '',
-    password2: '',
-    startdate: null,
-    enddate: null,
-    premiumshare: '',
-    standardshare: '',
-    freebookings: '',
-    schedulercolor: '',
-    access: '',
-}
-const useStyle = makeStyles(theme =>({
-    root: {
-        width: "80%",
-        marginTop: theme.spacing(5),
-        marginLeft: theme.spacing(15),
-        '& .MuiFormControl-root':{
-            width: '70%',
-            margin:theme.spacing(1.5)
-        },
-        '& .MuiButtonBase-root':{
-            marginLeft: '38%',
-        }
-    },
-    containerStyle:{
-        backgroundColor: '#f5f5f5',
-        width: '100%',
-        marginTop: theme.spacing(1),
-        marginLeft: theme.spacing(0),
-    },
-    
-}))
+  email: "",
+  watercraft: "",
+  firstname: "",
+  lastname: "",
+  password: "",
+  password2: "",
+  startdate: null,
+  enddate: null,
+  premiumshare: "",
+  standardshare: "",
+  freebookings: "",
+  schedulercolor: "",
+  access: "",
+};
+const watercraftObjectListInitial = [];
+const useStyle = makeStyles((theme) => ({
+  root: {
 
+    "& .MuiFormControl-root": {
+      marginLeft: theme.spacing(15),
+      width: "60%",
+      margin: theme.spacing(1),
+    },
+
+  },
+
+  containerStyle: {
+    padding: theme.spacing(1),
+    marginTop: "1%",
+    border: "4px solid #4db6ac",
+    borderRadius: '5px'
+  },
+
+  textLine:{
+    height:"8vh"
+  },
+  
+}));
 
 export default function AddMember() {
+  const classes = useStyle();
+  const [values, setValues] = useState(initialValues);
+  const [tempStateValues, setTempStateValues] = useState(tempState);
+  const [watercraftObjectList, setWatercraftObjectList] = useState(watercraftObjectListInitial);
 
-    const classes = useStyle();
-    const [values, setValues] = useState(initialValues);
-    const [tempStateValues, setTempStateValues] = useState(tempState);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value,
+    });
+  };
 
+  const handleStartDateChange = (e) => {
+    setValues({
+      ...values,
+      startdate: new Date(e),
+    });
+  };
 
-    const handleInputChange = (e) => {
-        const {name, value} = e.target;
-        setValues({
-            ...values,
-            [name]:value
-        })
+  const handleEndDateChange = (e) => {
+    if (values.startdate < e) {
+      setValues({
+        ...values,
+        enddate: new Date(e),
+      });
     }
+  };
 
-    const handleStartDateChange = (e) => {
-        setValues({
-            ...values,
-            startdate: new Date(e)
-        })
-    }
+  const handleColorChange = (e) => {
+    setValues({
+      ...values,
+      schedulercolor: e,
+    });
+  };
 
-    const handleEndDateChange = (e) => {
-        if(values.startdate < e) {
-            setValues({
-                ...values,
-                enddate: new Date(e)
-            })
-        }
-    }
+  const buttonClicked = (event) => {
+    console.log(values);
+    return fetch("http://localhost:8080/member/details", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...values,
+        watercraftId: watercraftObjectList.filter((each) => each.watercraftName === values.watercraft)[0].watercraftId
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        alert("Member successfully added!");
+        setValues(initialValues);
+      })
+      .catch((error) => {
+        alert("It seems we have some issue! Please retry.");
+      });
+  };
 
-    const handleColorChange = (e) => {
-        setValues({
-            ...values,
-            schedulercolor: e
-        })
-    }
-
-    const buttonClicked = (event) => {
-        console.log(values)
-        return fetch("http://localhost:8080/member/details",{
-            method: "POST",
-            headers:{
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                ...values,
-            }),
-        })
-        .then((response) => response.json())
-        .then((json) =>{
-            alert("Member successfully added!")
-            setValues(initialValues);
-        })
-        .catch((error)=>{
-            alert("It seems we have some issue! Please retry.")
-        });
-    };
-
-    const url = "http://localhost:8080/watercraft/getAllWaterCraft"
-    const watercraftList = []
-    const getWaterCraft = async () => { 
+  const url = "http://localhost:8080/watercraft/getAllWaterCraft";
+  const watercraftList = [];
+    const getWaterCraft = async () => {
         const response = await fetch(url, {
-            method: "GET"
+            method: "GET",
         });
         const watercraftResponse = await response.json();
-        for (let i = 0; i < watercraftResponse.length; i++){
-            watercraftList.push(watercraftResponse[i]["watercraftName"])
+        for (let i = 0; i < watercraftResponse.length; i++) {
+            watercraftList.push(watercraftResponse[i].watercraftName);
         }
         setTempStateValues({
-            ...tempStateValues,
-            drop: watercraftList
+          ...tempStateValues,
+          drop: watercraftList
         });
+        setWatercraftObjectList(watercraftResponse);
     }
 
     const [members, setMembers] = useState([]);
@@ -187,28 +206,39 @@ export default function AddMember() {
         <>
         <form className={classes.root}>
         
-            <Typography style={{margin:'5%'}}>
-                <Box fontWeight="fontWeightBold" fontSize={20} textAlign="left" m={1}>
-                    <h2>Search Existing Member or Enter Details</h2>
+            <Typography>
+                <Box fontSize={20} textAlign="center">
+                    Search Existing Member or Enter Details
                 </Box>
             </Typography>
-                {/* <div><SearchMember/></div> */}
-                <SearchField
-                placeholder="Search Member"
-                onEnter={onEnterExample}
-                searchText=""
-                classNames="test-class"
-                />
-                <ExampleList
-                    list={onEnterExampleList} updateForm={ fillDetails}
-                />
+
             <Grid container className={classes.containerStyle}>
+                <Grid item xs={12} sm={12} align="center">
+                  <SearchField
+                    placeholder="Search Member"
+                    onEnter={onEnterExample}
+                    searchText=""
+                    classNames="test-class"
+                    />
+                    <ExampleList
+                        list={onEnterExampleList} updateForm={ fillDetails}
+                    />
+                </Grid>
+                <Grid item xs={5} sm={5} className={classes.textLine} style={{paddingTop:"2vh"}}>
+                  <hr style={{borderColor:"#4db6ac"}}/>
+                </Grid>
+                <Grid item xs={2} sm={2} align="center" className={classes.textLine}>
+                  <h2>or</h2>
+                </Grid>
+                <Grid item xs={5} sm={5} className={classes.textLine} style={{paddingTop:"2vh"}}>
+                  <hr style={{borderColor:"#4db6ac"}}/>
+                </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
                     variant="outlined"
                     required
                     id="email"
-                    type="text"
+                    type="email"
                     name="email"
                     label="Email"
                     value={values.email}
@@ -217,25 +247,25 @@ export default function AddMember() {
                     />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                <FormControl variant="outlined">
-                        <InputLabel>Watercraft</InputLabel>
-                        <Select
-                            label="Watercraft"
-                            name="watercraft"
-                            value={values.watercraft}
-                            onChange={handleInputChange}>
-                            <MenuItem>
-                                <em>None</em>
-                            </MenuItem>
-                            {
-                                tempStateValues.drop.map((craft, index) => {
-                                    return (
-                                        <MenuItem key={index} value={craft}>{craft}</MenuItem>
-                                    )
-                                })
-                            } 
-                        </Select>
-                    </FormControl>
+                  <FormControl variant="outlined">
+                    <InputLabel>Watercraft</InputLabel>
+                    <Select
+                        label="Watercraft"
+                        name="watercraft"
+                        value={values.watercraft}
+                        onChange={handleInputChange}>
+                        <MenuItem>
+                            <em>None</em>
+                        </MenuItem>
+                        {
+                            tempStateValues.drop.map((craft, index) => {
+                                return (
+                                    <MenuItem key={index} value={craft}>{craft}</MenuItem>
+                                )
+                            })
+                        } 
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -265,6 +295,7 @@ export default function AddMember() {
                     <TextField
                     variant="outlined"
                     required
+                    type="password"
                     id="password"
                     name="password"
                     label="Password"
@@ -277,6 +308,7 @@ export default function AddMember() {
                     <TextField
                     variant="outlined"
                     required
+                    type="password"
                     id="password2"
                     name="password2"
                     label="Re-enter Password"
@@ -296,7 +328,7 @@ export default function AddMember() {
                     type="number"
                     id="premiumshare"
                     name="premiumshare"
-                    label="Premium Share (%)"
+                    label="Premium Share Slots"
                     value={values.premiumshare}
                     onChange={handleInputChange}
                     fullWidth
@@ -309,7 +341,7 @@ export default function AddMember() {
                     type="number"
                     id="standardshare"
                     name="standardshare"
-                    label="Standard Share (%)"
+                    label="Standard Share Slots"
                     value={values.standardshare}
                     onChange={handleInputChange}
                     fullWidth
@@ -330,7 +362,7 @@ export default function AddMember() {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <Grid container justify="space-around">
+                        <Grid container>
                             <KeyboardDatePicker
                             format="MM/dd/yyyy"
                             margin="normal"
@@ -348,7 +380,7 @@ export default function AddMember() {
                 </Grid>
                 <Grid item xs={12} sm={3}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <Grid container justify="space-around">
+                        <Grid container>
                             <KeyboardDatePicker
                             format="MM/dd/yyyy"
                             margin="normal"
@@ -365,16 +397,14 @@ export default function AddMember() {
                     </MuiPickersUtilsProvider>
                 </Grid>
                 <Grid item xs={12} sm={4}>
-                    <div style={{display:'flex'}}>
-                        <label style={{padding:'5%', display:'inline'}}>Color</label>
                         <ColorPicker
+                            variant="outlined"
                             name="color"
                             defaultValue="Select Scheduler Color"
                             style={{backgroundColor:values.schedulercolor, borderRadius:'5px'}}
                             onChange={handleColorChange}
                             value={values.schedulercolor}
                         />
-                    </div>
                 </Grid>
                 <Grid item xs={12} sm={2}>
                 </Grid>
@@ -386,12 +416,12 @@ export default function AddMember() {
                         </RadioGroup>
                     </FormControl>
                 </Grid>
-            </Grid>  
+            </Grid> 
             <Button 
                 size="large" 
                 variant="contained" 
-                color="secondary"
-                style={{width:'20%', marginTop:'2.5%', paddingLeft: '0px'}}
+                color="primary"
+                style={{width:'20%', marginTop:'1%', marginLeft: '38%', paddingLeft: '0px'}}
                 onClick={buttonClicked}>
                 Add Member
             </Button>

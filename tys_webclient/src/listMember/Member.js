@@ -28,6 +28,14 @@ const Member = (props) => {
     // marginRight: pix,
     // marginBotton: pix,
   };
+
+  const getMemeberImage = (imageUrl) => {
+    if ( imageUrl === undefined)
+      imageUrl = "https://api1.nauticalmonkey.com/uploadedImages/ab68874bf7d941cb815e5ba28d0a7b07_small.jpg";
+
+    return imageUrl;
+  };
+
   return (
     <>
       {console.log(props.name)}
@@ -37,7 +45,7 @@ const Member = (props) => {
             <Grid item xs={4}>
               <CardMedia
                 className={classes.media}
-                image="https://api1.nauticalmonkey.com/uploadedImages/ab68874bf7d941cb815e5ba28d0a7b07_small.jpg"
+                image={getMemeberImage(props.image)}
                 title="Boat"
                 alignItem="center"
               />

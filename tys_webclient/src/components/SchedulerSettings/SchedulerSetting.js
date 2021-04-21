@@ -1,17 +1,13 @@
-import React from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import { Typography, Grid, AppBar, Paper } from "@material-ui/core";
+import { Typography, Grid } from "@material-ui/core";
 import TimeSlots from "./TimeSlots";
 import { useHistory } from "react-router-dom";
 
 import {
-  Container,
   Checkbox,
   makeStyles,
   TextField,
@@ -26,35 +22,34 @@ import {
 import SaveIcon from "@material-ui/icons/Save";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import HolidayCalendar from "./HolidayCalendar";
+import GlobalContext from "../GlobalContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: "#90caf9",
-    width: "80%",
-    marginTop: theme.spacing(0),
-    marginLeft: theme.spacing(0),
-    padding: "10px",
 
     "& .MuiFormControl-root": {
-      width: "80%",
-      margin: theme.spacing(0.75),
+      width: "60%",
+      margin: theme.spacing(1),
     },
-    flexGrow: 1,
+
   },
   container: {
-    backgroundColor: "#f5f5f5",
-    width: "100%",
-    marginTop: theme.spacing(0),
-    marginLeft: theme.spacing(0),
+    padding: theme.spacing(1),
+    marginTop: "1%",
+    border: "4px solid #4db6ac",
+    borderRadius: '5px'
   },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
+
+  innerContainer:{
+    marginLeft:"15%"
   },
+
   buttonStyle: {
     marginLeft: "38%",
   },
+
   aSummery: {
+
     backgroundColor: "rgba(0, 0, 0, .03)",
     borderBottom: "1px solid rgba(0, 0, 0, .125)",
     marginBottom: -1,
@@ -63,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
       minHeight: 56,
     },
   },
+
   heading: {
     fontSize: theme.typography.pxToRem(20),
     flexBasis: "33.33%",
@@ -70,24 +66,33 @@ const useStyles = makeStyles((theme) => ({
     color: "#00227b",
     fontWeight: "bold",
   },
+
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
     color: "#00227b",
+    paddingLeft: "5%"
   },
-  button: {
-    margin: theme.spacing(1),
-  },
-  secTypo: {
-    marginLeft: "5%",
-    marginTop: "5%",
-    padding: "10px",
-  },
+  
+  // secTypo: {
+  //   marginLeft: "5%",
+  //   marginTop: "5%",
+  //   padding: "10px",
+  // },
 }));
+
+const InitialHCalendar = [];
 
 export default function SchedulerSetting() {
   const classes = useStyles();
   const history = useHistory();
+  const childRef = useRef();
+  const globalWatercraftId = useContext(GlobalContext);
+  var universalWatercraftId = sessionStorage.getItem('globalWatercraftId');
+
   const [expanded, setExpanded] = React.useState(false);
+  const [listOfHCalendar, setListOfHCalendar] = React.useState(
+    InitialHCalendar
+  );
   const hoursArr = [6, 12, 24, 36, 48, 60, 72];
   const timezoneArr = [
     "Australia/ACT",
@@ -140,7 +145,7 @@ export default function SchedulerSetting() {
   const [state, setState] = React.useState({
     premiumDays: [],
     customSlots: [],
-    sameSetSlots: true,
+    preventSameSetSlots: false,
     continuousReservationDays: 0,
     freeReservationHours: 0,
     confirmEmailHours: 0,
@@ -153,11 +158,6 @@ export default function SchedulerSetting() {
     watercraftTimeZone: "",
     advanceBookingMonth: 0,
     carryBorrow: false,
-    ignoreSharePercent: false,
-    reservationLimit: 0,
-    reservationLimitPer: 0,
-    reservationLimitUnit: "",
-    reservationLimitInclude: "",
   });
 
   const handleChangeExpansion = (panel) => (event, isExpanded) => {
@@ -165,7 +165,6 @@ export default function SchedulerSetting() {
   };
 
   const handleChange = (event) => {
-    console.log(event);
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
@@ -173,12 +172,26 @@ export default function SchedulerSetting() {
     if (event.target.checked) {
       setState({
         ...state,
-        sameSetSlots: false,
+        preventSameSetSlots: true,
       });
     } else {
       setState({
         ...state,
-        sameSetSlots: true,
+        preventSameSetSlots: false,
+      });
+    }
+  };
+
+  const handleCarryBorrowChange = (event) => {
+    if (event.target.checked) {
+      setState({
+        ...state,
+        carryBorrow: true,
+      });
+    } else {
+      setState({
+        ...state,
+        carryBorrow: false,
       });
     }
   };
@@ -201,6 +214,13 @@ export default function SchedulerSetting() {
     }
   };
 
+  const handleTimeSlots = (timeSlots) => {
+    setState({
+      ...state,
+      customSlots: timeSlots,
+    });
+  };
+
   const handleContinousReservationChange = (event) => {
     setState({
       ...state,
@@ -208,58 +228,129 @@ export default function SchedulerSetting() {
     });
   };
 
-  const handleRedirect = () => {
-    history.push("/holidaycalendar");
+  const handleHolidayCalendarChange = (event) => {
+    setState({
+      ...state,
+      holidayCalendar: event.target.value,
+    });
   };
-  //   useEffect((state) => {
-  //     fetch("http://localhost:8080/user/3/nsetting", {
-  //       method: "GET",
-  //       headers: {
-  //         Accept: "application/json",
-  //         "Content-Type": "application/json",
-  //       },
-  //     })
-  //       .then((resp) => resp.json())
-  //       .then((data) =>
-  //         setState({
-  //           ...state,
 
-  //         })
-  //       );
-  //   }, []);
+  const handleCreateRedirect = () => {
+    history.push("/holidaycalendar/" + "create");
+  };
 
-  //   const saveChanges = () => {
-  //     return fetch("http://localhost:8080/user/3/nsetting", {
-  //       method: "PUT",
-  //       headers: {
-  //         Accept: "application/json",
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         ...state,
-  //       }),
-  //     })
-  //       .then((response) => response.json())
-  //       .then((json) => {
-  //         console.log("Notification setting updated.");
-  //       })
-  //       .catch((error) => {
-  //         console.error("Notification setting update failed.");
-  //       });
-  //   };
+  const handleEditRedirect = () => {
+    const calendarId = listOfHCalendar.filter(
+      (each) => each.name == state.holidayCalendar
+    )[0].id;
+    history.push("/holidaycalendar/" + calendarId);
+  };
+
+  useEffect((state) => {
+    fetch("http://localhost:8080/holidaycalendar", {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        console.log(data);
+        setListOfHCalendar(data);
+      })
+      .then(() => {
+        if(universalWatercraftId){
+          fetch(
+            "http://localhost:8080/watercraft/" +
+              universalWatercraftId +
+              "/ssetting",
+            {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+            }
+          )
+            .then((resp) => resp.json())
+            .then((data) => {
+              console.log(data);
+              setState({
+                ...state,
+                premiumDays: data.premiumDays,
+                customSlots: data.timeSlot,
+                preventSameSetSlots: data.blockAllOneSlotBooking,
+                continuousReservationDays: data.maxContinuousBookingDays,
+                freeReservationHours: data.freeBookingAfterHours,
+                confirmEmailHours: data.confirmationBeforeHours,
+                cancelBookingBeforeStart: data.noResponseCancelAtHours,
+                weatherCountry: data.weatherCountry,
+                weatherCity: data.weatherCity,
+                weatherZipCode: data.weatherZipCode,
+                holidayCalendar: data.holidayCalName,
+                maxHolidayDays: data.maxHolidayBookingDays,
+                watercraftTimeZone: data.timeZone,
+                advanceBookingMonth: data.limitAdvBookingMonths,
+                carryBorrow: data.allowCarryBorrow,
+              });
+              childRef.current.updateSlotState(data.timeSlot);
+            });
+        }
+        else{
+          alert("Please select watercraft from the search box")
+        }
+      });
+  }, []);
+
+  const saveChanges = () => {
+    return fetch(
+      "http://localhost:8080/watercraft/" + universalWatercraftId + "/ssetting",
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          premiumDays: state.premiumDays,
+          timeSlot: state.customSlots,
+          blockAllOneSlotBooking: state.preventSameSetSlots,
+          maxContinuousBookingDays: state.continuousReservationDays,
+          freeBookingAfterHours: state.freeReservationHours,
+          confirmationBeforeHours: state.confirmEmailHours,
+          noResponseCancelAtHours: state.cancelBookingBeforeStart,
+          weatherCountry: state.weatherCountry,
+          weatherCity: state.weatherCity,
+          weatherZipCode: state.weatherZipCode,
+          holidayCalName: state.holidayCalendar,
+          maxHolidayBookingDays: state.maxHolidayDays,
+          timeZone: state.watercraftTimeZone,
+          limitAdvBookingMonths: state.advanceBookingMonth,
+          allowCarryBorrow: state.carryBorrow,
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        console.log("Notification setting updated.");
+      })
+      .catch((error) => {
+        console.error("Notification setting update failed.");
+      });
+  };
 
   return (
     <div>
-      <Container>
-        <Typography
-          color="textPrimary"
-          gutterBottom
-          variant="h3"
-          align="center"
-        >
-          Scheduler Settings
+        <Typography>
+          <Box
+            fontSize={20}
+            textAlign="center"
+            marginBottom="1%"
+          >
+            Scheduler Settings
+          </Box>
         </Typography>
-      </Container>
       <Accordion
         expanded={expanded === "panel0"}
         onChange={handleChangeExpansion("panel0")}
@@ -278,19 +369,15 @@ export default function SchedulerSetting() {
         <AccordionDetails>
           <form>
             <Grid container className={classes.container}>
-              <Grid item md={6} xs={12}>
+              <Grid item xs={12} sm={12} align="center">
                 <Typography
                   className=".MuiTypography-overline"
-                  color="textPrimary"
                   gutterBottom
                 >
-                  Select Premium Day(s):
+                  <b>Select Premium Day(s):</b>
                 </Typography>
-                <div>
-                  <div
-                    class="row"
-                    style={{ display: "flex", flexDirection: "row" }}
-                  >
+              </Grid>
+              <Grid item xs={12} sm={12} align="center">
                     {[
                       "Sunday",
                       "Monday",
@@ -301,53 +388,56 @@ export default function SchedulerSetting() {
                       "Saturday",
                     ].map((day) => {
                       return (
-                        <div>
-                          <Checkbox
-                            id={day}
-                            value={day}
-                            onChange={handlePremiumCheckboxChange}
-                          />
-                          <label class="custom-control-label" for={day}>
-                            {day}
-                          </label>
-                        </div>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              id={day}
+                              value={day}
+                              checked={state.premiumDays.includes(day)}
+                              onChange={handlePremiumCheckboxChange}
+                              name="carryBorrow"
+                              color="primary"
+                            />
+                          }
+                          label={day}
+                        />
                       );
                     })}
-                  </div>
-                </div>
               </Grid>
 
-              <Grid item xs={12}>
-                <br />
+              <Grid item xs={12} sm={12} align="center">
+                <br/>
                 <Typography
                   className=".MuiTypography-overline"
-                  color="textPrimary"
                   gutterBottom
                 >
-                  Booking Slot Timings:
+                  <b>Booking Slot Timings:</b>
                 </Typography>
-                <TimeSlots customSlots={state.customSlots} />
+                <TimeSlots
+                  ref={childRef}
+                  customSlots={state.customSlots}
+                  handleTimeSlots={handleTimeSlots}
+                />
               </Grid>
-              <Grid item xs={12}>
-                <br />
-                <div>
-                  <Checkbox
-                    id="oneSetSlots"
-                    value={state.sameSetSlots}
-                    onChange={handleSetSlotChange}
-                  />
-                  <label class="custom-control-label" for="oneSetSlots">
-                    Prevent members from using their entire share percentage on
-                    one set of slots.
-                  </label>
-                </div>
+              <Grid item xs={12} sm={12} className={classes.innerContainer}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={state.preventSameSetSlots}
+                      onChange={handleSetSlotChange}
+                      name="preventSameSetSlots"
+                      color="primary"
+                    />
+                  }
+                  label="Prevent members from using their entire share percentage on
+                  one set of slots."
+                />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={12} className={classes.innerContainer}>
                 <br />
                 <div>
                   <label class="custom-control-label" for="conReservationDays">
-                    {" "}
-                    Limit Back to Back reservations to{" "}
+                    Limit Back to Back reservations to &nbsp;
                   </label>
                   <TextField
                     variant="outlined"
@@ -369,26 +459,25 @@ export default function SchedulerSetting() {
                     onChange={handleContinousReservationChange}
                   />
                   <label class="custom-control-label" for="conReservationDays">
-                    {" "}
-                    days in a row.
+                    &nbsp; days in a row.
                   </label>
                 </div>
               </Grid>
-              <Grid item md={6} xs={12}>
+              <Grid item xs={12} sm={12} className={classes.innerContainer}>
                 <br />
                 <div>
-                  <Typography
+                  {/* <Typography
                     className=".MuiTypography-overline"
                     color="textSecondary"
                     gutterBottom
                   >
                     Free Booking Period:
-                  </Typography>
+                  </Typography> */}
                   <label
                     class="custom-control-label"
                     for="freeReservationTillHours"
                   >
-                    Reservations made within
+                    Reservations made within &nbsp;
                   </label>
                   <FormControl
                     variant="outlined"
@@ -400,7 +489,6 @@ export default function SchedulerSetting() {
                       value={state.freeReservationHours}
                       size="small"
                       onChange={handleChange}
-                      label="Age"
                     >
                       <MenuItem value={0}>
                         <em>None</em>
@@ -418,25 +506,25 @@ export default function SchedulerSetting() {
                     class="custom-control-label"
                     for="freeReservationTillHours"
                   >
-                    do not count against usage.
+                    &nbsp; do not count against usage.
                   </label>
                 </div>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={12} className={classes.innerContainer}>
                 <br />
                 <div>
-                  <Typography
+                  {/* <Typography
                     className=".MuiTypography-overline"
                     color="textSecondary"
                     gutterBottom
                   >
                     Confirmation Window:
-                  </Typography>
+                  </Typography> */}
                   <label
                     class="custom-control-label"
                     for="confiramationEmailHoursBefore"
                   >
-                    Send out confirmation email
+                    Send out confirmation email &nbsp;
                   </label>
                   <FormControl
                     variant="outlined"
@@ -472,25 +560,25 @@ export default function SchedulerSetting() {
                     class="custom-control-label"
                     for="confiramationEmailHoursBefore"
                   >
-                    before reservation
+                    &nbsp; before reservation
                   </label>
                 </div>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={12} className={classes.innerContainer}>
                 <br />
                 <div>
-                  <Typography
+                  {/* <Typography
                     className=".MuiTypography-overline"
                     color="textSecondary"
                     gutterBottom
                   >
                     Cancellation Period:
-                  </Typography>
+                  </Typography> */}
                   <label
                     class="custom-control-label"
                     for="freeReservationTillHours"
                   >
-                    If user does not confirm reservation,
+                    If user does not confirm reservation, &nbsp;
                   </label>
                   <FormControl
                     variant="outlined"
@@ -502,7 +590,6 @@ export default function SchedulerSetting() {
                       value={state.cancelBookingBeforeStart}
                       size="small"
                       onChange={handleChange}
-                      label="Hours"
                     >
                       <MenuItem value={0}>
                         <em>Do not cancel it.</em>
@@ -519,8 +606,7 @@ export default function SchedulerSetting() {
                   <label
                     class="custom-control-label"
                     for="freeReservationTillHours"
-                  >
-                    before it starts.
+                  > &nbsp; before it starts.
                   </label>
                 </div>
               </Grid>
@@ -541,22 +627,23 @@ export default function SchedulerSetting() {
         >
           <Typography className={classes.heading}>Advance Settings</Typography>
           <Typography className={classes.secondaryHeading}>
-            Change advance settings for watercraft here
+            Change advanced settings for watercraft here
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <form className={classes.root}>
             <Grid container className={classes.container}>
-              <Grid item md={3}>
+              <Grid item xs={12} sm={3} align="center">
                 <Typography
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
+                  style={{paddingTop:"3vh"}}
                 >
                   Show weather for:
                 </Typography>
               </Grid>
-              <Grid item md={6} xs={12}>
+              <Grid item xs={12} sm={6} align="center">
                 <FormControl variant="outlined" required>
                   <InputLabel>Country</InputLabel>
                   <Select
@@ -573,9 +660,9 @@ export default function SchedulerSetting() {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item md={3}></Grid>
-              <Grid item md={1}></Grid>
-              <Grid item md={4} xs={12}>
+              <Grid item xs={12} sm={3}></Grid>
+              <Grid item xs={12} sm={1}></Grid>
+              <Grid item xs={12} sm={4} align="center">
                 <TextField
                   variant="outlined"
                   label="City"
@@ -584,16 +671,17 @@ export default function SchedulerSetting() {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item md={1}>
+              <Grid item xs={12} sm={1} align="center">
                 <Typography
                   color="textSecondary"
                   className={classes.secTypo}
                   gutterBottom
+                  style={{paddingTop:"3vh"}}
                 >
                   Or
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} sm={4} align="center">
                 <TextField
                   variant="outlined"
                   label="Zip/Postal Code"
@@ -602,52 +690,63 @@ export default function SchedulerSetting() {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item md={3}>
+              <Grid item xs={12} sm={3} align="center">
                 <Typography
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
+                  style={{paddingTop:"3vh"}}
                 >
                   Select Holiday Calendar:
                 </Typography>
               </Grid>
-              <Grid item md={6} xs={12}>
+              <Grid item sm={6} xs={12} align="center">
                 <FormControl variant="outlined" required>
                   <InputLabel>Holiday Calendar</InputLabel>
                   <Select
                     label="Holiday Calendar"
                     name="holidayCalendar"
                     value={state.holidayCalendar}
-                    onChange={handleChange}
+                    onChange={handleHolidayCalendarChange}
                   >
                     <MenuItem value="">None</MenuItem>
-                    <MenuItem value={"Australia"}>Australia</MenuItem>
-                    <MenuItem value={"Canada"}>Canada</MenuItem>
-                    <MenuItem value={"United Kingdom"}>United Kingdom</MenuItem>
-                    <MenuItem value={"United States"}>United States</MenuItem>
+                    {listOfHCalendar.map((eachCalendar) => {
+                      return (
+                        <MenuItem
+                          key={eachCalendar.id}
+                          value={eachCalendar.name}
+                        >
+                          {eachCalendar.name}
+                        </MenuItem>
+                      );
+                    })}
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid>
+
+              <Grid item>
                 <ButtonGroup
                   color="primary"
                   aria-label="outlined primary button group"
                   style={{ marginTop: "10%", marginLeft: "0%" }}
                 >
-                  <Button>Edit</Button>
-                  <Button onClick={() => handleRedirect()}>Create</Button>
+                  <Button onClick={() => handleEditRedirect()}>Edit</Button>
+                  <Button onClick={() => handleCreateRedirect()}>Create</Button>
                 </ButtonGroup>
               </Grid>
-              <Grid item md={3}>
+
+              <Grid item sm={3} xs={12} align="center">
                 <Typography
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
+                  style={{paddingTop:"3vh"}}
                 >
                   Max Holiday Reservation:
                 </Typography>
               </Grid>
-              <Grid item md={6} xs={12}>
+
+              <Grid item sm={6} xs={12} align="center">
                 <TextField
                   variant="outlined"
                   label="Days Per Year"
@@ -655,18 +754,20 @@ export default function SchedulerSetting() {
                   value={state.maxHolidayDays}
                   onChange={handleChange}
                 />
+
               </Grid>
-              <Grid item md={3}></Grid>
-              <Grid item md={3}>
+              <Grid item sm={3} xs={12}></Grid>
+              <Grid item sm={3} xs={12} align="center">
                 <Typography
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
+                  style={{paddingTop:"3vh"}}
                 >
                   Select Watercraft Time Zone:
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} sm={6} align="center">
                 <FormControl variant="outlined" required>
                   <InputLabel>Watercraft Time Zone</InputLabel>
                   <Select
@@ -686,17 +787,18 @@ export default function SchedulerSetting() {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item md={3}></Grid>
-              <Grid item md={3}>
+              <Grid item sm={3} xs={12}></Grid>
+              <Grid item sm={3} xs={12} align="center">
                 <Typography
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
+                  style={{paddingTop:"3vh"}}
                 >
                   Allow advance reservation upto:
                 </Typography>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} sm={6} align="center">
                 <FormControl variant="outlined" required>
                   <InputLabel>Month(s)</InputLabel>
                   <Select
@@ -721,105 +823,18 @@ export default function SchedulerSetting() {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={12} align="center">
                 <FormControlLabel
                   control={
                     <Checkbox
                       checked={state.carryBorrow}
-                      onChange={handleChange}
+                      onChange={handleCarryBorrowChange}
                       name="carryBorrow"
                       color="primary"
                     />
                   }
                   label="Allow carrying slots from the previous month and borrow slots from the next month."
                 />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={state.ignoreSharePercent}
-                      onChange={handleChange}
-                      name="ignoreSharePercent"
-                      color="primary"
-                    />
-                  }
-                  label="Ignore share percentages - Allow users to book at will."
-                />
-              </Grid>
-              <Grid item md={1} xs={12}>
-                <Typography
-                  className={classes.secTypo}
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  Limit:
-                </Typography>
-              </Grid>
-              <Grid item md={2} xs={12}>
-                <TextField
-                  variant="outlined"
-                  label="reservations"
-                  name="reservationLimit"
-                  value={state.reservationLimit}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item md={1} xs={12}>
-                <Typography
-                  className={classes.secTypo}
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  Every:
-                </Typography>
-              </Grid>
-              <Grid item md={2} xs={12}>
-                <TextField
-                  variant="outlined"
-                  name="reservationLimitPer"
-                  value={state.reservationLimitPer}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item md={2} xs={12}>
-                <FormControl variant="outlined" required>
-                  <Select
-                    name="reservationLimitUnit"
-                    value={state.reservationLimitUnit}
-                    onChange={handleChange}
-                    defaultValue={"Month"}
-                  >
-                    <MenuItem value={"Month"}>Month(s)</MenuItem>
-                    <MenuItem value={"Week"}>Week(s)</MenuItem>
-                    <MenuItem value={"Day"}>Day(s)</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item md={1} xs={12}>
-                <Typography
-                  className={classes.secTypo}
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  Including:
-                </Typography>
-              </Grid>
-              <Grid item xs={12} md={3}>
-                <FormControl variant="outlined" required>
-                  <Select
-                    name="reservationLimitInclude"
-                    value={state.reservationLimitInclude}
-                    onChange={handleChange}
-                    defaultValue={"Past"}
-                  >
-                    <MenuItem value={"Past"}>Past Reservations</MenuItem>
-                    <MenuItem value={"Future"}>Future Reservations</MenuItem>
-                    <MenuItem value={"Both"}>
-                      Past & Future Reservations
-                    </MenuItem>
-                  </Select>
-                </FormControl>
               </Grid>
             </Grid>
           </form>
@@ -831,9 +846,9 @@ export default function SchedulerSetting() {
           variant="contained"
           color="primary"
           size="medium"
-          className={classes.button}
           startIcon={<SaveIcon />}
-          //onClick={saveChanges}
+          onClick={saveChanges}
+          style={{marginTop:'1%'}}
         >
           Save settings
         </Button>

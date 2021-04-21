@@ -11,6 +11,10 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import tysLogo from "../../tysLogo.png";
+import axios from "axios";
+import { useHistory } from "react-router-dom";
+import loginBackground from '../../loginBackground.jpg'
+
 
 function Copyright() {
   return (
@@ -25,23 +29,12 @@ function Copyright() {
   );
 }
 
-async function loginUser(credentials) {
-  return fetch("http://localhost:8080/login/admin", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(credentials),
-  }).then((data) => data.json());
-}
-
 const useStyles = makeStyles((theme) => ({
   root: {
     height: "100vh",
   },
   image: {
-    backgroundImage:
-      "url(https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=3150&q=80)",
+    backgroundImage: `url(${loginBackground})`,
     backgroundRepeat: "no-repeat",
     backgroundColor:
       theme.palette.type === "light"
@@ -71,35 +64,57 @@ const useStyles = makeStyles((theme) => ({
 
 function Login({ setAccess }) {
   // const bcrypt = require("bcrypt");
+  const history = useHistory();
   const classes = useStyles();
-  const [email, setEmail] = useState();
+  const [username, setUsername] = useState();
   const [password, setPassword] = useState();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const access = await loginUser({
-      email,
-      // bcrypt.hashSync(password, saltRounds)
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const access = await loginUser({
+  //     email,
+  //     // bcrypt.hashSync(password, saltRounds)
+  //   });
+  //   alert(access);
+  //   setAccess(access);
+  //   alert("my login page");
+  //   // this.history.push('/MyAccount');
+  // };
+
+  const handleSubmit = event => {
+    event.preventDefault();
+
+    const endpoint = "http://localhost:8080/authenticate";
+
+    const user_object = {
+      username: username,
+      password: password
+    };
+
+    axios.post(endpoint, user_object).then(res => {
+
+      sessionStorage.setItem("authorization", res.data.token);
+      sessionStorage.setItem("role", res.data.role);
+      sessionStorage.setItem("userId", res.data.id);
+      history.push('/');
+      window.location.reload();
+    }, error => {
+      alert("Authentication failure, retry");
     });
-    alert(access);
-    setAccess(access);
-    alert("my login page");
-    // this.history.push('/MyAccount');
   };
 
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <Grid item xs={12} sm={8} md={5} align="center" component={Paper} elevation={6} square>
         <img
           src={tysLogo}
           alt="Logo"
           style={{
             resizeMode: "cover",
             height: "15%",
-            width: "65%",
-            margin: "5%",
+            marginTop: '5%'
           }}
         />
         <div className={classes.paper}>
@@ -111,12 +126,12 @@ function Login({ setAccess }) {
               variant="outlined"
               margin="normal"
               required
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
@@ -131,10 +146,7 @@ function Login({ setAccess }) {
               id="password"
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+
             <Button
               type="submit"
               fullWidth
@@ -145,12 +157,12 @@ function Login({ setAccess }) {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
+              <Grid item xs={12} align="right">
                 <Link href="#" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
-              <Grid item>
+              <Grid item xs={12} align="right">
                 <Link href="https://theyachtsolution.com/" variant="body2">
                   {"Know more about The Yacht Solutions!"}
                 </Link>
