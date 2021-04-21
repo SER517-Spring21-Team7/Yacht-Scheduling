@@ -13,8 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import tysLogo from "../../tysLogo.png";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-import loginBackground from '../../loginBackground.jpg'
-
+import loginBackground from "../../loginBackground.jpg";
 
 function Copyright() {
   return (
@@ -81,40 +80,52 @@ function Login({ setAccess }) {
   //   // this.history.push('/MyAccount');
   // };
 
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
-    const endpoint = "http://localhost:8080/authenticate";
+    const endpoint =
+      "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/authenticate";
 
     const user_object = {
       username: username,
-      password: password
+      password: password,
     };
 
-    axios.post(endpoint, user_object).then(res => {
-
-      sessionStorage.setItem("authorization", res.data.token);
-      sessionStorage.setItem("role", res.data.role);
-      sessionStorage.setItem("userId", res.data.id);
-      history.push('/');
-      window.location.reload();
-    }, error => {
-      alert("Authentication failure, retry");
-    });
+    axios.post(endpoint, user_object).then(
+      (res) => {
+        sessionStorage.setItem("authorization", res.data.token);
+        sessionStorage.setItem("role", res.data.role);
+        sessionStorage.setItem("userId", res.data.id);
+        history.push("/");
+        window.location.reload();
+      },
+      (error) => {
+        alert("Authentication failure, retry");
+      }
+    );
   };
 
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} align="center" component={Paper} elevation={6} square>
+      <Grid
+        item
+        xs={12}
+        sm={8}
+        md={5}
+        align="center"
+        component={Paper}
+        elevation={6}
+        square
+      >
         <img
           src={tysLogo}
           alt="Logo"
           style={{
             resizeMode: "cover",
             height: "15%",
-            marginTop: '5%'
+            marginTop: "5%",
           }}
         />
         <div className={classes.paper}>

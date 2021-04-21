@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Button } from "@material-ui/core";
 
@@ -33,34 +33,36 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ManageAlert = () => {
-
   const [alerts, setAlerts] = useState([]);
 
-  var urlForAlert = "http://localhost:8080/displayAlert/get/"+sessionStorage.getItem("userId");
+  var urlForAlert =
+    "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/displayAlert/get/" +
+    sessionStorage.getItem("userId");
 
   const getAlerts = async () => {
-  const responseAlter = await axios.get(urlForAlert);
-  setAlerts(responseAlter.data);
+    const responseAlter = await axios.get(urlForAlert);
+    setAlerts(responseAlter.data);
   };
 
   const deleteAlert = (alertId) => {
     const newAlerts = alerts.filter((each) => each.id !== alertId);
-    const url = "http://localhost:8080/displayAlert/delete/"+alertId;
+    const url =
+      "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/displayAlert/delete/" +
+      alertId;
     console.log(newAlerts);
     fetch(url, {
       method: "DELETE",
-      "authorization" : sessionStorage.getItem("authorization"),
+      authorization: sessionStorage.getItem("authorization"),
       "Content-Type": "application/json",
     });
     setAlerts(newAlerts);
-  }
+  };
 
   useEffect(() => {
     getAlerts();
   }, []);
-return (
-
-  <TableContainer component={Paper}>
+  return (
+    <TableContainer component={Paper}>
       <Table className="alerts" aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -69,27 +71,25 @@ return (
           </TableRow>
         </TableHead>
         <TableBody>
-
           {alerts.map((row) => {
             return (
-            <TableRow key={row.id}>
-              <TableCell align="left">{row.text}</TableCell>
-              <TableCell align="center">
-                    <Button
-                      color="secondary"
-                      size="large"
-                      startIcon={<DeleteIcon />}
-                      onClick={() => deleteAlert(row.id)}
-                    ></Button>
-                  </TableCell>
-            </TableRow>
+              <TableRow key={row.id}>
+                <TableCell align="left">{row.text}</TableCell>
+                <TableCell align="center">
+                  <Button
+                    color="secondary"
+                    size="large"
+                    startIcon={<DeleteIcon />}
+                    onClick={() => deleteAlert(row.id)}
+                  ></Button>
+                </TableCell>
+              </TableRow>
             );
-            })}
-
+          })}
         </TableBody>
       </Table>
     </TableContainer>
-);      
+  );
 };
 
 export default ManageAlert;

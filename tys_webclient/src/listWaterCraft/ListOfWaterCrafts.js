@@ -28,10 +28,12 @@ const ListOfWaterCrafts = () => {
   const [watercrafts, setWatercrafts] = useState([]);
 
   const [alerts, setAlerts] = useState([]);
-  var urlForAlert = "http://localhost:8080/displayAlert/get/";
-  const urlAll = "http://localhost:8080/watercraft/getAllWaterCraft";
+  var urlForAlert =
+    "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/displayAlert/get/";
+  const urlAll =
+    "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/watercraft/getAllWaterCraft";
   const urlMember =
-    "http://localhost:8080/watercraft/getWaterCraftByMemberId/" +
+    "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/watercraft/getWaterCraftByMemberId/" +
     sessionStorage.getItem("userId");
   const getWaterCraft = async () => {
     var url = null;

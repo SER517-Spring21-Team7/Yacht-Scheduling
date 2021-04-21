@@ -26,22 +26,20 @@ import GlobalContext from "../GlobalContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-
     "& .MuiFormControl-root": {
       width: "60%",
       margin: theme.spacing(1),
     },
-
   },
   container: {
     padding: theme.spacing(1),
     marginTop: "1%",
     border: "4px solid #4db6ac",
-    borderRadius: '5px'
+    borderRadius: "5px",
   },
 
-  innerContainer:{
-    marginLeft:"15%"
+  innerContainer: {
+    marginLeft: "15%",
   },
 
   buttonStyle: {
@@ -49,7 +47,6 @@ const useStyles = makeStyles((theme) => ({
   },
 
   aSummery: {
-
     backgroundColor: "rgba(0, 0, 0, .03)",
     borderBottom: "1px solid rgba(0, 0, 0, .125)",
     marginBottom: -1,
@@ -70,9 +67,9 @@ const useStyles = makeStyles((theme) => ({
   secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
     color: "#00227b",
-    paddingLeft: "5%"
+    paddingLeft: "5%",
   },
-  
+
   // secTypo: {
   //   marginLeft: "5%",
   //   marginTop: "5%",
@@ -87,7 +84,7 @@ export default function SchedulerSetting() {
   const history = useHistory();
   const childRef = useRef();
   const globalWatercraftId = useContext(GlobalContext);
-  var universalWatercraftId = sessionStorage.getItem('globalWatercraftId');
+  var universalWatercraftId = sessionStorage.getItem("globalWatercraftId");
 
   const [expanded, setExpanded] = React.useState(false);
   const [listOfHCalendar, setListOfHCalendar] = React.useState(
@@ -247,22 +244,25 @@ export default function SchedulerSetting() {
   };
 
   useEffect((state) => {
-    fetch("http://localhost:8080/holidaycalendar", {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
+    fetch(
+      "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/holidaycalendar",
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((resp) => resp.json())
       .then((data) => {
         console.log(data);
         setListOfHCalendar(data);
       })
       .then(() => {
-        if(universalWatercraftId){
+        if (universalWatercraftId) {
           fetch(
-            "http://localhost:8080/watercraft/" +
+            "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/watercraft/" +
               universalWatercraftId +
               "/ssetting",
             {
@@ -296,16 +296,17 @@ export default function SchedulerSetting() {
               });
               childRef.current.updateSlotState(data.timeSlot);
             });
-        }
-        else{
-          alert("Please select watercraft from the search box")
+        } else {
+          alert("Please select watercraft from the search box");
         }
       });
   }, []);
 
   const saveChanges = () => {
     return fetch(
-      "http://localhost:8080/watercraft/" + universalWatercraftId + "/ssetting",
+      "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/watercraft/" +
+        universalWatercraftId +
+        "/ssetting",
       {
         method: "PUT",
         headers: {
@@ -342,15 +343,11 @@ export default function SchedulerSetting() {
 
   return (
     <div>
-        <Typography>
-          <Box
-            fontSize={20}
-            textAlign="center"
-            marginBottom="1%"
-          >
-            Scheduler Settings
-          </Box>
-        </Typography>
+      <Typography>
+        <Box fontSize={20} textAlign="center" marginBottom="1%">
+          Scheduler Settings
+        </Box>
+      </Typography>
       <Accordion
         expanded={expanded === "panel0"}
         onChange={handleChangeExpansion("panel0")}
@@ -370,47 +367,41 @@ export default function SchedulerSetting() {
           <form>
             <Grid container className={classes.container}>
               <Grid item xs={12} sm={12} align="center">
-                <Typography
-                  className=".MuiTypography-overline"
-                  gutterBottom
-                >
+                <Typography className=".MuiTypography-overline" gutterBottom>
                   <b>Select Premium Day(s):</b>
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={12} align="center">
-                    {[
-                      "Sunday",
-                      "Monday",
-                      "Tuesday",
-                      "Wednesday",
-                      "Thursday",
-                      "Friday",
-                      "Saturday",
-                    ].map((day) => {
-                      return (
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              id={day}
-                              value={day}
-                              checked={state.premiumDays.includes(day)}
-                              onChange={handlePremiumCheckboxChange}
-                              name="carryBorrow"
-                              color="primary"
-                            />
-                          }
-                          label={day}
+                {[
+                  "Sunday",
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                ].map((day) => {
+                  return (
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          id={day}
+                          value={day}
+                          checked={state.premiumDays.includes(day)}
+                          onChange={handlePremiumCheckboxChange}
+                          name="carryBorrow"
+                          color="primary"
                         />
-                      );
-                    })}
+                      }
+                      label={day}
+                    />
+                  );
+                })}
               </Grid>
 
               <Grid item xs={12} sm={12} align="center">
-                <br/>
-                <Typography
-                  className=".MuiTypography-overline"
-                  gutterBottom
-                >
+                <br />
+                <Typography className=".MuiTypography-overline" gutterBottom>
                   <b>Booking Slot Timings:</b>
                 </Typography>
                 <TimeSlots
@@ -606,7 +597,9 @@ export default function SchedulerSetting() {
                   <label
                     class="custom-control-label"
                     for="freeReservationTillHours"
-                  > &nbsp; before it starts.
+                  >
+                    {" "}
+                    &nbsp; before it starts.
                   </label>
                 </div>
               </Grid>
@@ -638,7 +631,7 @@ export default function SchedulerSetting() {
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
-                  style={{paddingTop:"3vh"}}
+                  style={{ paddingTop: "3vh" }}
                 >
                   Show weather for:
                 </Typography>
@@ -676,7 +669,7 @@ export default function SchedulerSetting() {
                   color="textSecondary"
                   className={classes.secTypo}
                   gutterBottom
-                  style={{paddingTop:"3vh"}}
+                  style={{ paddingTop: "3vh" }}
                 >
                   Or
                 </Typography>
@@ -695,7 +688,7 @@ export default function SchedulerSetting() {
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
-                  style={{paddingTop:"3vh"}}
+                  style={{ paddingTop: "3vh" }}
                 >
                   Select Holiday Calendar:
                 </Typography>
@@ -740,7 +733,7 @@ export default function SchedulerSetting() {
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
-                  style={{paddingTop:"3vh"}}
+                  style={{ paddingTop: "3vh" }}
                 >
                   Max Holiday Reservation:
                 </Typography>
@@ -754,7 +747,6 @@ export default function SchedulerSetting() {
                   value={state.maxHolidayDays}
                   onChange={handleChange}
                 />
-
               </Grid>
               <Grid item sm={3} xs={12}></Grid>
               <Grid item sm={3} xs={12} align="center">
@@ -762,7 +754,7 @@ export default function SchedulerSetting() {
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
-                  style={{paddingTop:"3vh"}}
+                  style={{ paddingTop: "3vh" }}
                 >
                   Select Watercraft Time Zone:
                 </Typography>
@@ -793,7 +785,7 @@ export default function SchedulerSetting() {
                   className={classes.secTypo}
                   color="textSecondary"
                   gutterBottom
-                  style={{paddingTop:"3vh"}}
+                  style={{ paddingTop: "3vh" }}
                 >
                   Allow advance reservation upto:
                 </Typography>
@@ -848,7 +840,7 @@ export default function SchedulerSetting() {
           size="medium"
           startIcon={<SaveIcon />}
           onClick={saveChanges}
-          style={{marginTop:'1%'}}
+          style={{ marginTop: "1%" }}
         >
           Save settings
         </Button>

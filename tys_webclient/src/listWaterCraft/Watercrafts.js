@@ -64,7 +64,9 @@ const Watercrafts = (props) => {
       (item) => item.watercraftId !== id
     );
     parentState1(listOfWatercrafts);
-    const url = "http://localhost:8080/watercraft/deleteWaterCraft/" + id;
+    const url =
+      "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/watercraft/deleteWaterCraft/" +
+      id;
     const response = await fetch(url, {
       method: "DELETE",
     });
