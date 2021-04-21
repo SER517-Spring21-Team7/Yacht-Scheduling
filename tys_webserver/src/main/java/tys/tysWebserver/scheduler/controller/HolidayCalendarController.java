@@ -17,7 +17,7 @@ import tys.tysWebserver.scheduler.model.HolidayCalendar;
 import tys.tysWebserver.scheduler.repository.HolidayCalendarRepo;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://booking.tys.com.s3-website-us-west-2.amazonaws.com")
 public class HolidayCalendarController {
 
 	@Autowired

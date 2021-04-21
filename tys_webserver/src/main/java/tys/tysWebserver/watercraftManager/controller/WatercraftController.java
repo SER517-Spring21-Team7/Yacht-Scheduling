@@ -24,7 +24,7 @@ import tys.tysWebserver.watercraftManager.model.WatercraftModel;
 import tys.tysWebserver.watercraftManager.repository.AddWatercraftRepo;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://booking.tys.com.s3-website-us-west-2.amazonaws.com")
 @RequestMapping("/watercraft")
 public class WatercraftController {
 	
@@ -44,7 +44,7 @@ public class WatercraftController {
 		return savedWatercraft;
 	}
 	
-	@CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = "http://booking.tys.com.s3-website-us-west-2.amazonaws.com")
 	@PostMapping("/updateWatercraftById/{id}")
 	public WatercraftModel updateWatercraftById(@PathVariable String id, @RequestBody WatercraftModel addwatercraft) {
 		
@@ -65,14 +65,14 @@ public class WatercraftController {
 		
 	}
 	
-	@CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = "http://booking.tys.com.s3-website-us-west-2.amazonaws.com")
 	@GetMapping("/getAllWaterCraft")
 	public List<WatercraftModel> finalAll() {
 		List<WatercraftModel> data = AWrepo.findAll();
 		return data;
 	}
 	
-	@CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = "http://booking.tys.com.s3-website-us-west-2.amazonaws.com")
 	@GetMapping("/getWaterCraftByMemberId/{id}")
 	public List<WatercraftModel> finalWaterCraftByMemberId(@PathVariable Integer id) {
 		List<Integer> watercraftIds = new ArrayList<>();
@@ -87,14 +87,14 @@ public class WatercraftController {
 	}
 	
 	
-	@CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = "http://booking.tys.com.s3-website-us-west-2.amazonaws.com")
 	@DeleteMapping("/deleteWaterCraft/{id}")
 	public ResponseEntity<String> deleteWaterCraft(@PathVariable String id) {
 		AWrepo.deleteById(Integer.parseInt(id));
 		return new ResponseEntity<String>("Success", HttpStatus.OK);
 	}
 	
-	@CrossOrigin(origins = "http://localhost:3000")
+	@CrossOrigin(origins = "http://booking.tys.com.s3-website-us-west-2.amazonaws.com")
 	@GetMapping("/getWaterCraftById/{id}")
 	public WatercraftModel getWaterCraftById(@PathVariable String id) {
 		Optional<WatercraftModel> data = AWrepo.findById(Integer.parseInt(id));

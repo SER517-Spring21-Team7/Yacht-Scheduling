@@ -27,7 +27,7 @@ import tys.tysWebserver.accountManager.repository.UserProfileRepo;
 import tys.tysWebserver.memberManager.model.MemberModel;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://booking.tys.com.s3-website-us-west-2.amazonaws.com")
 public class UserAccountController {
 	
 	@Autowired

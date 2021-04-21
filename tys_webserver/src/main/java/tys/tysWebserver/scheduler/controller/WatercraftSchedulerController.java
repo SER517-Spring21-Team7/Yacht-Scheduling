@@ -36,7 +36,7 @@ import tys.tysWebserver.watercraftManager.controller.WatercraftController;
 import tys.tysWebserver.watercraftManager.model.WatercraftModel;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://booking.tys.com.s3-website-us-west-2.amazonaws.com")
 public class WatercraftSchedulerController {
 	
 	@Autowired
