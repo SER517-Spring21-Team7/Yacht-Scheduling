@@ -22,7 +22,7 @@ import tys.tysWebserver.memberManager.model.MemberModel;
 import tys.tysWebserver.memberManager.repository.MemberRepository;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://booking.tys.com.s3-website-us-west-2.amazonaws.com")
 @RequestMapping("/displayAlert")
 public class DisplayAlertController {
 
