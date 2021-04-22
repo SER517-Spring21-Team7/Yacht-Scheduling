@@ -118,17 +118,20 @@ export default function HolidayCalendar() {
   };
 
   const handleSave = () => {
-    return fetch("http://localhost:8080/holidaycalendar", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: calendarDetail.calendarName,
-        listOfHoliday: rows,
-      }),
-    })
+    return fetch(
+      "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/holidaycalendar",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: calendarDetail.calendarName,
+          listOfHoliday: rows,
+        }),
+      }
+    )
       .then((response) => response.json())
       .then((json) => {
         console.log("Holiday Calendar created.");
@@ -143,13 +146,17 @@ export default function HolidayCalendar() {
     handleClickOpen();
     if (idOfHolidayCalendar !== "create") {
       console.log("Fetching for ID:: " + idOfHolidayCalendar);
-      fetch("http://localhost:8080/holidaycalendar/" + idOfHolidayCalendar, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      })
+      fetch(
+        "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/holidaycalendar/" +
+          idOfHolidayCalendar,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      )
         .then((resp) => resp.json())
         .then((data) => {
           console.log("data" + data.id);
@@ -165,7 +172,7 @@ export default function HolidayCalendar() {
   const handleUpdate = () => {
     console.log(calendarDetail.calendarId);
     return fetch(
-      `http://localhost:8080/holidaycalendar/${calendarDetail.calendarId}`,
+      `http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/holidaycalendar/${calendarDetail.calendarId}`,
       {
         method: "PUT",
         headers: {

@@ -1,8 +1,8 @@
-import React, { useState, useEffect} from 'react'
-import Member from './Member'
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+import React, { useState, useEffect } from "react";
+import Member from "./Member";
+import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -10,18 +10,18 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     padding: theme.spacing(1),
-    textAlign: 'center',
+    textAlign: "center",
     color: theme.palette.text.secondary,
   },
 }));
-    
+
 const ListMember = () => {
     var universalWatercraftId = sessionStorage.getItem('globalWatercraftId');
     if (universalWatercraftId === null) {
         alert("Please select Watercraft");
     }
     const [members, setMembers] = useState([]);
-    const url = "http://localhost:8080/member/getAllMemberDetails/" + universalWatercraftId;
+    const url = "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/member/getAllMemberDetails/" + universalWatercraftId;
     const getAllMember = async () => { 
         const response = await fetch(url, {
             method: "GET"
@@ -49,9 +49,9 @@ const ListMember = () => {
                     </Grid>
                 })
             }
-            </Grid>
-        </div>
-    )
-}
+      </Grid>
+    </div>
+  );
+};
 
-export default ListMember
+export default ListMember;

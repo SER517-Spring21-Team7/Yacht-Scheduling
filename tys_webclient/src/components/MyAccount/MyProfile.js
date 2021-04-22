@@ -74,7 +74,6 @@ const timezoneArr = [
 
 const useStyle = makeStyles((theme) => ({
   root: {
-
     "& .MuiFormControl-root": {
       marginLeft: theme.spacing(10),
       width: "60%",
@@ -91,7 +90,7 @@ const useStyle = makeStyles((theme) => ({
     padding: theme.spacing(1),
     marginTop: "1%",
     border: "4px solid #4db6ac",
-    borderRadius: '5px'
+    borderRadius: "5px",
   },
   button: {
     margin: theme.spacing(2),
@@ -182,7 +181,7 @@ export default function MyProfile() {
   };
 
   useEffect((values) => {
-    // fetch("http://localhost:8080/user/3/profile", {
+    // fetch("http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/user/3/profile", {
     //   method: "GET",
     //   headers: {
     //     Accept: "application/json",
@@ -190,7 +189,8 @@ export default function MyProfile() {
     //   },
     // })
     const url =
-      "http://localhost:8080/userprofile/" + sessionStorage.getItem("userId");
+      "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/userprofile/" +
+      sessionStorage.getItem("userId");
 
     axios.get(url).then((resp) => {
       console.log(resp);
@@ -214,7 +214,8 @@ export default function MyProfile() {
 
   const saveChanges = () => {
     return fetch(
-      "http://localhost:8080/user/profile/" + sessionStorage.getItem("userId"),
+      "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/user/profile/" +
+        sessionStorage.getItem("userId"),
       {
         method: "PUT",
         headers: {
@@ -346,12 +347,12 @@ export default function MyProfile() {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-          <TextField
-            variant="outlined"
-            id="fileUpload"
-            type="file"
-            onChange={handleImageInput}
-          />
+            <TextField
+              variant="outlined"
+              id="fileUpload"
+              type="file"
+              onChange={handleImageInput}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField

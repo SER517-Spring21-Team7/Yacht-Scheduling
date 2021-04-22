@@ -14,7 +14,7 @@ import tys.tysWebserver.memberManager.repository.MemberSlotRepository;
 import tys.tysWebserver.scheduler.controller.SchedulerSettingController;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://booking.tys.com.s3-website-us-west-2.amazonaws.com")
 public class MemberSlotController {
 	
 	@Autowired

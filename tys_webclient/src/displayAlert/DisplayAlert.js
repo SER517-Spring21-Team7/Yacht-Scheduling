@@ -40,7 +40,8 @@ const DisplayAlert = () => {
   const classes = useStyle();
   const [values, setValues] = useState(initialValues);
   const [watercrafts, setWatercrafts] = useState([]);
-  const url = "http://localhost:8080/watercraft/getAllWaterCraft";
+  const url =
+    "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/watercraft/getAllWaterCraft";
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setValues({
@@ -68,7 +69,10 @@ const DisplayAlert = () => {
     };
     console.log(saveJson);
     axios
-      .post("http://localhost:8080/displayAlert/add", saveJson)
+      .post(
+        "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/displayAlert/add",
+        saveJson
+      )
       .then(function (response) {
         console.log(response);
       })

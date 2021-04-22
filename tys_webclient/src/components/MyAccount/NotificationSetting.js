@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 import {
   makeStyles,
   Accordion,
@@ -20,11 +20,9 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import SaveIcon from "@material-ui/icons/Save";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    
-  },
+  root: {},
   buttonStyle: {
-    marginLeft: '38%'
+    marginLeft: "38%",
   },
   aSummery: {
     backgroundColor: "rgba(0, 0, 0, .03)",
@@ -83,31 +81,36 @@ export default function NotificationSetting() {
   };
 
   useEffect((state) => {
-
-    const url = "http://localhost:8080/usernotificationSetting/"+sessionStorage.getItem("userId");
-    axios.get(url)
-      .then((resp) => {console.log(resp);
-        setState({
-          ...state,
-          sendMessage: resp.data.sendMessage,
-          watercraftInvite: resp.data.watercraftInvite,
-          requestApproval: resp.data.requestApproval,
-          othersReservationAdmin: resp.data.othersReservationAdmin,
-          othersReservationMember: resp.data.othersReservationMember,
-          scheduleSomeTime: resp.data.scheduleSomeTime,
-          eventSuggestion: resp.data.eventSuggestion,
-          eventChange: resp.data.eventChange,
-          eventCancel: resp.data.eventCancel,
-          upcomingScheduleReminder: resp.data.upcomingScheduleReminder,
-          addedToExpense: resp.data.addedToExpense,
-        })
-  });
-}, []);
+    const url =
+      "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/usernotificationSetting/" +
+      sessionStorage.getItem("userId");
+    axios.get(url).then((resp) => {
+      console.log(resp);
+      setState({
+        ...state,
+        sendMessage: resp.data.sendMessage,
+        watercraftInvite: resp.data.watercraftInvite,
+        requestApproval: resp.data.requestApproval,
+        othersReservationAdmin: resp.data.othersReservationAdmin,
+        othersReservationMember: resp.data.othersReservationMember,
+        scheduleSomeTime: resp.data.scheduleSomeTime,
+        eventSuggestion: resp.data.eventSuggestion,
+        eventChange: resp.data.eventChange,
+        eventCancel: resp.data.eventCancel,
+        upcomingScheduleReminder: resp.data.upcomingScheduleReminder,
+        addedToExpense: resp.data.addedToExpense,
+      });
+    });
+  }, []);
 
   const saveChanges = () => {
-    const url = "http://localhost:8080/user/nsetting/" + sessionStorage.getItem("userId");
-    axios.put( url, { ...state})
-      .then((resp) => { console.log(resp.data);
+    const url =
+      "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/user/nsetting/" +
+      sessionStorage.getItem("userId");
+    axios
+      .put(url, { ...state })
+      .then((resp) => {
+        console.log(resp.data);
         console.log("Notification setting updated.");
       })
       .catch((error) => {
@@ -119,7 +122,7 @@ export default function NotificationSetting() {
     <div>
       <div className={classes.root}>
         <Typography>
-          <Box fontSize={20} textAlign="center" style={{marginBottom:'1%'}}>
+          <Box fontSize={20} textAlign="center" style={{ marginBottom: "1%" }}>
             Send me an email when someone:
           </Box>
         </Typography>
@@ -328,7 +331,6 @@ export default function NotificationSetting() {
             />
           </AccordionDetails>
         </Accordion>
-        
       </div>
       <div className={classes.buttonStyle}>
         <Button
@@ -337,9 +339,10 @@ export default function NotificationSetting() {
           size="medium"
           className={classes.button}
           startIcon={<SaveIcon />}
-          onClick={saveChanges}>
+          onClick={saveChanges}
+        >
           Save changes
-        </Button>   
+        </Button>
       </div>
     </div>
   );

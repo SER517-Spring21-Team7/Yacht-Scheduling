@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -14,7 +14,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -48,8 +48,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
 
-  userWelcome:{
-    display:'inlineflex'
+  userWelcome: {
+    display: "inlineflex",
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -110,11 +110,10 @@ const useStyles = makeStyles((theme) => ({
   search: {
     padding: theme.spacing(0, 2),
   },
-
 }));
 
-var loggedMember = ''
-var loggedMemberImage = ''
+var loggedMember = "";
+var loggedMemberImage = "";
 
 export default function MiniDrawer() {
   const classes = useStyles();
@@ -141,22 +140,27 @@ export default function MiniDrawer() {
 
   const logout = () => {
     sessionStorage.clear();
-    window.location.href = '/';
-  }
+    window.location.href = "/";
+  };
 
   const loggedInMember = () => {
-    const url = "http://localhost:8080/userprofile/"+sessionStorage.getItem("userId");
-    axios.get(url).then(res => {
-      setMember(res.data.firstName)
-      setMemberImage(res.data.image)
-    }, error => {
-      alert("Unable to fetch member details. Please try again later!");
-    });
-  }
+    const url =
+      "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/userprofile/" +
+      sessionStorage.getItem("userId");
+    axios.get(url).then(
+      (res) => {
+        setMember(res.data.firstName);
+        setMemberImage(res.data.image);
+      },
+      (error) => {
+        alert("Unable to fetch member details. Please try again later!");
+      }
+    );
+  };
 
-  useEffect(() => { 
+  useEffect(() => {
     loggedInMember();
-  },[])
+  }, []);
 
   return (
     <GlobalContext.Provider value={selectedWatercraft}>
@@ -203,27 +207,27 @@ export default function MiniDrawer() {
               </Grid>
 
               <Grid item xs="auto">
-                <Avatar alt="Test" src={getMemberImage}/>
+                <Avatar alt="Test" src={getMemberImage} />
               </Grid>
 
               <Grid item xs={3}>
-                <h3 style={{marginLeft:'2%'}}>Welcome, {getMemberName}!</h3>
+                <h3 style={{ marginLeft: "2%" }}>Welcome, {getMemberName}!</h3>
               </Grid>
             </Grid>
-              <Grid item xs="auto" align="center">
-                <IconButton
-                  color="inherit"
-                  aria-label="logout"
-                  onClick={logout}
-                  style={{
-                    width: "20px",
-                    height: "20px"
-                  }}
-                  >
-                  <ExitToAppIcon />
-                </IconButton>
-                <p>Logout</p>
-              </Grid>
+            <Grid item xs="auto" align="center">
+              <IconButton
+                color="inherit"
+                aria-label="logout"
+                onClick={logout}
+                style={{
+                  width: "20px",
+                  height: "20px",
+                }}
+              >
+                <ExitToAppIcon />
+              </IconButton>
+              <p>Logout</p>
+            </Grid>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -264,33 +268,38 @@ export default function MiniDrawer() {
           </div>
           <Divider />
           <List style={{ fontSize: "1.8rem", backgroundColor: "#e0f2f1" }}>
-            {SidebarData.map((text, index) => (
-              text &&
-              <ListItem button key={text.title} component={Link} to={text.path}>
-                <ListItemIcon>{text.icon}</ListItemIcon>
-                <ListItemText primary={text.title} />
-              </ListItem>
-            ))}
+            {SidebarData.map(
+              (text, index) =>
+                text && (
+                  <ListItem
+                    button
+                    key={text.title}
+                    component={Link}
+                    to={text.path}
+                  >
+                    <ListItemIcon>{text.icon}</ListItemIcon>
+                    <ListItemText primary={text.title} />
+                  </ListItem>
+                )
+            )}
           </List>
           <Divider />
         </Drawer>
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Switch>
-            <Route exact path="/" exact component={ListOfWaterCrafts}/>
+            <Route exact path="/" exact component={ListOfWaterCrafts} />
             {/* <Route path="watercraft" render={() => <div> Page inbox</div>} />
             <Route path="/Starred" render={() => <div>Page starred</div>} /> */}
             <Route path="/listwatercraft" exact component={ListOfWaterCrafts} />
             <Route path="/watercrafts">
-            {
-                sessionStorage.getItem("role") === "Admin" &&
+              {sessionStorage.getItem("role") === "Admin" && (
                 <AddWatercraft data={null} />
-              }
+              )}
             </Route>
-            {
-              sessionStorage.getItem("role") === "Admin" &&
+            {sessionStorage.getItem("role") === "Admin" && (
               <Route path="/member" component={AddMember} />
-            }
+            )}
             <Route path="/viewmember" component={ListMember} />
             <Route path="/MyAccount" component={MyAccount} />
             <Route

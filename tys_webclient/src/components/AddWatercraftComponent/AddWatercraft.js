@@ -14,23 +14,21 @@ import {
   Box,
 } from "@material-ui/core";
 import clsx from "clsx";
-import S3 from 'react-aws-s3'
-import imageCompression from 'browser-image-compression'
-
+import S3 from "react-aws-s3";
+import imageCompression from "browser-image-compression";
 
 const useStyle = makeStyles((theme) => ({
   root: {
-    
     "& .MuiFormControl-root": {
       marginLeft: theme.spacing(15),
       width: "60%",
       margin: theme.spacing(1),
     },
     "& .MuiButtonBase-root": {
-      left:"40%"
+      left: "40%",
     },
   },
-  
+
   textField: {
     width: "25ch",
   },
@@ -38,7 +36,7 @@ const useStyle = makeStyles((theme) => ({
     padding: theme.spacing(1),
     marginTop: "1%",
     border: "4px solid #4db6ac",
-    borderRadius: '5px'
+    borderRadius: "5px",
   },
 }));
 
@@ -57,11 +55,11 @@ const initialValues = {
 };
 
 const config = {
-  bucketName: 'tys-user-image',
-  region: 'us-west-2',
-  accessKeyId: 'AKIAVM6FVNOGNDLX6DEY',
-  secretAccessKey: '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',
-}
+  bucketName: "tys-user-image",
+  region: "us-west-2",
+  accessKeyId: "AKIAVM6FVNOGNDLX6DEY",
+  secretAccessKey: "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",
+};
 
 export default function AddWatercraft(props) {
   const [values, setValues] = useState(
@@ -80,47 +78,50 @@ export default function AddWatercraft(props) {
   };
 
   const handleImageInput = (e) => {
-
     let imageFile = e.target.files[0];
     let options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: 1920,
-        useWebWorker: true
-    }
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    };
 
     imageCompression(imageFile, options)
-    .then(function (compressedFile){
-        let file = new File([compressedFile], "file1.png", {type: "image/jpg"});
-        return file
-    })
-    .then(fileToUpload =>{
+      .then(function (compressedFile) {
+        let file = new File([compressedFile], "file1.png", {
+          type: "image/jpg",
+        });
+        return file;
+      })
+      .then((fileToUpload) => {
         const ReactS3Client = new S3(config);
-        ReactS3Client
-        .uploadFile(fileToUpload)
-        .then(data => {
-            return data.location
-        })
-        .then(url => {
+        ReactS3Client.uploadFile(fileToUpload)
+          .then((data) => {
+            return data.location;
+          })
+          .then((url) => {
             setValues({
-                ...values,
-                image: url
-            })
-        })
-        .catch(err => console.error(err))
-    })
-}
+              ...values,
+              image: url,
+            });
+          })
+          .catch((err) => console.error(err));
+      });
+  };
 
   const buttonClicked = (event) => {
-    return fetch("http://localhost:8080/watercraft/details", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...values,
-      }),
-    })
+    return fetch(
+      "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/watercraft/details",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...values,
+        }),
+      }
+    )
       .then((response) => response.json())
       .then((json) => {
         alert("Watercraft successfully added!");
@@ -136,7 +137,7 @@ export default function AddWatercraft(props) {
   };
   const updateWatercraftById = async () => {
     const updateUrl =
-      "http://localhost:8080/watercraft/updateWatercraftById/" +
+      "http://ec2-18-237-18-199.us-west-2.compute.amazonaws.com:8080/watercraft/updateWatercraftById/" +
       props.data.watercraftId;
     const response = await fetch(updateUrl, {
       method: "POST",
@@ -165,10 +166,7 @@ export default function AddWatercraft(props) {
     <div>
       <form className={classes.root}>
         <Typography>
-          <Box
-            fontSize={20}
-            textAlign="center"
-          >
+          <Box fontSize={20} textAlign="center">
             Add Watercraft Details
           </Box>
         </Typography>
@@ -188,8 +186,7 @@ export default function AddWatercraft(props) {
               accept="image/*"
               variant="outlined"
               onChange={handleImageInput}
-            >
-            </TextField>
+            ></TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
