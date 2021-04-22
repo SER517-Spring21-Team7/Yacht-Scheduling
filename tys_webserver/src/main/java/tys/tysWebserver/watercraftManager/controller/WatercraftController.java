@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import tys.tysWebserver.memberManager.model.MemberModel;
 import tys.tysWebserver.memberManager.repository.MemberRepository;
 import tys.tysWebserver.scheduler.controller.SchedulerSettingController;
-import tys.tysWebserver.scheduler.repository.SchedulerSettingRepo;
 import tys.tysWebserver.watercraftManager.model.WatercraftModel;
 import tys.tysWebserver.watercraftManager.repository.AddWatercraftRepo;
 

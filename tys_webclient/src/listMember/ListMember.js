@@ -16,8 +16,12 @@ const useStyles = makeStyles((theme) => ({
 }));
     
 const ListMember = () => {
+    var universalWatercraftId = sessionStorage.getItem('globalWatercraftId');
+    if (universalWatercraftId === null) {
+        alert("Please select Watercraft");
+    }
     const [members, setMembers] = useState([]);
-    const url = "http://localhost:8080/member/getAllMemberDetails"
+    const url = "http://localhost:8080/member/getAllMemberDetails/" + universalWatercraftId;
     const getAllMember = async () => { 
         const response = await fetch(url, {
             method: "GET"
