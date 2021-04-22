@@ -169,11 +169,6 @@ function Login({ setAccess }) {
             </Button>
             <Grid container>
               <Grid item xs={12} align="right">
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item xs={12} align="right">
                 <Link href="https://theyachtsolution.com/" variant="body2">
                   {"Know more about The Yacht Solutions!"}
                 </Link>

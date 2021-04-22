@@ -67,7 +67,7 @@ const ManageAlert = () => {
         <TableHead>
           <TableRow>
             <TableCell>Alerts</TableCell>
-            <TableCell align="right">Action</TableCell>
+            <TableCell align="center">Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

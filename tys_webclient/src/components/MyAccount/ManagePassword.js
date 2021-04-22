@@ -58,7 +58,7 @@ export default function ManagePassword() {
       .post(url, { ...values })
       .then((resp) => {
         console.log(resp.data);
-        console.log("Password updated.");
+        alert("Password updated.");
       })
       .catch((error) => {
         alert("Invalid Credentials provided");

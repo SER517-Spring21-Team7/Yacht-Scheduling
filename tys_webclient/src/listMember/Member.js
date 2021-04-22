@@ -10,7 +10,7 @@ const useStyles = makeStyles({
   root: {
     display: "flex",
     width: 345,
-    height: 650,
+    height: 500,
   },
   media: {
     height: 50,
@@ -41,16 +41,16 @@ const Member = (props) => {
       {console.log(props.name)}
       <Card className={classes.root} style={section}>
         <Grid container direction="row" style={section}>
-          <Grid container spacing={2} style={{ height: "25%" }}>
-            <Grid item xs={4}>
+          <Grid container spacing={2}>
+            <Grid item xs={3}>
               <CardMedia
                 className={classes.media}
-                image={getMemeberImage(props.image)}
+                image={props.name.image}
                 title="Boat"
                 alignItem="center"
               />
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={9}>
               <Typography gutterBottom variant="h5" component="h2">
                 {props.name.firstname} {props.name.lastname}
               </Typography>
@@ -61,7 +61,7 @@ const Member = (props) => {
             </Grid>
           </Grid>
 
-          <Grid container spacing={2} style={{ height: "65%" }}>
+          <Grid container spacing={2} style={{ height: "50%" }}>
             <Grid item xs={12}>
               <Typography
                 variant="body1"
@@ -77,9 +77,12 @@ const Member = (props) => {
                 gutterBottom
                 style={{ whiteSpace: "pre-line" }}
               >
-                <h3>Access dates:</h3>{" "}
-                {new Date(props.name.startdate).toDateString()} to{" "}
-                {new Date(props.name.enddate).toDateString()}
+                <h3>Access dates:-</h3>
+                {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(props.name.startdate))}
+                {" "}to{" "}
+                { new Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit'}).format(new Date(props.name.enddate))}
+                {/* {new Date(props.name.startdate).toUTCString()} to{" "}
+                {new Date(props.name.enddate).toDateString()} */}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -88,21 +91,18 @@ const Member = (props) => {
                 gutterBottom
                 style={{ whiteSpace: "pre-line" }}
               >
-                <h3>Premium slot</h3>
+                <h4>Holiday Slots Remaining:-  { props.name.slotData[0]}</h4>
+                
               </Typography>
+              
+            </Grid>
+            <Grid item xs={12}>
               <Typography
                 variant="body1"
                 gutterBottom
                 style={{ whiteSpace: "pre-line" }}
               >
-                9:00 AM - 5:00 PM : 4 remaining ( Out of Total 4 )
-              </Typography>
-              <Typography
-                variant="body1"
-                gutterBottom
-                style={{ whiteSpace: "pre-line" }}
-              >
-                9:00 AM - 5:00 PM : 4 remaining ( Out of Total 4 )
+                <h4>Previous Month Slot:-  { props.name.slotData[1]}</h4>
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -111,14 +111,7 @@ const Member = (props) => {
                 gutterBottom
                 style={{ whiteSpace: "pre-line" }}
               >
-                <h3>Standard slot</h3>
-              </Typography>
-              <Typography
-                variant="body1"
-                gutterBottom
-                style={{ whiteSpace: "pre-line" }}
-              >
-                9:00 AM - 5:00 PM : 4 remaining ( Out of Total 4 )
+                <h4>Current Month Slot:-  { props.name.slotData[2]}</h4>
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -127,12 +120,21 @@ const Member = (props) => {
                 gutterBottom
                 style={{ whiteSpace: "pre-line" }}
               >
-                Limited to 0 FREE bookings per month.
+                <h4>Next Month Slot:-   { props.name.slotData[3]}</h4>
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography
+                variant="body1"
+                gutterBottom
+                style={{ whiteSpace: "pre-line" }}
+              >
+                Limited to { props.name.freebookings} FREE bookings per month.
               </Typography>
             </Grid>
           </Grid>
 
-          <Grid container spacing={2} style={{ alignItems: "center" }}>
+          {/* <Grid container spacing={2} style={{ alignItems: "center" }}>
             <Button
               size="small"
               color="primary"
@@ -149,7 +151,7 @@ const Member = (props) => {
             >
               Delete Member
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Card>
     </>
