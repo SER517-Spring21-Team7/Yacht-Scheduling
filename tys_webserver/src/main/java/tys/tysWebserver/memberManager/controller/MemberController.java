@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import tys.tysWebserver.accountManager.controller.LoginController;
 import tys.tysWebserver.accountManager.controller.UserAccountController;
-import tys.tysWebserver.accountManager.model.UserNotificationSetting;
 import tys.tysWebserver.accountManager.model.UserProfile;
 import tys.tysWebserver.memberManager.model.MemberModel;
+import tys.tysWebserver.memberManager.model.MemberSlot;
 import tys.tysWebserver.memberManager.repository.MemberRepository;
 
 @RestController
@@ -42,7 +42,8 @@ public class MemberController {
 	@Autowired
 	PasswordEncoder pasEncoder;
  
-  MemberSlotController msController;
+	@Autowired
+	MemberSlotController msController;
 	
 	@PostMapping("/details")
 	public MemberModel createMember(@RequestBody MemberModel addmember) {
@@ -84,9 +85,9 @@ public class MemberController {
 		return ResponseEntity.ok().body(memberObject);
 	}
 
-	@GetMapping("/getAllMemberDetails")
-	public List<MemberModel> getAllMemberDetails() {
-		List<MemberModel> data = AMrepo.findAll();
+	@GetMapping("/getAllMemberDetails/{id}")
+	public List<MemberModel> getAllMemberDetails(@PathVariable(value = "id") int watercraftId) {
+		List<MemberModel> data = AMrepo.findByWatercraftId(watercraftId);
 		if (ObjectUtils.isEmpty(data))
 			return null;
 
@@ -102,6 +103,21 @@ public class MemberController {
 
 		data.forEach((member) -> member.setImage(imageMap.get(member.getMemberId())));
 
+		for(int i = 0 ; i < data.size() ; ++i) {
+			
+			if(msController.getSlotsByUser(data.get(i).getMemberId()+"") == null) {
+				data.get(i).slotData.add(1);
+				data.get(i).slotData.add(1);
+				data.get(i).slotData.add(1);
+				data.get(i).slotData.add(1);
+				continue;
+			}
+			MemberSlot memberSlot = msController.getSlotsByUser(data.get(i).getMemberId()+"").getBody();
+			data.get(i).slotData.add(memberSlot.getHolidaySlot());
+			data.get(i).slotData.add(memberSlot.getPrevMonthSlot());
+			data.get(i).slotData.add(memberSlot.getCurrMonthSlot());
+			data.get(i).slotData.add(memberSlot.getNextMonthSlot());
+		}
 		return data;
 	}
 	

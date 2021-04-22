@@ -77,6 +77,7 @@ export const SidebarData = [
     icon: <FaIcons.FaBroadcastTower />,
     cName: "nav-text",
   },
+
   sessionStorage.getItem("role") === "Admin" &&
   {
     title: "Manage Alerts",
@@ -84,4 +85,20 @@ export const SidebarData = [
     icon: <AiIcons.AiOutlineDatabase  />,
     cName: "nav-text",
   },
+
+  sessionStorage.getItem("role") === "Admin" &&
+  {
+    title: "Add CheckList",
+    path: "/checkList",
+    icon: <FaIcons.FaRegStickyNote />,
+    cName: "nav-text",
+  },
+    sessionStorage.getItem("role") !== "Admin" &&
+  {
+    title: "Show CheckList",
+    path: "/checklistView",
+    icon: <FaIcons.FaRegStickyNote />,
+    cName: "nav-text",
+  },
+    
 ];
