@@ -55,6 +55,7 @@ export default function ManagePassword() {
     const url = "http://localhost:8080/user/passUpdate/"+sessionStorage.getItem("userId");
     axios.post( url, { ...values})
       .then((resp) => { console.log(resp.data);
+        alert("Password updated.");
         console.log("Password updated.");
       })
       .catch((error) => {

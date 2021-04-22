@@ -49,7 +49,7 @@ const ManageAlert = () => {
     console.log(newAlerts);
     fetch(url, {
       method: "DELETE",
-      "authorization" : sessionStorage.getItem("authorization"),
+      authorization : sessionStorage.getItem("authorization"),
       "Content-Type": "application/json",
     });
     setAlerts(newAlerts);
@@ -65,7 +65,7 @@ return (
         <TableHead>
           <TableRow>
             <TableCell>Alerts</TableCell>
-            <TableCell align="right">Action</TableCell>
+            <TableCell align="center">Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

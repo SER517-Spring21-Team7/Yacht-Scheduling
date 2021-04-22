@@ -81,7 +81,7 @@ export const SidebarData = [
   {
     title: "Manage Alerts",
     path: "/manageAlert",
-    icon: <FaIcons.FaBroadcastTower />,
+    icon: <AiIcons.AiOutlineDatabase  />,
     cName: "nav-text",
   },
 ];
