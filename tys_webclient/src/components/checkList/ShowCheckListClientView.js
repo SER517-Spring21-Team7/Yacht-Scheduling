@@ -42,6 +42,8 @@ const ShowCheckListClientView = () => {
 
     const buttonClicked = (event) => {
         console.log(event);
+        document.getElementById(event).style.backgroundColor = "green";
+        document.getElementById(event).textContent = "Done";
         // console.log(event.target);
         // console.log(event.target.id);
     };
@@ -69,7 +71,7 @@ const ShowCheckListClientView = () => {
                 <TableCell align="right">
                     <Button id={checkList.id} variant="contained" color="primary" 
                         style={{ width: "30%", marginTop: "1%" }}  onClick={() => buttonClicked(checkList.id)}>
-                        Done
+                        Check
                     </Button>
                 </TableCell>
                 </TableRow>
