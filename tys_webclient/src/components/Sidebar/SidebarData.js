@@ -77,7 +77,16 @@ export const SidebarData = [
     icon: <FaIcons.FaBroadcastTower />,
     cName: "nav-text",
   },
-    sessionStorage.getItem("role") === "Admin" &&
+
+  sessionStorage.getItem("role") === "Admin" &&
+  {
+    title: "Manage Alerts",
+    path: "/manageAlert",
+    icon: <FaIcons.FaBroadcastTower />,
+    cName: "nav-text",
+  },
+
+  sessionStorage.getItem("role") === "Admin" &&
   {
     title: "Add CheckList",
     path: "/checkList",
@@ -91,4 +100,5 @@ export const SidebarData = [
     icon: <FaIcons.FaRegStickyNote />,
     cName: "nav-text",
   },
+    
 ];

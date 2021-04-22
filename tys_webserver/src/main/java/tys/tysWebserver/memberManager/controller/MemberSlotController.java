@@ -26,6 +26,9 @@ public class MemberSlotController {
 	@GetMapping("/getslots/{mid}")
 	public ResponseEntity<MemberSlot> getSlotsByUser(@PathVariable(value="mid") String mid)
 		throws ResourceNotFoundException {
+		if(msr.findByMemberId(Integer.parseInt(mid)) == null || msr.findByMemberId(Integer.parseInt(mid)).size() == 0) {
+			return null;
+		}
 		MemberSlot memberSlot = msr.findByMemberId(Integer.parseInt(mid)).get(0);
 			return ResponseEntity.ok().body(memberSlot);
 	}

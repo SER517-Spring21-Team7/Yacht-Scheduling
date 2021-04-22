@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import React from "react";
 
 import MiniDrawer from "./components/Sidebar/Sidebar";
-import Login from "./components/Login/Login";
-import PrivateRoute from "./components/Login/PrivateRoute";
+import Login from "./components/Login/Login.js";
+import PrivateRoute from "./components/Login/PrivateRoute.js";
 
 function getToken() {
   return sessionStorage.getItem("authorization");

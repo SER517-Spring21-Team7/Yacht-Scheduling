@@ -36,6 +36,7 @@ import GlobalContext from "./../GlobalContext";
 import Emergency from "./../EmergencyContact/Emergency";
 import DisplayAlert from "../../displayAlert/DisplayAlert";
 import AddCheckList from "../checkList/AddCheckList";
+import ManageAlert from "../../displayAlert/ManageAlert";
 import WatercraftSchedulerUI from './../WatercraftScheduler/WatercraftSchedulerUI'
 import CheckListHomePage from "../checkList/CheckListHomePage";
 import ShowCheckListClientView from "../checkList/ShowCheckListClientView";
@@ -304,6 +305,7 @@ export default function MiniDrawer() {
             />
             <Route path="/emergency" component={Emergency} />
             <Route path="/displayAlert" component={DisplayAlert} />
+            <Route path="/manageAlert" component={ManageAlert} />
             <Route path="/reservation" component={WatercraftSchedulerUI} />
             <Route path="/checklist" component={CheckListHomePage} />
             <Route path="/checklistView" component={ShowCheckListClientView} />

@@ -1,5 +1,6 @@
 package tys.tysWebserver.memberManager.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -21,7 +22,7 @@ public class MemberModel {
 	@Column(name = "email")
 	private String email;
 	@Column(name = "watercraftid")
-	private int watercraftId;
+	private Integer watercraftId;
 	@Column(name = "firstname")
 	private String firstname;
 	@Column(name = "lastname")
@@ -47,6 +48,9 @@ public class MemberModel {
 	private String access;
 	@Column(name = "image")
 	private String image;
+	
+	@Transient
+	public ArrayList<Integer> slotData;
 
 	@Override
 	public String toString() {
@@ -63,9 +67,10 @@ public class MemberModel {
 	}
 	public MemberModel() {
 		super();
+		slotData = new ArrayList<Integer>();
 	}
 
-	public MemberModel(int memberId, String email, int watercraftId, String firstname, String lastname, String password, String password2,
+	public MemberModel(int memberId, String email, Integer watercraftId, String firstname, String lastname, String password, String password2,
 			Date startdate, Date enddate, String premiumshare, String standardshare, String freebookings,
 			String schedulercolor, String access) {
 		super();
@@ -97,10 +102,10 @@ public class MemberModel {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public int getWatercraftId() {
+	public Integer getWatercraftId() {
 		return watercraftId;
 	}
-	public void setWatercraftId(int watercraftId) {
+	public void setWatercraftId(Integer watercraftId) {
 		this.watercraftId = watercraftId;
 	}
 	public String getFirstname() {
