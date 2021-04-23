@@ -17,7 +17,7 @@ import tys.tysWebserver.checkList.model.CheckListModel;
 import tys.tysWebserver.checkList.repository.CheckListRepo;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://booking.tys.com.s3-website-us-west-2.amazonaws.com")
 @RequestMapping("/checkList")
 public class CheckListController {
 	
