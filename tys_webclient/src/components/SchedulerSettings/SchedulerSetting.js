@@ -334,6 +334,7 @@ export default function SchedulerSetting() {
       .then((response) => response.json())
       .then((json) => {
         console.log("Notification setting updated.");
+        alert("Settings saved");
       })
       .catch((error) => {
         console.error("Notification setting update failed.");
