@@ -22,13 +22,16 @@ const ListMember = () => {
     }
     const [members, setMembers] = useState([]);
     const url = "http://localhost:8080/member/getAllMemberDetails/" + universalWatercraftId;
-    const getAllMember = async () => { 
-        const response = await fetch(url, {
-            method: "GET"
-        });
-        const members = await response.json();
-        console.log(members);
-        setMembers(members);
+    const getAllMember = async () => {
+        if (universalWatercraftId !== null) {
+            const response = await fetch(url, {
+                method: "GET"
+            });
+            const members = await response.json();
+            console.log(members);
+            setMembers(members);
+        }
+        
     }
         
     useEffect(() => { 

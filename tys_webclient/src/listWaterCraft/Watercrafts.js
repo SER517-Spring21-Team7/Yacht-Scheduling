@@ -72,6 +72,18 @@ const Watercrafts = (props) => {
   const handleRedirect = (id) => {
     history.push("/editWatercraft/" + id);
   };
+  const reservation = () => {
+    history.push("/reservation");
+  }
+  const viewmember = () => {
+    history.push("/viewmember");
+  }
+  const myAccount = () => {
+    history.push("/MyAccount");
+  }
+  const checklist = () => {
+    history.push("/checklistView");
+  }
   return (
     <>
       <Card className={classes.root}>
@@ -108,6 +120,7 @@ const Watercrafts = (props) => {
                 <Grid item xs="auto" className={classes.avatarStyle}>
                   <Avatar
                     variant="square"
+                    onClick={ reservation}
                     style={{ backgroundColor: "#424242" }}
                   >
                     <AiIcons.AiOutlineSchedule />
@@ -116,6 +129,7 @@ const Watercrafts = (props) => {
                 <Grid item xs="auto" className={classes.avatarStyle}>
                   <Avatar
                     variant="square"
+                    onClick={viewmember}
                     style={{ backgroundColor: "#424242" }}
                   >
                     <FaIcons.FaUsers />
@@ -124,6 +138,7 @@ const Watercrafts = (props) => {
                 <Grid item xs="auto" className={classes.avatarStyle}>
                   <Avatar
                     variant="square"
+                    onClick={myAccount}
                     style={{ backgroundColor: "#424242" }}
                   >
                     <FaIcons.FaCog />
@@ -132,6 +147,7 @@ const Watercrafts = (props) => {
                 <Grid item xs="auto" className={classes.avatarStyle}>
                   <Avatar
                     variant="square"
+                    onClick={checklist}
                     style={{ backgroundColor: "#424242" }}
                   >
                     <FaIcons.FaClipboardList />
